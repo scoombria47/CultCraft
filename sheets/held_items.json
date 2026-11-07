@@ -1,0 +1,276 @@
+{
+  "name": "held_items",
+  "columns": {
+    "Id": "string",
+    "Asset": "string",
+    "Model": "string",
+    "System": "string",
+    "Verification": "string"
+  },
+  "references": {
+    "Asset": "assets.Id",
+    "Model": "assets.Id",
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "berry",
+      "Asset": "berry",
+      "Model": "display_model_berry",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "black_bundle",
+      "Asset": "black_bundle",
+      "Model": "display_model_black_bundle",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "black_shulker_box",
+      "Asset": "black_shulker_box",
+      "Model": "display_model_black_shulker_box",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "bone",
+      "Asset": "bone",
+      "Model": "display_model_bone",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "bow",
+      "Asset": "bow",
+      "Model": "display_model_bow",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "crossbow_arrow",
+      "Asset": "crossbow_arrow",
+      "Model": "display_model_crossbow",
+      "System": "avatar",
+      "Verification": "Native Minecraft crossbow display transform across charged and reload frames"
+    },
+    {
+      "Id": "crossbow_pulling_0",
+      "Asset": "crossbow_pulling_0",
+      "Model": "display_model_crossbow",
+      "System": "avatar",
+      "Verification": "Native Minecraft crossbow display transform across charged and reload frames"
+    },
+    {
+      "Id": "crossbow_pulling_1",
+      "Asset": "crossbow_pulling_1",
+      "Model": "display_model_crossbow",
+      "System": "avatar",
+      "Verification": "Native Minecraft crossbow display transform across charged and reload frames"
+    },
+    {
+      "Id": "crossbow_pulling_2",
+      "Asset": "crossbow_pulling_2",
+      "Model": "display_model_crossbow",
+      "System": "avatar",
+      "Verification": "Native Minecraft crossbow display transform across charged and reload frames"
+    },
+    {
+      "Id": "cobblestone",
+      "Asset": "cobblestone",
+      "Model": "display_model_cobblestone",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "diamond_axe",
+      "Asset": "diamond_axe",
+      "Model": "display_model_diamond_axe",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "diamond_sword",
+      "Asset": "diamond_sword",
+      "Model": "display_model_diamond_sword",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "emerald",
+      "Asset": "emerald",
+      "Model": "display_model_emerald",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "filled_map",
+      "Asset": "filled_map",
+      "Model": "display_model_filled_map",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "gold_ingot",
+      "Asset": "gold_ingot",
+      "Model": "display_model_gold_ingot",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "gold_nugget",
+      "Asset": "gold_nugget",
+      "Model": "display_model_gold_nugget",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "grass",
+      "Asset": "grass",
+      "Model": "display_model_grass",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "iron_axe",
+      "Asset": "iron_axe",
+      "Model": "display_model_iron_axe",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "iron_sword",
+      "Asset": "iron_sword",
+      "Model": "display_model_iron_sword",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "mace",
+      "Asset": "mace",
+      "Model": "display_model_mace",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "netherite_axe",
+      "Asset": "netherite_axe",
+      "Model": "display_model_netherite_axe",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "netherite_sword",
+      "Asset": "netherite_sword",
+      "Model": "display_model_netherite_sword",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "oak_log",
+      "Asset": "oak_log",
+      "Model": "display_model_oak_log",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "oak_planks",
+      "Asset": "oak_planks",
+      "Model": "display_model_oak_planks",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "rabbit",
+      "Asset": "rabbit",
+      "Model": "display_model_rabbit",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "raw_beef",
+      "Asset": "raw_beef",
+      "Model": "display_model_raw_beef",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "rotten_flesh",
+      "Asset": "rotten_flesh",
+      "Model": "display_model_rotten_flesh",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "seeds",
+      "Asset": "seeds",
+      "Model": "display_model_seeds",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "stone",
+      "Asset": "stone",
+      "Model": "display_model_stone",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "stone_axe",
+      "Asset": "stone_axe",
+      "Model": "display_model_stone_axe",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "stone_pickaxe",
+      "Asset": "stone_pickaxe",
+      "Model": "display_model_stone_pickaxe",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "stone_sword",
+      "Asset": "stone_sword",
+      "Model": "display_model_stone_sword",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "water_bucket",
+      "Asset": "water_bucket",
+      "Model": "display_model_water_bucket",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "wooden_axe",
+      "Asset": "wooden_axe",
+      "Model": "display_model_wooden_axe",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "wooden_sword",
+      "Asset": "wooden_sword",
+      "Model": "display_model_wooden_sword",
+      "System": "avatar",
+      "Verification": "Actual per-item parent-chain displays; full XYZ rotation, translation/16 and scale in both contexts; source bytecode coordinate conversion"
+    },
+    {
+      "Id": "fishing_rod",
+      "Asset": "fishing_rod",
+      "Model": "display_model_fishing_rod",
+      "System": "avatar",
+      "Verification": "Actual Minecraft handheld_rod parent context; cast state follows native hook/line lifetime"
+    },
+    {
+      "Id": "fishing_rod_cast",
+      "Asset": "fishing_rod_cast",
+      "Model": "display_model_fishing_rod_cast",
+      "System": "avatar",
+      "Verification": "Actual Minecraft handheld_rod parent context; cast state follows native hook/line lifetime"
+    }
+  ]
+}

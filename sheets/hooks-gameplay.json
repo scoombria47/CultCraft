@@ -1,0 +1,16 @@
+{
+  "name":"hooks",
+  "columns":{"Id":"string","Type":"string","Member":"string","Purpose":"string","System":"string","Verification":"string"},
+  "references":{"System":"systems.Id"},
+  "rows":[
+    {"Id":"native_player","Type":"PlayerFarming","Member":"Instance; playerWeapon; state; currentWeapon; currentWeaponLevel","Purpose":"Use the live native player and equipment state","System":"weapons","Verification":"Metadata and targeted decompilation of installed build 25223484"},
+    {"Id":"dungeon_check","Type":"GameManager","Member":"IsDungeon(PlayerFarming.Location)","Purpose":"Enable Minecraft combat only in native dungeon locations","System":"weapons","Verification":"Exact call inspected in PlayerFarming.Start and SetSkin"},
+    {"Id":"native_equip","Type":"PlayerWeapon","Member":"SetWeapon(EquipmentType,int)","Purpose":"Equip a native sword while retaining the acquired level and compatible enchantment variant","System":"weapons","Verification":"Exact native pickup path inspected in Interaction_WeaponPickUp.PlayerShowWeaponRoutine"},
+    {"Id":"native_damage","Type":"PlayerWeapon","Member":"GetDamage(float,int,PlayerFarming)","Purpose":"Apply checked material bonus to native weapon damage","System":"weapons","Verification":"Inspected static native formula; postfix only applies to this mod's current player in a dungeon"},
+    {"Id":"bow_target","Type":"Health","Member":"DealDamage(float,GameObject,Vector3,bool,AttackTypes,bool,AttackFlags)","Purpose":"Minecraft arrow collisions use native hostile damage and death handling","System":"weapons","Verification":"Metadata signature inspected; only Team2 enemies accepted; Projectile enum value 2"},
+    {"Id":"weapon_icons","Type":"PlayerWeapon","Member":"GetCurrentIcon(EquipmentType); GetSprite(EquipmentType)","Purpose":"Return Minecraft item sprites without modifying native WeaponData assets","System":"weapons","Verification":"Both exact method bodies inspected in installed PlayerWeapon"},
+    {"Id":"resource_icons","Type":"Lamb.UI.Assets.InventoryIconMapping","Member":"GetImage(InventoryItem.ITEM_TYPE)","Purpose":"Postfix Minecraft LOG and STONE UI icons while retaining inventory identities","System":"resources","Verification":"Exact overload inspected; Image overload delegates to this returning overload"},
+    {"Id":"resource_pickups","Type":"InventoryItem","Member":"GetInventoryItemTypeOf(GameObject)","Purpose":"Identify authentic native resource pickups for temporary visual replacement","System":"resources","Verification":"Metadata signature inspected; no inventory quantities or IDs are changed"},
+    {"Id":"structure_visuals","Type":"Structure","Member":"Structures; Type; transform; GetComponentsInChildren<Renderer>","Purpose":"Attach visual-only Minecraft block meshes to selected native structures","System":"buildings","Verification":"Structure metadata and enum IDs inspected; native colliders, StructureBrain, tasks and saves are retained"}
+  ]
+}

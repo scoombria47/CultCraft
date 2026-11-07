@@ -1,0 +1,9 @@
+{
+  "name":"enchantments",
+  "columns":{"Id":"string","DataAsset":"string","EffectKey":"string","EffectType":"string","ValueType":"string","Name":"string","InactiveLabel":"string","FirstEnchantOffset":"int","MaxPerMaterial":"int","GlintAsset":"string","GlintShaders":"string","GlintTile":"float","GlintScrollU":"float","GlintScrollV":"float","GlintAlpha":"float","GlintQueueOffset":"int","System":"string","Verification":"string"},
+  "references":{"DataAsset":"assets.Id","GlintAsset":"assets.Id","System":"systems.Id"},
+  "rows":[
+    {"Id":"sharpness","DataAsset":"sharpness_data","EffectKey":"minecraft:damage","EffectType":"minecraft:add","ValueType":"minecraft:linear","Name":"Острота","InactiveLabel":"Без зачарований","FirstEnchantOffset":1,"MaxPerMaterial":2,"GlintAsset":"enchant_glint","GlintShaders":"Legacy Shaders/Particles/Additive|Particles/Additive|Mobile/Particles/Additive","GlintTile":4,"GlintScrollU":0.08,"GlintScrollV":0.04,"GlintAlpha":0.5,"GlintQueueOffset":1,"System":"weapons","Verification":"Installed1.21 sharpness.json inspected in memory: add linear base1 step0.5 max5; values parsed at runtime, not duplicated; stages0,I,II follow user progression; glint scroll is mod presentation design"},
+    {"Id":"power","DataAsset":"power_data","EffectKey":"minecraft:damage","EffectType":"minecraft:add","ValueType":"minecraft:linear","Name":"Сила","InactiveLabel":"Без зачарований","FirstEnchantOffset":1,"MaxPerMaterial":2,"GlintAsset":"enchant_glint","GlintShaders":"Legacy Shaders/Particles/Additive|Particles/Additive|Mobile/Particles/Additive","GlintTile":4,"GlintScrollU":0.08,"GlintScrollV":0.04,"GlintAlpha":0.5,"GlintQueueOffset":1,"System":"weapons","Verification":"Installed1.21 power.json inspected in memory: add linear base0.5 step0.5 max5; requirement direct_attacker #minecraft:arrows verified; root applies only to bow projectile damage"}
+  ]
+}

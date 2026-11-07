@@ -1,0 +1,8 @@
+{
+  "name":"sources",
+  "columns":{"Id":"string","PreferredVersion":"string","CompanionEnvironment":"string","System":"string","Verification":"string"},
+  "references":{"System":"systems.Id"},
+  "rows":[
+    {"Id":"minecraft_java","PreferredVersion":"1.21","CompanionEnvironment":"CULTCRAFT_MINECRAFT","System":"assets","Verification":"Minecraft Java 1.21 client found locally; every required sheet asset checked in its archive without extraction"}
+  ]
+}

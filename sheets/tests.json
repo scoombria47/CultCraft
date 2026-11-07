@@ -1,0 +1,32 @@
+{
+  "name": "tests",
+  "columns": {
+    "Id": "string",
+    "Evidence": "string",
+    "System": "string",
+    "Verification": "string"
+  },
+  "references": {
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "mod-loads",
+      "Evidence": "Exact MeltyTest.Start protocol runs in plugin Awake",
+      "System": "testing",
+      "Verification": "Melty-provided test protocol; runtime result is reported separately"
+    },
+    {
+      "Id": "minecraft-assets-loaded",
+      "Evidence": "Live local asset reader Ready, 64x64 player texture and wooden sword texture exist",
+      "System": "testing",
+      "Verification": "Runtime observation required; static design is not a pass"
+    },
+    {
+      "Id": "minecraft-local-coop",
+      "Evidence": "The native Goat joins and leaves in a shared settlement. Both Minecraft avatars render with their assigned skins and arm widths.",
+      "System": "testing",
+      "Verification": "Observe real join and removal, separate character rendering, and the surviving main avatar."
+    }
+  ]
+}

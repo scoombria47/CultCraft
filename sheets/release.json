@@ -1,0 +1,32 @@
+{
+  "name": "releases",
+  "columns": {
+    "Id": "string",
+    "Version": "string",
+    "Title": "string",
+    "Guid": "string",
+    "Primary": "string",
+    "Companion": "string",
+    "License": "string",
+    "AllowRemix": "bool",
+    "System": "string",
+    "Verification": "string"
+  },
+  "references": {
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "current",
+      "Version": "0.8.5-multiplayer",
+      "Title": "CultCraft",
+      "Guid": "local.cultcraft",
+      "Primary": "cult-of-the-lamb",
+      "Companion": "minecraft-java",
+      "License": "All rights reserved; remixes permitted through Melty",
+      "AllowRemix": true,
+      "System": "integration",
+      "Verification": "Cult of the Lamb is the primary game. Melty declares the native two-player co-op. Closed licence and Melty remixes."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+/dist/
+/preflight.json
+/package-info.json
+/local-verification.json
+/melty-state.json
+/src/Spec.Generated.cs
+__pycache__/
+*.dll
+*.jar
+*.zip
+*.log

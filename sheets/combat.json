@@ -1,0 +1,6 @@
+{
+  "name":"combat",
+  "columns":{"Id":"string","Speed":"float","Lifetime":"float","Height":"float","SpawnOffset":"float","HitRadius":"float","MinimumCooldown":"float","VisualScale":"float","ScanInterval":"float","SpritePixelsPerUnit":"float","System":"string","Verification":"string"},
+  "references":{"System":"systems.Id"},
+  "rows":[{"Id":"bow","Speed":13.0,"Lifetime":1.25,"Height":0.8,"SpawnOffset":0.55,"HitRadius":0.1,"MinimumCooldown":0.25,"VisualScale":0.65,"ScanInterval":1.0,"SpritePixelsPerUnit":16.0,"System":"weapons","Verification":"Initial implementation design; native XY collision/damage pipeline statically inspected; balance awaits in-game verification"}]
+}

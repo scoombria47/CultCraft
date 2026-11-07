@@ -1,0 +1,36 @@
+{
+  "name": "sound_sources",
+  "columns": {
+    "Id": "string",
+    "Entry": "string",
+    "LegacyPath": "string",
+    "System": "string",
+    "Verification": "string"
+  },
+  "references": {
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "hurt_classic",
+      "Entry": "minecraft/sounds/random/hurt.ogg",
+      "LegacyPath": "resources/newsound/random/hurt.ogg",
+      "System": "avatar",
+      "Verification": "Actual old player hurt sound exists in installed Minecraft resources/newsound/random/hurt.ogg; optional if owner lacks legacy resources"
+    },
+    {
+      "Id": "hurt_modern",
+      "Entry": "minecraft/sounds/damage/hit1.ogg",
+      "LegacyPath": "resources/newsound/damage/hit1.ogg",
+      "System": "avatar",
+      "Verification": "Actual installed index1.12.json hit1 hash8760ebb9d4b1fe9457ef272324ecd6b4329a593e object exists; imported async from original hashed file"
+    },
+    {
+      "Id": "experience_pickup",
+      "Entry": "minecraft/sounds/random/orb.ogg",
+      "LegacyPath": "resources/newsound/random/orb.ogg",
+      "System": "assets",
+      "Verification": "Read installed Minecraft experience-orb pickup sound from the local asset index/resource; native sound retained if absent or playback fails"
+    }
+  ]
+}

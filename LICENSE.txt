@@ -1,0 +1,11 @@
+CultCraft original code: All rights reserved, 2026 CultCraft contributors.
+
+The creator authorized publication through Melty and remixes through Melty.
+No separate permission to redistribute the original project or game content is granted.
+
+Cult of the Lamb and all its content belong to Massive Monster and its respective rightsholders.
+Minecraft and all its content belong to Mojang/Microsoft and their respective rightsholders.
+CultCraft contains no redistributed content from either game. Each player supplies their own installed copies.
+
+BepInEx and Harmony are separate loader dependencies supplied by Melty, not bundled in this package.
+Original implementation prepared with assistance from OpenAI Codex.

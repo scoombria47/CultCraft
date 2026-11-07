@@ -1,0 +1,11 @@
+{
+  "name": "growths",
+  "columns": {"Id":"string","Scale":"float","System":"string","Verification":"string"},
+  "references": {"System":"systems.Id"},
+  "rows": [
+    {"Id":"sapling","Scale":1.0,"System":"buildings","Verification":"Native sapling GrowthStage1..2 uses authentic sapling cross model; its declared full height stays below every young tree crown"},
+    {"Id":"young","Scale":0.7,"System":"buildings","Verification":"Native sapling GrowthStage3..4 uses species small model at positive declared scale; no native collision or StartingScale changed"},
+    {"Id":"near_mature","Scale":0.85,"System":"buildings","Verification":"Native GrowthStage5 uses actual native adult variant profile reduced positively, avoiding shrink when a small tree matures"},
+    {"Id":"mature","Scale":1.0,"System":"buildings","Verification":"Native IsSapling=false uses actual native variant profile at its declared mature dimensions"}
+  ]
+}

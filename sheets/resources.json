@@ -1,0 +1,408 @@
+{
+  "name": "resources",
+  "columns": {
+    "Id": "string",
+    "NativeId": "int",
+    "Texture": "string",
+    "System": "string",
+    "Verification": "string"
+  },
+  "references": {
+    "Texture": "assets.Id",
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "wood",
+      "NativeId": 1,
+      "Texture": "oak_log",
+      "System": "resources",
+      "Verification": "Inspected InventoryItem.ITEM_TYPE.LOG=1"
+    },
+    {
+      "Id": "stone",
+      "NativeId": 2,
+      "Texture": "stone",
+      "System": "resources",
+      "Verification": "Inspected InventoryItem.ITEM_TYPE.STONE=2"
+    },
+    {
+      "Id": "berry",
+      "NativeId": 21,
+      "Texture": "berry",
+      "System": "resources",
+      "Verification": "Inspected installed InventoryItem.ITEM_TYPE numeric order; native item identity retained"
+    },
+    {
+      "Id": "meat",
+      "NativeId": 6,
+      "Texture": "raw_beef",
+      "System": "resources",
+      "Verification": "Inspected installed InventoryItem.ITEM_TYPE numeric order; native item identity retained"
+    },
+    {
+      "Id": "rotten_meat",
+      "NativeId": 61,
+      "Texture": "rotten_flesh",
+      "System": "resources",
+      "Verification": "Inspected installed InventoryItem.ITEM_TYPE numeric order; native item identity retained"
+    },
+    {
+      "Id": "berry_seed",
+      "NativeId": 8,
+      "Texture": "seeds",
+      "System": "resources",
+      "Verification": "Inspected installed InventoryItem.ITEM_TYPE numeric order; native item identity retained"
+    },
+    {
+      "Id": "morsel",
+      "NativeId": 105,
+      "Texture": "rabbit",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "follower_meat",
+      "NativeId": 62,
+      "Texture": "rotten_flesh",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "follower_rotten",
+      "NativeId": 63,
+      "Texture": "rotten_flesh",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "coins",
+      "NativeId": 20,
+      "Texture": "emerald",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "gold_nugget",
+      "NativeId": 83,
+      "Texture": "gold_nugget",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "gold_ingot",
+      "NativeId": 86,
+      "Texture": "gold_ingot",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "bone",
+      "NativeId": 9,
+      "Texture": "bone",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "grass",
+      "NativeId": 35,
+      "Texture": "grass",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "grass2",
+      "NativeId": 73,
+      "Texture": "grass",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "grass3",
+      "NativeId": 74,
+      "Texture": "grass",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "grass4",
+      "NativeId": 75,
+      "Texture": "grass",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "grass5",
+      "NativeId": 76,
+      "Texture": "grass",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "treasure_map",
+      "NativeId": 79,
+      "Texture": "filled_map",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "blueprint_scroll",
+      "NativeId": 23,
+      "Texture": "filled_map",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "decoration_scroll",
+      "NativeId": 40,
+      "Texture": "globe_banner_pattern",
+      "System": "resources",
+      "Verification": "Native FOUND_ITEM_DECORATION40; actual FoundItemPickUp.typeOfCard Decoration3 discriminant (PickUp.type NONE0); original Minecraft1.21.2 globe pattern icon"
+    },
+    {
+      "Id": "small_gift",
+      "NativeId": 43,
+      "Texture": "black_bundle",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "large_gift",
+      "NativeId": 44,
+      "Texture": "black_shulker_box",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE identity; presentation changes only"
+    },
+    {
+      "Id": "follower_form_scroll",
+      "NativeId": 52,
+      "Texture": "creeper_banner_pattern",
+      "System": "resources",
+      "Verification": "Native FOUND_ITEM_FOLLOWERSKIN52; actual FoundItemSkin prefab FoundItemPickUp.typeOfCard FollowerSkin6 (PickUp.type NONE0); original distinct Minecraft1.21.2 creeper pattern icon"
+    },
+    {
+      "Id": "decoration_scroll_alt",
+      "NativeId": 164,
+      "Texture": "globe_banner_pattern",
+      "System": "resources",
+      "Verification": "Native FOUND_ITEM_DECORATION_ALT164 preserved; decoration recipe presentation uses original Minecraft1.21.2 globe pattern icon"
+    },
+    {
+      "Id": "camellia",
+      "NativeId": 55,
+      "Texture": "poppy",
+      "System": "resources",
+      "Verification": "Native FLOWER_RED55 camellia reward/ingredient retains identity and quantities; original Minecraft poppy block texture for item/drop icons"
+    },
+    {
+      "Id": "camellia_wild",
+      "NativeId": 19,
+      "Texture": "poppy",
+      "System": "resources",
+      "Verification": "Actual SacredFlowers.prefab runtime DropLootOnDeath.LootToDrop=FLOWERS19; actual camellia reward and small3D pickup keep native identity"
+    },
+    {
+      "Id": "salmon_cotl",
+      "NativeId": 28,
+      "Texture": "cod",
+      "System": "resources",
+      "Verification": "Native inventory localization and enum identity verified"
+    },
+    {
+      "Id": "tuna_cotl",
+      "NativeId": 34,
+      "Texture": "salmon",
+      "System": "resources",
+      "Verification": "Native inventory localization and enum identity verified"
+    },
+    {
+      "Id": "blowfish",
+      "NativeId": 96,
+      "Texture": "pufferfish",
+      "System": "resources",
+      "Verification": "Native inventory localization and enum identity verified"
+    },
+    {
+      "Id": "log_refined",
+      "NativeId": 81,
+      "Texture": "oak_planks",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.LOG_REFINED=81; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "stone_refined",
+      "NativeId": 82,
+      "Texture": "stone_bricks",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.STONE_REFINED=82; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "crystal",
+      "NativeId": 89,
+      "Texture": "amethyst_shard",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.CRYSTAL=89; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "spider_web",
+      "NativeId": 90,
+      "Texture": "cobweb",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.SPIDER_WEB=90; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "silk_thread",
+      "NativeId": 132,
+      "Texture": "string",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.SILK_THREAD=132; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "shell",
+      "NativeId": 117,
+      "Texture": "nautilus_shell",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.SHELL=117; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "beetroot",
+      "NativeId": 97,
+      "Texture": "beetroot",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.BEETROOT=97; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "pumpkin",
+      "NativeId": 50,
+      "Texture": "pumpkin",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.PUMPKIN=50; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "cauliflower",
+      "NativeId": 102,
+      "Texture": "chorus_lime",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.CAULIFLOWER=102; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "mushroom_small",
+      "NativeId": 29,
+      "Texture": "red_mushroom",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.MUSHROOM_SMALL=29; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "grapes",
+      "NativeId": 151,
+      "Texture": "chorus_fruit",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.GRAPES=151; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "hops",
+      "NativeId": 150,
+      "Texture": "melon",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.HOPS=150; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "cotton",
+      "NativeId": 133,
+      "Texture": "bone_meal",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.COTTON=133; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "yolk",
+      "NativeId": 159,
+      "Texture": "egg",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.YOLK=159; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "poop",
+      "NativeId": 39,
+      "Texture": "brown_dye",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.POOP=39; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "poop_glow",
+      "NativeId": 144,
+      "Texture": "white_dye",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.POOP_GLOW=144; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "poop_gold",
+      "NativeId": 142,
+      "Texture": "yellow_dye",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.POOP_GOLD=142; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "poop_rainbow",
+      "NativeId": 143,
+      "Texture": "rainbow_dye",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.POOP_RAINBOW=143; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "poop_devotion",
+      "NativeId": 162,
+      "Texture": "green_dye",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.POOP_DEVOTION=162; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "seed_beetroot",
+      "NativeId": 98,
+      "Texture": "beetroot_seeds",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.SEED_BEETROOT=98; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "seed_pumpkin",
+      "NativeId": 51,
+      "Texture": "pumpkin_seeds",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.SEED_PUMPKIN=51; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "seed_cauliflower",
+      "NativeId": 103,
+      "Texture": "kelp",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.SEED_CAULIFLOWER=103; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "seed_cotton",
+      "NativeId": 140,
+      "Texture": "sugar",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.SEED_COTTON=140; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "seed_hops",
+      "NativeId": 152,
+      "Texture": "melon_seeds",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.SEED_HOPS=152; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "seed_mushroom",
+      "NativeId": 70,
+      "Texture": "spider_eye_red",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.SEED_MUSHROOM=70; creator requested presentation only, original quantity and gameplay preserved"
+    },
+    {
+      "Id": "seed_sozo",
+      "NativeId": 160,
+      "Texture": "brown_mushroom",
+      "System": "resources",
+      "Verification": "Actual inspected InventoryItem.ITEM_TYPE.SEED_SOZO=160; creator requested presentation only, original quantity and gameplay preserved"
+    }
+  ]
+}

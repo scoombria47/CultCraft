@@ -1,0 +1,267 @@
+{
+  "name": "settings",
+  "columns": {
+    "Id": "string",
+    "Value": "float",
+    "Text": "string",
+    "System": "string",
+    "Verification": "string"
+  },
+  "references": {
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "test_total_timeout",
+      "Value": 350.0,
+      "Text": "seconds",
+      "System": "testing",
+      "Verification": "Five-minute bounded integration run including official secondary client source readiness, native L lotus geometry, real pooled XP collection/reuse, straw/red beds and actual workbench, native B/FMOD, mineable rubble, kill slow motion and native weapon families; missing observations fail before runner closes"
+    },
+    {
+      "Id": "test_menu_settle",
+      "Value": 5.0,
+      "Text": "seconds",
+      "System": "testing",
+      "Verification": "Initial test timing to allow native UI Awake and startup assets to finish"
+    },
+    {
+      "Id": "test_world_settle",
+      "Value": 2.0,
+      "Text": "seconds",
+      "System": "testing",
+      "Verification": "Initial test timing; all checks additionally require observed native readiness"
+    },
+    {
+      "Id": "test_view_settle",
+      "Value": 1.5,
+      "Text": "seconds",
+      "System": "testing",
+      "Verification": "Leaves actual perspective and restored-view footage frames; camera and render state must still match observations"
+    },
+    {
+      "Id": "test_move_attempt",
+      "Value": 1.25,
+      "Text": "seconds per direction",
+      "System": "testing",
+      "Verification": "Initial native movement observation duration; up to four directions avoid initial obstacles"
+    },
+    {
+      "Id": "test_move_threshold",
+      "Value": 0.08,
+      "Text": "native XY units",
+      "System": "testing",
+      "Verification": "Minimum measured displacement above floating-point camera/animation noise"
+    },
+    {
+      "Id": "test_dungeon_scene",
+      "Value": 1.0,
+      "Text": "Use the live Darkwood doorway SceneName and native OnTriggerEnter2D",
+      "System": "testing",
+      "Verification": "MMTransition requires the native Dungeon1 asset-loading route; live serialized door destination is authoritative, legacy Game Biome 1 is not a full entry route"
+    },
+    {
+      "Id": "test_progression_base",
+      "Value": 1.0,
+      "Text": "native weapon level",
+      "System": "testing",
+      "Verification": "Explicit requested integration coverage: basic wooden material"
+    },
+    {
+      "Id": "test_progression_enchanted",
+      "Value": 2.0,
+      "Text": "native weapon level",
+      "System": "testing",
+      "Verification": "Explicit requested integration coverage: wooden SharpnessI and actual glint"
+    },
+    {
+      "Id": "test_progression_next_material",
+      "Value": 4.0,
+      "Text": "native weapon level",
+      "System": "testing",
+      "Verification": "Explicit requested integration coverage: stone material and enchantment reset"
+    },
+    {
+      "Id": "test_progression_settle",
+      "Value": 1.0,
+      "Text": "seconds",
+      "System": "testing",
+      "Verification": "Leaves actual footage frames for each native equip, LateUpdate material and glint change; observations still required"
+    },
+    {
+      "Id": "test_progression_timeout",
+      "Value": 3.0,
+      "Text": "seconds per material step",
+      "System": "testing",
+      "Verification": "Missing progression observations fail without blocking remaining checks"
+    },
+    {
+      "Id": "test_build_timeout",
+      "Value": 18.0,
+      "Text": "seconds after the actual world becomes ready",
+      "System": "testing",
+      "Verification": "Timing starts at first ready gameplay frame; require actual native bed plus CookingFire71 with retained colliders, actual interaction footprint anchor and both animated Minecraft UV strips advancing"
+    },
+    {
+      "Id": "test_build_distance",
+      "Value": 4.0,
+      "Text": "native XY units",
+      "System": "testing",
+      "Verification": "Isolated test-bed spawn offset from player; native BuildStructure owns actual construction state"
+    },
+    {
+      "Id": "test_bow_timeout",
+      "Value": 15.0,
+      "Text": "seconds",
+      "System": "testing",
+      "Verification": "Missing hostile or native HP loss explicitly fails; no assumed arrow success"
+    },
+    {
+      "Id": "test_bow_target_range",
+      "Value": 12.0,
+      "Text": "native XY units",
+      "System": "testing",
+      "Verification": "Initial maximum nearby live hostile search distance for actual arrow test"
+    },
+    {
+      "Id": "test_room_spawn_grace",
+      "Value": 3.0,
+      "Text": "seconds after actual room ready",
+      "System": "testing",
+      "Verification": "Wait for native CurrentRoom.Active and genuine enemy spawn phases before searching unlocked connected doors"
+    },
+    {
+      "Id": "test_room_transition_timeout",
+      "Value": 22.0,
+      "Text": "seconds per actual door trigger",
+      "System": "testing",
+      "Verification": "Bound real MMTransition/OnBiomeChangeRoom completion; no guessed direct scene loading"
+    },
+    {
+      "Id": "test_combat_preparation_timeout",
+      "Value": 55.0,
+      "Text": "seconds total after progression",
+      "System": "testing",
+      "Verification": "Bound natural combat-room preparation, transitions and hostile spawn waiting within total test deadline"
+    },
+    {
+      "Id": "test_combat_room_steps",
+      "Value": 5.0,
+      "Text": "maximum native connected door steps",
+      "System": "testing",
+      "Verification": "Only unlocked True or DungeonFirstRoom doors to actual connected unvisited native rooms; no enemy injection or position/HP assignments"
+    },
+    {
+      "Id": "test_hitstop_duration",
+      "Value": 0.2,
+      "Text": "native GameManager.HitStop seconds",
+      "System": "testing",
+      "Verification": "Calls actual native hitstop coroutine used by combat; observes real FPS render during zero-timescale frame without assigning Time.timeScale or health"
+    },
+    {
+      "Id": "test_camera_restore_cycles",
+      "Value": 3.0,
+      "Text": "perspective toggle cycles",
+      "System": "testing",
+      "Verification": "Require actual live FPS and canonical native -45/0/0 topdown view with original projection after three consecutive F5-equivalent toggles"
+    },
+    {
+      "Id": "test_food_timeout",
+      "Value": 8.0,
+      "Text": "seconds after bow observation",
+      "System": "testing",
+      "Verification": "Optional food proof uses actual digit3/LMB, real native inventory and passive HealthPlayer.Heal HP delta; waits only natural combat damage, never assigns player HP"
+    },
+    {
+      "Id": "test_progression_retries",
+      "Value": 3.0,
+      "Text": "maximum interrupted observation retries per native level",
+      "System": "testing",
+      "Verification": "A genuine asynchronous native pickup can replace level during test; retry only bounded3times with unchanged strict native level/material/glint/GetDamage and stable-duration requirements"
+    },
+    {
+      "Id": "test_progression_deadline",
+      "Value": 12.0,
+      "Text": "seconds absolute per native level including all retries",
+      "System": "testing",
+      "Verification": "One monotonic deadline survives native pickup animations/retries; no indefinite retry until pass. Existing perattempt3s and continuous successful1s proof remain"
+    },
+    {
+      "Id": "test_vegetation_timeout",
+      "Value": 32.0,
+      "Text": "seconds after native test world readiness",
+      "System": "testing",
+      "Verification": "Bound actual native tree/crop construction and geometry observations including native growth and harvest transitions; no pass on declared rows alone"
+    },
+    {
+      "Id": "test_vegetation_distance",
+      "Value": 6.0,
+      "Text": "native XY units from actual test player",
+      "System": "testing",
+      "Verification": "Isolated vegetation fixture offsets within initial native top-down scene; native BuildStructure owns all object and collision setup"
+    },
+    {
+      "Id": "test_vegetation_spacing",
+      "Value": 3.0,
+      "Text": "native XY units between initial test trees",
+      "System": "testing",
+      "Verification": "Four native variants are separate structures so actual small/large mesh bounds and species materials can be compared"
+    },
+    {
+      "Id": "test_vegetation_large_ratio",
+      "Value": 1.25,
+      "Text": "minimum rendered large/small height ratio",
+      "System": "testing",
+      "Verification": "Measure actual world mesh bounds on negative-Z height axis, not profile names or declared table dimensions"
+    },
+    {
+      "Id": "test_camera_effect_timeout",
+      "Value": 2.5,
+      "Text": "seconds per actual native combat effect",
+      "System": "testing",
+      "Verification": "Bounds real GameManager.HitStop and PlayerWeapon.DoSlowMo(true); observed zero/.2 timescale render frames still required"
+    },
+    {
+      "Id": "test_kill_slowmo_observe",
+      "Value": 0.85,
+      "Text": "unscaled seconds",
+      "System": "testing",
+      "Verification": "Native PlayerWeapon.SlowMo lasts .7 unscaled seconds; observe the real .2-timescale render interval and native recovery before movement"
+    },
+    {
+      "Id": "test_bleat_input_hold",
+      "Value": 0.25,
+      "Text": "unscaled seconds of real virtual B input",
+      "System": "testing",
+      "Verification": "Native InputManager owns B eligibility and BleatRoutine; no direct feedback/audio call can satisfy this proof"
+    },
+    {
+      "Id": "test_bleat_timeout",
+      "Value": 6.0,
+      "Text": "unscaled seconds after actual avatar readiness",
+      "System": "testing",
+      "Verification": "Require actual B key state, native BleatRoutine invocation, rendered crouch and FMOD channel playing for classic Minecraft hurt"
+    },
+    {
+      "Id": "test_axe_level",
+      "Value": 1.0,
+      "Text": "native weapon level",
+      "System": "testing",
+      "Verification": "Exact native EquipmentType.Axe100 at level1 must retain PrimaryEquipmentType.Axe and level while rendering Minecraft wooden_axe"
+    },
+    {
+      "Id": "test_axe_settle",
+      "Value": 0.6,
+      "Text": "seconds of continuous native axe and actual mesh proof",
+      "System": "testing",
+      "Verification": "Require native axe/level and positive textured wooden_axe mesh throughout the settle interval"
+    },
+    {
+      "Id": "test_axe_timeout",
+      "Value": 6.0,
+      "Text": "unscaled seconds absolute",
+      "System": "testing",
+      "Verification": "Bound native SetWeapon Axe100 fixture observation and restore the original captured native gear afterward"
+    }
+  ]
+}

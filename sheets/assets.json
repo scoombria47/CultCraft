@@ -1,0 +1,1896 @@
+{
+  "name": "assets",
+  "columns": {
+    "Id": "string",
+    "Entry": "string",
+    "Kind": "string",
+    "System": "string",
+    "Verification": "string",
+    "SourceJarVersion": "string"
+  },
+  "references": {
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "steve",
+      "Entry": "assets/minecraft/textures/entity/player/wide/steve.png",
+      "Kind": "skin",
+      "System": "avatar",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "wooden_sword",
+      "Entry": "assets/minecraft/textures/item/wooden_sword.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "stone_sword",
+      "Entry": "assets/minecraft/textures/item/stone_sword.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "iron_sword",
+      "Entry": "assets/minecraft/textures/item/iron_sword.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "diamond_sword",
+      "Entry": "assets/minecraft/textures/item/diamond_sword.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "netherite_sword",
+      "Entry": "assets/minecraft/textures/item/netherite_sword.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "bow",
+      "Entry": "assets/minecraft/textures/item/bow.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "crossbow_arrow",
+      "Entry": "assets/minecraft/textures/item/crossbow_arrow.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified authentic crossbow frame in installed Minecraft 1.21",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "crossbow_pulling_0",
+      "Entry": "assets/minecraft/textures/item/crossbow_pulling_0.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified authentic crossbow frame in installed Minecraft 1.21",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "crossbow_pulling_1",
+      "Entry": "assets/minecraft/textures/item/crossbow_pulling_1.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified authentic crossbow frame in installed Minecraft 1.21",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "crossbow_pulling_2",
+      "Entry": "assets/minecraft/textures/item/crossbow_pulling_2.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified authentic crossbow frame in installed Minecraft 1.21",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_crossbow",
+      "Entry": "assets/minecraft/models/item/crossbow.json",
+      "Kind": "model",
+      "System": "avatar",
+      "Verification": "Verified installed first and third person crossbow transforms",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "arrow_entity",
+      "Entry": "assets/minecraft/textures/entity/projectiles/arrow.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Authentic Minecraft 1.21 ArrowRenderer entity atlas. Installed renderer bytecode verified.",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "oak_log",
+      "Entry": "assets/minecraft/textures/block/oak_log.png",
+      "Kind": "block",
+      "System": "resources",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "oak_log_top",
+      "Entry": "assets/minecraft/textures/block/oak_log_top.png",
+      "Kind": "block",
+      "System": "resources",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "stone",
+      "Entry": "assets/minecraft/textures/block/stone.png",
+      "Kind": "block",
+      "System": "resources",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "oak_planks",
+      "Entry": "assets/minecraft/textures/block/oak_planks.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "cobblestone",
+      "Entry": "assets/minecraft/textures/block/cobblestone.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "crafting_table_top",
+      "Entry": "assets/minecraft/textures/block/crafting_table_top.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Verified in installed Minecraft 1.21 jar",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "sharpness_data",
+      "Entry": "data/minecraft/enchantment/sharpness.json",
+      "Kind": "data",
+      "System": "weapons",
+      "Verification": "Read installed Minecraft 1.21 enchantment JSON in place; linear damage effect",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "power_data",
+      "Entry": "data/minecraft/enchantment/power.json",
+      "Kind": "data",
+      "System": "weapons",
+      "Verification": "Read installed Minecraft 1.21 enchantment JSON in place; linear arrow damage effect",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "enchant_glint",
+      "Entry": "assets/minecraft/textures/misc/enchanted_glint_item.png",
+      "Kind": "effect",
+      "System": "weapons",
+      "Verification": "Verified in installed Minecraft 1.21 jar by visual subsystem agent",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "stone_pickaxe",
+      "Entry": "assets/minecraft/textures/item/stone_pickaxe.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "raw_beef",
+      "Entry": "assets/minecraft/textures/item/beef.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "berry",
+      "Entry": "assets/minecraft/textures/item/sweet_berries.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "rotten_flesh",
+      "Entry": "assets/minecraft/textures/item/rotten_flesh.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "seeds",
+      "Entry": "assets/minecraft/textures/item/wheat_seeds.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "oak_leaves",
+      "Entry": "assets/minecraft/textures/block/oak_leaves.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "furnace_front",
+      "Entry": "assets/minecraft/textures/block/furnace_front.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "furnace_side",
+      "Entry": "assets/minecraft/textures/block/furnace_side.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "furnace_top",
+      "Entry": "assets/minecraft/textures/block/furnace_top.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "crafting_table_side",
+      "Entry": "assets/minecraft/textures/block/crafting_table_side.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "crafting_table_front",
+      "Entry": "assets/minecraft/textures/block/crafting_table_front.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "red_bed",
+      "Entry": "assets/minecraft/textures/entity/bed/red.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "experience_orb",
+      "Entry": "assets/minecraft/textures/entity/experience_orb.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Verified in installed Minecraft 1.21 client; imported in memory only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "birch_log",
+      "Entry": "assets/minecraft/textures/block/birch_log.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "birch_log_top",
+      "Entry": "assets/minecraft/textures/block/birch_log_top.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "birch_leaves",
+      "Entry": "assets/minecraft/textures/block/birch_leaves.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "spruce_log",
+      "Entry": "assets/minecraft/textures/block/spruce_log.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "spruce_log_top",
+      "Entry": "assets/minecraft/textures/block/spruce_log_top.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "spruce_leaves",
+      "Entry": "assets/minecraft/textures/block/spruce_leaves.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "oak_sapling",
+      "Entry": "assets/minecraft/textures/block/oak_sapling.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "birch_sapling",
+      "Entry": "assets/minecraft/textures/block/birch_sapling.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "spruce_sapling",
+      "Entry": "assets/minecraft/textures/block/spruce_sapling.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "sweet_berry_bush_stage0",
+      "Entry": "assets/minecraft/textures/block/sweet_berry_bush_stage0.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "sweet_berry_bush_stage1",
+      "Entry": "assets/minecraft/textures/block/sweet_berry_bush_stage1.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "sweet_berry_bush_stage2",
+      "Entry": "assets/minecraft/textures/block/sweet_berry_bush_stage2.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "sweet_berry_bush_stage3",
+      "Entry": "assets/minecraft/textures/block/sweet_berry_bush_stage3.png",
+      "Kind": "texture",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "plant_cross_model",
+      "Entry": "assets/minecraft/models/block/cross.json",
+      "Kind": "data",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "oak_sapling_model",
+      "Entry": "assets/minecraft/models/block/oak_sapling.json",
+      "Kind": "data",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "birch_sapling_model",
+      "Entry": "assets/minecraft/models/block/birch_sapling.json",
+      "Kind": "data",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "spruce_sapling_model",
+      "Entry": "assets/minecraft/models/block/spruce_sapling.json",
+      "Kind": "data",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "sweet_berry_bush_stage0_model",
+      "Entry": "assets/minecraft/models/block/sweet_berry_bush_stage0.json",
+      "Kind": "data",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "sweet_berry_bush_stage1_model",
+      "Entry": "assets/minecraft/models/block/sweet_berry_bush_stage1.json",
+      "Kind": "data",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "sweet_berry_bush_stage2_model",
+      "Entry": "assets/minecraft/models/block/sweet_berry_bush_stage2.json",
+      "Kind": "data",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "sweet_berry_bush_stage3_model",
+      "Entry": "assets/minecraft/models/block/sweet_berry_bush_stage3.json",
+      "Kind": "data",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft Java1.21 entry verified; read in memory without extracting or redistributing",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "wooden_axe",
+      "Entry": "assets/minecraft/textures/item/wooden_axe.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "stone_axe",
+      "Entry": "assets/minecraft/textures/item/stone_axe.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "iron_axe",
+      "Entry": "assets/minecraft/textures/item/iron_axe.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "diamond_axe",
+      "Entry": "assets/minecraft/textures/item/diamond_axe.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "netherite_axe",
+      "Entry": "assets/minecraft/textures/item/netherite_axe.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "water_bucket",
+      "Entry": "assets/minecraft/textures/item/water_bucket.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "rabbit",
+      "Entry": "assets/minecraft/textures/item/rabbit.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gold_nugget",
+      "Entry": "assets/minecraft/textures/item/gold_nugget.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gold_ingot",
+      "Entry": "assets/minecraft/textures/item/gold_ingot.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "iron_nugget",
+      "Entry": "assets/minecraft/textures/item/iron_nugget.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "iron_ingot",
+      "Entry": "assets/minecraft/textures/item/iron_ingot.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "emerald",
+      "Entry": "assets/minecraft/textures/item/emerald.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "bone",
+      "Entry": "assets/minecraft/textures/item/bone.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "bundle",
+      "Entry": "assets/minecraft/textures/item/bundle.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "filled_map",
+      "Entry": "assets/minecraft/textures/item/filled_map.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "filled_map_markings",
+      "Entry": "assets/minecraft/textures/item/filled_map_markings.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "black_bundle",
+      "Entry": "assets/minecraft/textures/item/black_bundle.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Actual separate Minecraft1.21.2 closed black bundle texture; no tint or open front/back icon",
+      "SourceJarVersion": "1.21.2"
+    },
+    {
+      "Id": "black_shulker_box",
+      "Entry": "assets/minecraft/textures/block/black_shulker_box.png",
+      "Kind": "block_icon",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "grass_raw",
+      "Entry": "assets/minecraft/textures/block/short_grass.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "grass",
+      "Entry": "assets/minecraft/textures/block/short_grass.png",
+      "Kind": "tinted_texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "enchanting_table_book",
+      "Entry": "assets/minecraft/textures/entity/enchanting_table_book.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "enchanting_glyphs",
+      "Entry": "assets/minecraft/textures/font/ascii_sga.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "campfire_log",
+      "Entry": "assets/minecraft/textures/block/campfire_log.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "campfire_log_lit",
+      "Entry": "assets/minecraft/textures/block/campfire_log_lit.png",
+      "Kind": "animated_texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "campfire_fire",
+      "Entry": "assets/minecraft/textures/block/campfire_fire.png",
+      "Kind": "animated_texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "campfire_model",
+      "Entry": "assets/minecraft/models/block/campfire.json",
+      "Kind": "data",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "campfire_template_model",
+      "Entry": "assets/minecraft/models/block/template_campfire.json",
+      "Kind": "data",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "campfire_fire_animation",
+      "Entry": "assets/minecraft/textures/block/campfire_fire.png.mcmeta",
+      "Kind": "data",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "campfire_log_lit_animation",
+      "Entry": "assets/minecraft/textures/block/campfire_log_lit.png.mcmeta",
+      "Kind": "data",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_hotbar",
+      "Entry": "assets/minecraft/textures/gui/sprites/hud/hotbar.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_hotbar_selection",
+      "Entry": "assets/minecraft/textures/gui/sprites/hud/hotbar_selection.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_xp_background",
+      "Entry": "assets/minecraft/textures/gui/sprites/hud/experience_bar_background.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_xp_progress",
+      "Entry": "assets/minecraft/textures/gui/sprites/hud/experience_bar_progress.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "mc_font_ascii",
+      "Entry": "assets/minecraft/textures/font/ascii.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "mc_font_nonlatin",
+      "Entry": "assets/minecraft/textures/font/nonlatin_european.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "mc_font_accented",
+      "Entry": "assets/minecraft/textures/font/accented.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "mc_font_default_data",
+      "Entry": "assets/minecraft/font/include/default.json",
+      "Kind": "data",
+      "System": "assets",
+      "Verification": "Verified in installed Java1.21; runtime import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "mace",
+      "Entry": "assets/minecraft/textures/item/mace.png",
+      "Kind": "item",
+      "System": "weapons",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_berry",
+      "Entry": "assets/minecraft/models/item/sweet_berries.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_black_bundle",
+      "Entry": "assets/minecraft/models/item/black_bundle.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Actual Minecraft1.21.2 closed black bundle model, inherited generated display transforms",
+      "SourceJarVersion": "1.21.2"
+    },
+    {
+      "Id": "display_model_black_shulker_box",
+      "Entry": "assets/minecraft/models/item/black_shulker_box.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_bone",
+      "Entry": "assets/minecraft/models/item/bone.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_bow",
+      "Entry": "assets/minecraft/models/item/bow.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_cobblestone",
+      "Entry": "assets/minecraft/models/item/cobblestone.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_diamond_axe",
+      "Entry": "assets/minecraft/models/item/diamond_axe.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_diamond_sword",
+      "Entry": "assets/minecraft/models/item/diamond_sword.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_emerald",
+      "Entry": "assets/minecraft/models/item/emerald.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_filled_map",
+      "Entry": "assets/minecraft/models/item/filled_map.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_gold_ingot",
+      "Entry": "assets/minecraft/models/item/gold_ingot.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_gold_nugget",
+      "Entry": "assets/minecraft/models/item/gold_nugget.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_grass",
+      "Entry": "assets/minecraft/models/item/short_grass.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_iron_axe",
+      "Entry": "assets/minecraft/models/item/iron_axe.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_iron_sword",
+      "Entry": "assets/minecraft/models/item/iron_sword.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_mace",
+      "Entry": "assets/minecraft/models/item/mace.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_netherite_axe",
+      "Entry": "assets/minecraft/models/item/netherite_axe.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_netherite_sword",
+      "Entry": "assets/minecraft/models/item/netherite_sword.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_oak_log",
+      "Entry": "assets/minecraft/models/item/oak_log.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_oak_planks",
+      "Entry": "assets/minecraft/models/item/oak_planks.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_rabbit",
+      "Entry": "assets/minecraft/models/item/rabbit.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_raw_beef",
+      "Entry": "assets/minecraft/models/item/beef.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_rotten_flesh",
+      "Entry": "assets/minecraft/models/item/rotten_flesh.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_seeds",
+      "Entry": "assets/minecraft/models/item/wheat_seeds.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_stone",
+      "Entry": "assets/minecraft/models/item/stone.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_stone_axe",
+      "Entry": "assets/minecraft/models/item/stone_axe.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_stone_pickaxe",
+      "Entry": "assets/minecraft/models/item/stone_pickaxe.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_stone_sword",
+      "Entry": "assets/minecraft/models/item/stone_sword.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_water_bucket",
+      "Entry": "assets/minecraft/models/item/water_bucket.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_wooden_axe",
+      "Entry": "assets/minecraft/models/item/wooden_axe.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_wooden_sword",
+      "Entry": "assets/minecraft/models/item/wooden_sword.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_0",
+      "Entry": "assets/minecraft/models/block/block.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_1",
+      "Entry": "assets/minecraft/models/block/cobblestone.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_2",
+      "Entry": "assets/minecraft/models/block/cube.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_3",
+      "Entry": "assets/minecraft/models/block/cube_all.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_4",
+      "Entry": "assets/minecraft/models/block/cube_column.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_5",
+      "Entry": "assets/minecraft/models/block/oak_log.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_6",
+      "Entry": "assets/minecraft/models/block/oak_planks.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_7",
+      "Entry": "assets/minecraft/models/block/stone.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_8",
+      "Entry": "assets/minecraft/models/item/generated.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_9",
+      "Entry": "assets/minecraft/models/item/handheld.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_10",
+      "Entry": "assets/minecraft/models/item/handheld_mace.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "held_parent_11",
+      "Entry": "assets/minecraft/models/item/template_shulker_box.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Verified in installed official Java1.21; runtime RAM import only, no game assets shipped",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "straw_bed",
+      "Entry": "assets/minecraft/textures/block/straw_bed.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft26.3 straw bed: full original JSON face geometry/fringes/pillow and64x64atlas, runtimeRAMonly",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "straw_bed_head_model",
+      "Entry": "assets/minecraft/models/block/straw_bed_head.json",
+      "Kind": "data",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft26.3 straw bed: full original JSON face geometry/fringes/pillow and64x64atlas, runtimeRAMonly",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "straw_bed_foot_model",
+      "Entry": "assets/minecraft/models/block/straw_bed_foot.json",
+      "Kind": "data",
+      "System": "buildings",
+      "Verification": "Actual installed Minecraft26.3 straw bed: full original JSON face geometry/fringes/pillow and64x64atlas, runtimeRAMonly",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "gui_settings_slider_highlighted",
+      "Entry": "assets/minecraft/textures/gui/sprites/widget/slider_highlighted.png",
+      "Kind": "gui",
+      "System": "camera",
+      "Verification": "Actual installedMinecraft1.21 widget/background; runtime RAM import only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_settings_button_highlighted",
+      "Entry": "assets/minecraft/textures/gui/sprites/widget/button_highlighted.png",
+      "Kind": "gui",
+      "System": "camera",
+      "Verification": "Actual installedMinecraft1.21 widget/background; runtime RAM import only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_settings_button",
+      "Entry": "assets/minecraft/textures/gui/sprites/widget/button.png",
+      "Kind": "gui",
+      "System": "camera",
+      "Verification": "Actual installedMinecraft1.21 widget/background; runtime RAM import only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_settings_background",
+      "Entry": "assets/minecraft/textures/gui/inworld_menu_background.png",
+      "Kind": "gui",
+      "System": "camera",
+      "Verification": "Actual installedMinecraft1.21 widget/background; runtime RAM import only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_settings_button_meta",
+      "Entry": "assets/minecraft/textures/gui/sprites/widget/button.png.mcmeta",
+      "Kind": "data",
+      "System": "camera",
+      "Verification": "Actual installedMinecraft1.21 widget/background; runtime RAM import only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_settings_slider",
+      "Entry": "assets/minecraft/textures/gui/sprites/widget/slider.png",
+      "Kind": "gui",
+      "System": "camera",
+      "Verification": "Actual installedMinecraft1.21 widget/background; runtime RAM import only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_settings_slider_meta",
+      "Entry": "assets/minecraft/textures/gui/sprites/widget/slider.png.mcmeta",
+      "Kind": "data",
+      "System": "camera",
+      "Verification": "Actual installedMinecraft1.21 widget/background; runtime RAM import only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_settings_handle",
+      "Entry": "assets/minecraft/textures/gui/sprites/widget/slider_handle.png",
+      "Kind": "gui",
+      "System": "camera",
+      "Verification": "Actual installedMinecraft1.21 widget/background; runtime RAM import only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_settings_handle_meta",
+      "Entry": "assets/minecraft/textures/gui/sprites/widget/slider_handle.png.mcmeta",
+      "Kind": "data",
+      "System": "camera",
+      "Verification": "Actual installedMinecraft1.21 widget/background; runtime RAM import only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "gui_settings_handle_highlighted",
+      "Entry": "assets/minecraft/textures/gui/sprites/widget/slider_handle_highlighted.png",
+      "Kind": "gui",
+      "System": "camera",
+      "Verification": "Actual installedMinecraft1.21 widget/background; runtime RAM import only",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "enchanting_font_model",
+      "Entry": "assets/minecraft/font/alt.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "ActualMinecraftalt font provider char-to-glyph mapping; no guessed atlas positions",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/textures/item/creeper_banner_pattern.png",
+      "Kind": "item",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "creeper_banner_pattern",
+      "System": "resources",
+      "SourceJarVersion": "1.21.2"
+    },
+    {
+      "Entry": "assets/minecraft/textures/item/globe_banner_pattern.png",
+      "Kind": "item",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "globe_banner_pattern",
+      "System": "resources",
+      "SourceJarVersion": "1.21.2"
+    },
+    {
+      "Entry": "assets/minecraft/textures/block/poppy.png",
+      "Kind": "item",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "poppy",
+      "System": "resources",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/models/block/poppy.json",
+      "Kind": "data",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "poppy_model",
+      "System": "buildings",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/textures/block/rose_bush_bottom.png",
+      "Kind": "block",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "rose_bush_bottom",
+      "System": "buildings",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/textures/block/rose_bush_top.png",
+      "Kind": "block",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "rose_bush_top",
+      "System": "buildings",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/models/block/rose_bush_bottom.json",
+      "Kind": "data",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "rose_bush_bottom_model",
+      "System": "buildings",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/models/block/rose_bush_top.json",
+      "Kind": "data",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "rose_bush_top_model",
+      "System": "buildings",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/textures/gui/sprites/hud/crosshair_attack_indicator_background.png",
+      "Kind": "gui",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "gui_attack_crosshair_background",
+      "System": "camera",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/textures/gui/sprites/hud/crosshair_attack_indicator_progress.png",
+      "Kind": "gui",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "gui_attack_crosshair_progress",
+      "System": "camera",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/textures/gui/sprites/hud/crosshair_attack_indicator_full.png",
+      "Kind": "gui",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "gui_attack_crosshair_full",
+      "System": "camera",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/textures/gui/sprites/hud/hotbar_attack_indicator_background.png",
+      "Kind": "gui",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "gui_attack_hotbar_background",
+      "System": "camera",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Entry": "assets/minecraft/textures/gui/sprites/hud/hotbar_attack_indicator_progress.png",
+      "Kind": "gui",
+      "Verification": "Verified in declared official Minecraft client; runtime RAM import only; newer banner icons are distinct in 1.21.2",
+      "Id": "gui_attack_hotbar_progress",
+      "System": "camera",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "page_26",
+      "Entry": "assets/minecraft/textures/item/map.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Creator requested loose page icon from installed verified Minecraft26.3; native animation prop replacement only",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "red_bed_head26",
+      "Entry": "assets/minecraft/models/block/red_bed_head.json",
+      "Kind": "model",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "red_bed_foot26",
+      "Entry": "assets/minecraft/models/block/red_bed_foot.json",
+      "Kind": "model",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "template_bed_head26",
+      "Entry": "assets/minecraft/models/block/template_bed_head.json",
+      "Kind": "model",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "template_bed_foot26",
+      "Entry": "assets/minecraft/models/block/template_bed_foot.json",
+      "Kind": "model",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "template_bed26",
+      "Entry": "assets/minecraft/models/block/template_bed.json",
+      "Kind": "model",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "red_bed_head_east26",
+      "Entry": "assets/minecraft/textures/block/red_bed_head_east.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "red_bed_head_west26",
+      "Entry": "assets/minecraft/textures/block/red_bed_head_west.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "red_bed_head_up26",
+      "Entry": "assets/minecraft/textures/block/red_bed_head_up.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "red_bed_foot_east26",
+      "Entry": "assets/minecraft/textures/block/red_bed_foot_east.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "red_bed_foot_west26",
+      "Entry": "assets/minecraft/textures/block/red_bed_foot_west.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "red_bed_foot_up26",
+      "Entry": "assets/minecraft/textures/block/red_bed_foot_up.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "red_bed_foot_south26",
+      "Entry": "assets/minecraft/textures/block/red_bed_foot_south.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "bed_head_north26",
+      "Entry": "assets/minecraft/textures/block/bed_head_north.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "bed_down26",
+      "Entry": "assets/minecraft/textures/block/bed_down.png",
+      "Kind": "block",
+      "System": "buildings",
+      "Verification": "Original Minecraft26.3 red-bed block JSON and face textures; same explicit per-face importer as straw bed; proper Y rotation preserves pillow alignment",
+      "SourceJarVersion": "26.3"
+    },
+    {
+      "Id": "broom_bamboo_source",
+      "Entry": "assets/minecraft/textures/item/bamboo.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "broom_stick_source",
+      "Entry": "assets/minecraft/textures/item/stick.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "broom_string_source",
+      "Entry": "assets/minecraft/textures/item/string.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "broom_dead_bush",
+      "Entry": "assets/minecraft/textures/block/dead_bush.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "broom_birch",
+      "Entry": "assets/minecraft/textures/block/birch_sapling.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "broom_oak",
+      "Entry": "assets/minecraft/textures/block/oak_sapling.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "broom_spruce",
+      "Entry": "assets/minecraft/textures/block/spruce_sapling.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "broom_dark_oak",
+      "Entry": "assets/minecraft/textures/block/dark_oak_sapling.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "broom_sugar_cane",
+      "Entry": "assets/minecraft/textures/item/sugar_cane.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "broom_wheat",
+      "Entry": "assets/minecraft/textures/item/wheat.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "broom_brush",
+      "Entry": "assets/minecraft/textures/item/brush.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Installed Minecraft 1.21 source for native chore level broom visuals",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "cod",
+      "Entry": "assets/minecraft/textures/item/cod.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Installed Minecraft 1.21 fish item texture",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "salmon",
+      "Entry": "assets/minecraft/textures/item/salmon.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Installed Minecraft 1.21 fish item texture",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "pufferfish",
+      "Entry": "assets/minecraft/textures/item/pufferfish.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Installed Minecraft 1.21 fish item texture",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "fishing_rod",
+      "Entry": "assets/minecraft/textures/item/fishing_rod.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Read from owner Minecraft 1.21: native rod uncast/cast overrides and original fishing-hook entity atlas",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "fishing_rod_cast",
+      "Entry": "assets/minecraft/textures/item/fishing_rod_cast.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Read from owner Minecraft 1.21: native rod uncast/cast overrides and original fishing-hook entity atlas",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "fishing_hook",
+      "Entry": "assets/minecraft/textures/entity/fishing_hook.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Read from owner Minecraft 1.21: native rod uncast/cast overrides and original fishing-hook entity atlas",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_fishing_rod",
+      "Entry": "assets/minecraft/models/item/fishing_rod.json",
+      "Kind": "model",
+      "System": "avatar",
+      "Verification": "Read from owner Minecraft 1.21: native rod uncast/cast overrides and original fishing-hook entity atlas",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_fishing_rod_cast",
+      "Entry": "assets/minecraft/models/item/fishing_rod_cast.json",
+      "Kind": "model",
+      "System": "avatar",
+      "Verification": "Read from owner Minecraft 1.21: native rod uncast/cast overrides and original fishing-hook entity atlas",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_parent_handheld_rod",
+      "Entry": "assets/minecraft/models/item/handheld_rod.json",
+      "Kind": "model",
+      "System": "avatar",
+      "Verification": "Read from owner Minecraft 1.21: native rod uncast/cast overrides and original fishing-hook entity atlas",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "alex",
+      "Entry": "assets/minecraft/textures/entity/player/slim/alex.png",
+      "Kind": "skin",
+      "System": "avatar",
+      "Verification": "Installed 1.21 slim Alex default for native Goat; actual local co-op render probe",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "amethyst_shard",
+      "Entry": "assets/minecraft/textures/item/amethyst_shard.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "beetroot",
+      "Entry": "assets/minecraft/textures/item/beetroot.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "beetroot_seeds",
+      "Entry": "assets/minecraft/textures/item/beetroot_seeds.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "bone_meal",
+      "Entry": "assets/minecraft/textures/item/bone_meal.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "brown_dye",
+      "Entry": "assets/minecraft/textures/item/brown_dye.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "1.21.9"
+    },
+    {
+      "Id": "brown_mushroom",
+      "Entry": "assets/minecraft/textures/block/brown_mushroom.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "chorus_fruit",
+      "Entry": "assets/minecraft/textures/item/chorus_fruit.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "chorus_lime",
+      "Entry": "assets/minecraft/textures/item/chorus_fruit.png",
+      "Kind": "tinted_texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "cobweb",
+      "Entry": "assets/minecraft/textures/block/cobweb.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "egg",
+      "Entry": "assets/minecraft/textures/item/egg.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "green_dye",
+      "Entry": "assets/minecraft/textures/item/green_dye.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "1.21.9"
+    },
+    {
+      "Id": "kelp",
+      "Entry": "assets/minecraft/textures/item/kelp.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "lime_dye",
+      "Entry": "assets/minecraft/textures/item/lime_dye.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "1.21.9"
+    },
+    {
+      "Id": "melon",
+      "Entry": "assets/minecraft/textures/block/melon_side.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "melon_seeds",
+      "Entry": "assets/minecraft/textures/item/melon_seeds.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "melon_top",
+      "Entry": "assets/minecraft/textures/block/melon_top.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "nautilus_shell",
+      "Entry": "assets/minecraft/textures/item/nautilus_shell.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "pumpkin",
+      "Entry": "assets/minecraft/textures/block/pumpkin_side.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "pumpkin_seeds",
+      "Entry": "assets/minecraft/textures/item/pumpkin_seeds.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "pumpkin_top",
+      "Entry": "assets/minecraft/textures/block/pumpkin_top.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "rainbow_dye",
+      "Entry": "assets/minecraft/textures/item/lime_dye.png",
+      "Kind": "tinted_texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "1.21.9"
+    },
+    {
+      "Id": "red_mushroom",
+      "Entry": "assets/minecraft/textures/block/red_mushroom.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "spider_eye",
+      "Entry": "assets/minecraft/textures/item/spider_eye.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "spider_eye_red",
+      "Entry": "assets/minecraft/textures/item/spider_eye.png",
+      "Kind": "tinted_texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "stone_bricks",
+      "Entry": "assets/minecraft/textures/block/stone_bricks.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "string",
+      "Entry": "assets/minecraft/textures/item/string.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "sugar",
+      "Entry": "assets/minecraft/textures/item/sugar.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "white_dye",
+      "Entry": "assets/minecraft/textures/item/white_dye.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "1.21.9"
+    },
+    {
+      "Id": "yellow_dye",
+      "Entry": "assets/minecraft/textures/item/yellow_dye.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Creator 0.8.1 mapping; official client entry verified by preflight; RAM recolour only for named variants",
+      "SourceJarVersion": "1.21.9"
+    },
+    {
+      "Id": "black_shulker_entity",
+      "Entry": "assets/minecraft/textures/entity/shulker/shulker_black.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Actual primary1.21 ShulkerModel UV0,0 lid16x12x16 and UV0,28 base16x8x16 confirmed from client bytecode via official mappings; RAM closed block atlas",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "black_shulker_top",
+      "Entry": "assets/minecraft/textures/block/black_shulker_box.png",
+      "Kind": "texture",
+      "System": "resources",
+      "Verification": "Original top face only; resource icon now projects actual closed cube and world drop uses all six faces",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "kb_happy",
+      "Entry": "assets/minecraft/textures/particle/glint.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Original primary1.21 particle definitions happy_villager/angry_villager/heart/crit inspected in local client; native KB emotion callbacks own bursts",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "kb_angry",
+      "Entry": "assets/minecraft/textures/particle/angry.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Original primary1.21 particle definitions happy_villager/angry_villager/heart/crit inspected in local client; native KB emotion callbacks own bursts",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "kb_heart",
+      "Entry": "assets/minecraft/textures/particle/heart.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Original primary1.21 particle definitions happy_villager/angry_villager/heart/crit inspected in local client; native KB emotion callbacks own bursts",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "kb_crit",
+      "Entry": "assets/minecraft/textures/particle/critical_hit.png",
+      "Kind": "texture",
+      "System": "assets",
+      "Verification": "Original primary1.21 particle definitions happy_villager/angry_villager/heart/crit inspected in local client; native KB emotion callbacks own bursts",
+      "SourceJarVersion": "primary"
+    }
+  ]
+}

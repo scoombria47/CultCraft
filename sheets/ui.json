@@ -1,0 +1,176 @@
+{
+  "name": "ui",
+  "columns": {
+    "Id": "string",
+    "Value": "float",
+    "System": "string",
+    "Verification": "string"
+  },
+  "references": {
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "scale_screen_divisor",
+      "Value": 360.0,
+      "System": "integration",
+      "Verification": "Original UI sizing: integral Minecraft pixel scale from screen height, avoids bilinear fractional scaling"
+    },
+    {
+      "Id": "scale_min",
+      "Value": 2.0,
+      "System": "integration",
+      "Verification": "Original readable minimum screen-pixel multiplier"
+    },
+    {
+      "Id": "scale_max",
+      "Value": 4.0,
+      "System": "integration",
+      "Verification": "Original maximum screen-pixel multiplier for high-resolution screens"
+    },
+    {
+      "Id": "hotbar_slot_width",
+      "Value": 20.0,
+      "System": "integration",
+      "Verification": "Actual installed Minecraft hotbar182x22 has nine20px slots plus side borders"
+    },
+    {
+      "Id": "hotbar_width",
+      "Value": 62.0,
+      "System": "integration",
+      "Verification": "Three20px slots plus two native outer border pixels"
+    },
+    {
+      "Id": "hotbar_height",
+      "Value": 22.0,
+      "System": "integration",
+      "Verification": "Actual installed Minecraft hotbar texture height22"
+    },
+    {
+      "Id": "hotbar_bottom_gap",
+      "Value": 28.0,
+      "System": "integration",
+      "Verification": "Original reserved screen space for the pixel control hint below the bar"
+    },
+    {
+      "Id": "name_line_offset",
+      "Value": 24.0,
+      "System": "integration",
+      "Verification": "Original vertical separation of selected name above the hotbar in logical font pixels"
+    },
+    {
+      "Id": "enchantment_line_offset",
+      "Value": 12.0,
+      "System": "integration",
+      "Verification": "Original second pixel text line above the hotbar"
+    },
+    {
+      "Id": "xp_top_offset",
+      "Value": 15.0,
+      "System": "integration",
+      "Verification": "Original top-center Minecraft progress-bar margin in logical UI pixels"
+    },
+    {
+      "Id": "orb_world_size",
+      "Value": 0.35,
+      "System": "integration",
+      "Verification": "Original visual orb size in native world units; collection amount and target untouched"
+    },
+    {
+      "Id": "orb_cutout",
+      "Value": 0.1,
+      "System": "integration",
+      "Verification": "Clip transparent atlas pixels while keeping authentic Minecraft orb glyph edge"
+    },
+    {
+      "Id": "settings_width",
+      "Value": 304.0,
+      "System": "camera",
+      "Verification": "Original modal layout in logical Minecraft pixels, integer screen scaling and game-language pixel labels"
+    },
+    {
+      "Id": "settings_height",
+      "Value": 374.0,
+      "System": "camera",
+      "Verification": "Original modal layout in logical Minecraft pixels, integer screen scaling and game-language pixel labels"
+    },
+    {
+      "Id": "settings_screen_margin",
+      "Value": 8.0,
+      "System": "camera",
+      "Verification": "Original modal layout in logical Minecraft pixels, integer screen scaling and game-language pixel labels"
+    },
+    {
+      "Id": "settings_padding",
+      "Value": 16.0,
+      "System": "camera",
+      "Verification": "Original modal layout in logical Minecraft pixels, integer screen scaling and game-language pixel labels"
+    },
+    {
+      "Id": "settings_title_y",
+      "Value": 14.0,
+      "System": "camera",
+      "Verification": "Original modal layout in logical Minecraft pixels, integer screen scaling and game-language pixel labels"
+    },
+    {
+      "Id": "settings_first_slider_y",
+      "Value": 42.0,
+      "System": "camera",
+      "Verification": "Original modal layout in logical Minecraft pixels, integer screen scaling and game-language pixel labels"
+    },
+    {
+      "Id": "settings_slider_gap",
+      "Value": 46.0,
+      "System": "camera",
+      "Verification": "Original modal layout in logical Minecraft pixels, integer screen scaling and game-language pixel labels"
+    },
+    {
+      "Id": "settings_button_y",
+      "Value": 320.0,
+      "System": "camera",
+      "Verification": "Original modal layout in logical Minecraft pixels, integer screen scaling and game-language pixel labels"
+    },
+    {
+      "Id": "settings_hint_y",
+      "Value": 354.0,
+      "System": "camera",
+      "Verification": "Original modal layout in logical Minecraft pixels, integer screen scaling and game-language pixel labels"
+    },
+    {
+      "Id": "settings_control_height",
+      "Value": 20.0,
+      "System": "camera",
+      "Verification": "Actual installed Minecraft1.21 button/slider sprite and nine-slice metadata height20"
+    },
+    {
+      "Id": "settings_button_gap",
+      "Value": 8.0,
+      "System": "camera",
+      "Verification": "Original modal layout in logical Minecraft pixels, integer screen scaling and game-language pixel labels"
+    },
+    {
+      "Id": "settings_handle_width",
+      "Value": 8.0,
+      "System": "camera",
+      "Verification": "Actual installed Minecraft1.21 slider_handle sprite and nine-slice metadata width8"
+    },
+    {
+      "Id": "attack_crosshair_offset",
+      "Value": 9.0,
+      "System": "weapons",
+      "Verification": "Minecraft attack indicator placement in logical pixel units; authentic16x4/16x16crosshair and18x18hotbar sprites, no combat timing/damage change"
+    },
+    {
+      "Id": "attack_hotbar_gap",
+      "Value": 4.0,
+      "System": "weapons",
+      "Verification": "Minecraft attack indicator placement in logical pixel units; authentic16x4/16x16crosshair and18x18hotbar sprites, no combat timing/damage change"
+    },
+    {
+      "Id": "attack_hotbar_y",
+      "Value": 2.0,
+      "System": "weapons",
+      "Verification": "Minecraft attack indicator placement in logical pixel units; authentic16x4/16x16crosshair and18x18hotbar sprites, no combat timing/damage change"
+    }
+  ]
+}

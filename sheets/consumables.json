@@ -1,0 +1,108 @@
+{
+  "name": "consumables",
+  "columns": {
+    "Id": "string",
+    "NativeId": "int",
+    "Texture": "string",
+    "UseSeconds": "float",
+    "Healing": "float",
+    "Cooldown": "float",
+    "System": "string",
+    "Verification": "string",
+    "Heart": "string"
+  },
+  "references": {
+    "Texture": "assets.Id",
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "raw_beef",
+      "NativeId": 6,
+      "Texture": "raw_beef",
+      "UseSeconds": 1.2,
+      "Healing": 2,
+      "Cooldown": 0.6,
+      "System": "weapons",
+      "Verification": "Creator-specified effect in native half-heart units per unreserved item",
+      "Heart": "red"
+    },
+    {
+      "Id": "morsel",
+      "NativeId": 105,
+      "Texture": "rabbit",
+      "UseSeconds": 1.2,
+      "Healing": 1,
+      "Cooldown": 0.6,
+      "System": "weapons",
+      "Verification": "Creator-specified effect in native half-heart units per unreserved item",
+      "Heart": "red"
+    },
+    {
+      "Id": "follower_meat",
+      "NativeId": 62,
+      "Texture": "rotten_flesh",
+      "UseSeconds": 1.2,
+      "Healing": 1,
+      "Cooldown": 0.6,
+      "System": "weapons",
+      "Verification": "Creator-specified effect in native half-heart units per unreserved item",
+      "Heart": "blue"
+    },
+    {
+      "Id": "camellia",
+      "NativeId": 55,
+      "Texture": "poppy",
+      "UseSeconds": 1.2,
+      "Healing": 1,
+      "Cooldown": 0.6,
+      "System": "weapons",
+      "Verification": "Creator-specified effect in native half-heart units per unreserved item",
+      "Heart": "red"
+    },
+    {
+      "Id": "berry",
+      "NativeId": 21,
+      "Texture": "berry",
+      "UseSeconds": 1.2,
+      "Healing": 1,
+      "Cooldown": 0.6,
+      "System": "weapons",
+      "Verification": "Creator-specified effect in native half-heart units per unreserved item",
+      "Heart": "red"
+    },
+    {
+      "Id": "salmon_cotl",
+      "NativeId": 28,
+      "Texture": "cod",
+      "UseSeconds": 1.2,
+      "Healing": 1,
+      "Cooldown": 0.6,
+      "System": "weapons",
+      "Verification": "Creator-specified effect in native half-heart units per unreserved item",
+      "Heart": "red"
+    },
+    {
+      "Id": "tuna_cotl",
+      "NativeId": 34,
+      "Texture": "salmon",
+      "UseSeconds": 1.2,
+      "Healing": 2,
+      "Cooldown": 0.6,
+      "System": "weapons",
+      "Verification": "Creator-specified effect in native half-heart units per unreserved item",
+      "Heart": "red"
+    },
+    {
+      "Id": "blowfish",
+      "NativeId": 96,
+      "Texture": "pufferfish",
+      "UseSeconds": 1.2,
+      "Healing": 2,
+      "Cooldown": 0.6,
+      "System": "weapons",
+      "Verification": "Creator-specified effect in native half-heart units per unreserved item",
+      "Heart": "diseased"
+    }
+  ]
+}

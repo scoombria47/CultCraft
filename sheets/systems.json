@@ -1,0 +1,15 @@
+{
+  "name": "systems",
+  "columns": {"Id":"string","Behavior":"string","Owner":"string","Verification":"string"},
+  "references": {},
+  "rows": [
+    {"Id":"assets","Behavior":"Read authentic Minecraft assets in memory from the player's installed client jar; never redistribute game content","Owner":"MinecraftAssets","Verification":"Creator requests both games; local Minecraft 1.21 jar inspected"},
+    {"Id":"avatar","Behavior":"Replace the visible Lamb body with a textured cuboid Minecraft character; keep native collisions, animations and interactions","Owner":"MinecraftAvatar","Verification":"Creator design; PlayerFarming.Spine metadata inspected"},
+    {"Id":"camera","Behavior":"Toggle vanilla top-down and independent playable first-person camera; rotate billboards, restore during menus and cutscenes","Owner":"CameraRig","Verification":"Creator design; PhotoModeCamera/PhotoModeManager and XY plane inspected"},
+    {"Id":"weapons","Behavior":"Minecraft sword material progresses with native weapon level; retain native melee and add bow shooting and enchantment bonuses","Owner":"Gameplay","Verification":"Creator design; PlayerWeapon.SetWeapon inspected"},
+    {"Id":"resources","Behavior":"Display Minecraft wood and stone using native inventory identities and native gathering economy","Owner":"Gameplay","Verification":"Creator design; InventoryItem LOG=1 STONE=2 inspected"},
+    {"Id":"buildings","Behavior":"Minecraft visual treatment for initialized native cult buildings while preserving construction, work, save identities and original collision states","Owner":"Gameplay","Verification":"Creator design; native placement assigns Brain/data to a root or child Structure; only overlay configured structures and retain original collision references/states"},
+    {"Id":"testing","Behavior":"Only under Melty test marker, operate a separate test state and report observations after real in-game behavior","Owner":"SelfTest","Verification":"Melty validate_recipe cultcraft C# protocol"},
+    {"Id":"integration","Behavior":"Cult of the Lamb is primary, installed Minecraft is companion; BepInEx 5 installed by Melty; single-player","Owner":"Plugin","Verification":"Creator chose solo; Melty game_info and early validate_recipe passed"}
+  ]
+}

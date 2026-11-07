@@ -1,0 +1,62 @@
+{
+  "name": "cameras",
+  "columns": {
+    "Id": "string",
+    "Perspective": "bool",
+    "DisableDepthOfField": "bool",
+    "Fov": "float",
+    "EyeHeight": "float",
+    "MouseSensitivity": "float",
+    "MouseHorizontalAxis": "int",
+    "MouseVerticalAxis": "int",
+    "PitchLimit": "float",
+    "RefreshSeconds": "float",
+    "ControllerLookSpeed": "float",
+    "NearClip": "float",
+    "BillboardDistance": "float",
+    "SpriteTiltThreshold": "float",
+    "System": "string",
+    "Verification": "string"
+  },
+  "references": {
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "top_down",
+      "Perspective": false,
+      "DisableDepthOfField": false,
+      "Fov": 0.0,
+      "EyeHeight": 0.0,
+      "MouseSensitivity": 0.0,
+      "MouseHorizontalAxis": 0,
+      "MouseVerticalAxis": 1,
+      "PitchLimit": 0.0,
+      "RefreshSeconds": 0.0,
+      "ControllerLookSpeed": 0.0,
+      "NearClip": 0.0,
+      "BillboardDistance": 0.0,
+      "SpriteTiltThreshold": 0.0,
+      "System": "camera",
+      "Verification": "Native CameraFollowTarget resets to Quaternion.Euler(-45,0,0); enforce native roll and restore captured projection outside genuine target-camera cutscenes"
+    },
+    {
+      "Id": "first_person",
+      "Perspective": true,
+      "DisableDepthOfField": true,
+      "Fov": 75.0,
+      "EyeHeight": 1.4,
+      "MouseSensitivity": 0.15,
+      "MouseHorizontalAxis": 0,
+      "MouseVerticalAxis": 1,
+      "PitchLimit": 55.0,
+      "RefreshSeconds": 0.75,
+      "ControllerLookSpeed": 120.0,
+      "NearClip": 0.03,
+      "BillboardDistance": 24.0,
+      "SpriteTiltThreshold": 0.25,
+      "System": "camera",
+      "Verification": "Creator playtest fixes: persistent F6 sensitivity .02..1 and FOV55..110; character-only cached billboards and visible-actor LOD; fixed cardinal static prop visual leaves; no broad per-refresh scene scans; hitstop preserves FPS; requires new runtime performance and transition review"
+    }
+  ]
+}

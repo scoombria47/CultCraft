@@ -1,0 +1,12 @@
+{
+  "name":"weapons",
+  "columns":{"Id":"string","Texture":"string","MinLevel":"int","DamageMultiplier":"float","BowDamage":"float","Cooldown":"float","System":"string","Verification":"string"},
+  "references":{"Texture":"assets.Id","System":"systems.Id"},
+  "rows":[
+    {"Id":"wooden_sword","Texture":"wooden_sword","MinLevel":1,"DamageMultiplier":1.0,"BowDamage":2.0,"Cooldown":0.75,"System":"weapons","Verification":"Creator requested material progression; initial balance to verify in gameplay"},
+    {"Id":"stone_sword","Texture":"stone_sword","MinLevel":4,"DamageMultiplier":1.05,"BowDamage":2.5,"Cooldown":0.70,"System":"weapons","Verification":"Creator requested material progression; initial balance to verify in gameplay"},
+    {"Id":"iron_sword","Texture":"iron_sword","MinLevel":7,"DamageMultiplier":1.10,"BowDamage":3.0,"Cooldown":0.65,"System":"weapons","Verification":"Creator requested material progression; initial balance to verify in gameplay"},
+    {"Id":"diamond_sword","Texture":"diamond_sword","MinLevel":10,"DamageMultiplier":1.15,"BowDamage":3.5,"Cooldown":0.60,"System":"weapons","Verification":"Creator requested material progression; initial balance to verify in gameplay"},
+    {"Id":"netherite_sword","Texture":"netherite_sword","MinLevel":13,"DamageMultiplier":1.20,"BowDamage":4.0,"Cooldown":0.55,"System":"weapons","Verification":"Creator requested material progression; initial balance to verify in gameplay"}
+  ]
+}

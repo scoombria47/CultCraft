@@ -1,0 +1,470 @@
+{
+  "name": "visuals",
+  "columns": {
+    "Id": "string",
+    "Value": "float",
+    "System": "string",
+    "Verification": "string"
+  },
+  "references": {
+    "System": "systems.Id"
+  },
+  "rows": [
+    {
+      "Id": "pixel_size",
+      "Value": 0.05,
+      "System": "avatar",
+      "Verification": "Design: 32 skin pixels produce a 1.6 unit tall avatar; runtime appearance to verify"
+    },
+    {
+      "Id": "body_pixels",
+      "Value": 32,
+      "System": "avatar",
+      "Verification": "Minecraft wide player head 8 plus torso 12 plus legs 12"
+    },
+    {
+      "Id": "eye_pixels",
+      "Value": 28,
+      "System": "avatar",
+      "Verification": "Design: first person eye near center of 8 pixel head"
+    },
+    {
+      "Id": "skin_size",
+      "Value": 64,
+      "System": "avatar",
+      "Verification": "Verified modern wide Steve PNG dimensions from installed 1.21 client"
+    },
+    {
+      "Id": "move_full_speed",
+      "Value": 4,
+      "System": "avatar",
+      "Verification": "Design: full walk stride at four Cult units per second"
+    },
+    {
+      "Id": "walk_frequency",
+      "Value": 12,
+      "System": "avatar",
+      "Verification": "Design: Minecraft style opposite arm and leg walking phase"
+    },
+    {
+      "Id": "walk_degrees",
+      "Value": 36,
+      "System": "avatar",
+      "Verification": "Design: arm and leg walk swing amplitude"
+    },
+    {
+      "Id": "swing_duration",
+      "Value": 0.36,
+      "System": "avatar",
+      "Verification": "Design: attack animation synchronized to COTL attack state entry"
+    },
+    {
+      "Id": "body_bob",
+      "Value": 0.025,
+      "System": "avatar",
+      "Verification": "Design: subtle walking vertical movement"
+    },
+    {
+      "Id": "default_facing",
+      "Value": 270,
+      "System": "avatar",
+      "Verification": "Design: face south when no StateMachine is available"
+    },
+    {
+      "Id": "ground_yaw_offset",
+      "Value": -90,
+      "System": "avatar",
+      "Verification": "Source verified: COTL movement XY; model forward +Z maps to +Y by -90 X rotation"
+    },
+    {
+      "Id": "ground_pitch",
+      "Value": -90,
+      "System": "avatar",
+      "Verification": "Source verified: COTL player visual elevation uses negative Z"
+    },
+    {
+      "Id": "minimum_scale",
+      "Value": 0.25,
+      "System": "avatar",
+      "Verification": "Design: retain visibility under malformed relic scale values"
+    },
+    {
+      "Id": "arm_rest_roll",
+      "Value": 2,
+      "System": "avatar",
+      "Verification": "Design: small relaxed arm separation"
+    },
+    {
+      "Id": "attack_arm_pitch",
+      "Value": 108,
+      "System": "avatar",
+      "Verification": "Design: Minecraft style hit swing with actual COTL combat state"
+    },
+    {
+      "Id": "attack_arm_yaw",
+      "Value": 24,
+      "System": "avatar",
+      "Verification": "Design: attack arm crossing motion"
+    },
+    {
+      "Id": "attack_arm_roll",
+      "Value": 18,
+      "System": "avatar",
+      "Verification": "Design: attack arm crossing motion"
+    },
+    {
+      "Id": "attack_torso_yaw",
+      "Value": 15,
+      "System": "avatar",
+      "Verification": "Design: body follow through"
+    },
+    {
+      "Id": "attack_head_yaw",
+      "Value": 8,
+      "System": "avatar",
+      "Verification": "Design: head follow through"
+    },
+    {
+      "Id": "head_idle_frequency",
+      "Value": 1.6,
+      "System": "avatar",
+      "Verification": "Design: small idle head movement"
+    },
+    {
+      "Id": "head_idle_degrees",
+      "Value": 1.5,
+      "System": "avatar",
+      "Verification": "Design: small idle head movement"
+    },
+    {
+      "Id": "dodge_degrees",
+      "Value": 55,
+      "System": "avatar",
+      "Verification": "Design: tilt on existing COTL Dodge state"
+    },
+    {
+      "Id": "death_degrees",
+      "Value": 80,
+      "System": "avatar",
+      "Verification": "Design: fall on existing COTL Dead state"
+    },
+    {
+      "Id": "view_bob",
+      "Value": 0.015,
+      "System": "avatar",
+      "Verification": "Design: subtle first person hand walk bob"
+    },
+    {
+      "Id": "item_world_size",
+      "Value": 0.8,
+      "System": "avatar",
+      "Verification": "Design: generated item edge length equals 16 skin pixels"
+    },
+    {
+      "Id": "item_half_depth",
+      "Value": 0.5,
+      "System": "avatar",
+      "Verification": "Minecraft builtin generated item extrusion depth is one texture pixel"
+    },
+    {
+      "Id": "item_view_scale",
+      "Value": 1.0,
+      "System": "avatar",
+      "Verification": "Use genuine contextual display scale without additional guessed shrink factor"
+    },
+    {
+      "Id": "item_attach_pitch",
+      "Value": -90,
+      "System": "avatar",
+      "Verification": "Design: convert original Minecraft held item coordinates into arm coordinates"
+    },
+    {
+      "Id": "front_shade",
+      "Value": 1,
+      "System": "avatar",
+      "Verification": "Design: face vertex tint when active shader supports vertex colors"
+    },
+    {
+      "Id": "back_shade",
+      "Value": 0.8,
+      "System": "avatar",
+      "Verification": "Design: face vertex tint when active shader supports vertex colors"
+    },
+    {
+      "Id": "left_shade",
+      "Value": 0.82,
+      "System": "avatar",
+      "Verification": "Design: face vertex tint when active shader supports vertex colors"
+    },
+    {
+      "Id": "right_shade",
+      "Value": 0.88,
+      "System": "avatar",
+      "Verification": "Design: face vertex tint when active shader supports vertex colors"
+    },
+    {
+      "Id": "top_shade",
+      "Value": 1,
+      "System": "avatar",
+      "Verification": "Design: face vertex tint when active shader supports vertex colors"
+    },
+    {
+      "Id": "bottom_shade",
+      "Value": 0.65,
+      "System": "avatar",
+      "Verification": "Design: face vertex tint when active shader supports vertex colors"
+    },
+    {
+      "Id": "geometry_alpha_threshold",
+      "Value": 0.5,
+      "System": "avatar",
+      "Verification": "Design: omit transparent texture pixels instead of relying on shader alpha blending"
+    },
+    {
+      "Id": "material_queue",
+      "Value": 2450,
+      "System": "avatar",
+      "Verification": "Design: render authentic cuboids alongside opaque COTL sprites before transparent effects"
+    },
+    {
+      "Id": "damage_flash_duration",
+      "Value": 0.35,
+      "System": "avatar",
+      "Verification": "Presentation duration after actual native Health.OnHit; no HP mutation"
+    },
+    {
+      "Id": "feedback_volume",
+      "Value": 0.65,
+      "System": "avatar",
+      "Verification": "Local clip gain multiplied by live native Settings.Audio.MasterVolume and SFXVolume"
+    },
+    {
+      "Id": "bleat_duration",
+      "Value": 0.4,
+      "System": "avatar",
+      "Verification": "Verified native PlayerFarming.BleatRoutine duration; only presentation is replaced"
+    },
+    {
+      "Id": "bleat_crouch_hold",
+      "Value": 0.45,
+      "System": "avatar",
+      "Verification": "Crouch pose spans the native short B action"
+    },
+    {
+      "Id": "meditation_drop",
+      "Value": 0.46,
+      "System": "avatar",
+      "Verification": "Seated hip height .14 keeps the rotated rigid leg cubes above the native ground plane"
+    },
+    {
+      "Id": "crouch_drop",
+      "Value": 0.08,
+      "System": "avatar",
+      "Verification": "Short native B action crouch torso offset"
+    },
+    {
+      "Id": "warp_out_hide_start",
+      "Value": 0.35,
+      "System": "avatar",
+      "Verification": "Presentation normalized phase during actual native warp-out track"
+    },
+    {
+      "Id": "warp_out_hide_end",
+      "Value": 0.68,
+      "System": "avatar",
+      "Verification": "Presentation normalized phase during actual native warp-out track"
+    },
+    {
+      "Id": "warp_in_show_start",
+      "Value": 0.1,
+      "System": "avatar",
+      "Verification": "Presentation normalized phase during actual native warp-in track"
+    },
+    {
+      "Id": "warp_in_show_end",
+      "Value": 0.45,
+      "System": "avatar",
+      "Verification": "Presentation normalized phase during actual native warp-in track"
+    },
+    {
+      "Id": "bow_release_duration",
+      "Value": 0.25,
+      "System": "avatar",
+      "Verification": "Short visual recoil after a real custom bow shot"
+    },
+    {
+      "Id": "build_item_cycle",
+      "Value": 0.65,
+      "System": "avatar",
+      "Verification": "Declared presentation value; native action/progress remains authoritative and no collision/economy changes"
+    },
+    {
+      "Id": "book_open_speed",
+      "Value": 5,
+      "System": "avatar",
+      "Verification": "Declared presentation value; native action/progress remains authoritative and no collision/economy changes"
+    },
+    {
+      "Id": "book_size",
+      "Value": 0.8,
+      "System": "avatar",
+      "Verification": "Declared presentation value; native action/progress remains authoritative and no collision/economy changes"
+    },
+    {
+      "Id": "book_world_y",
+      "Value": 0.45,
+      "System": "avatar",
+      "Verification": "Declared presentation value; native action/progress remains authoritative and no collision/economy changes"
+    },
+    {
+      "Id": "book_world_z",
+      "Value": 0.45,
+      "System": "avatar",
+      "Verification": "Declared presentation value; native action/progress remains authoritative and no collision/economy changes"
+    },
+    {
+      "Id": "book_view_y",
+      "Value": -0.18,
+      "System": "avatar",
+      "Verification": "Declared presentation value; native action/progress remains authoritative and no collision/economy changes"
+    },
+    {
+      "Id": "book_view_z",
+      "Value": 0.75,
+      "System": "avatar",
+      "Verification": "Declared presentation value; native action/progress remains authoritative and no collision/economy changes"
+    },
+    {
+      "Id": "campfire_model_size",
+      "Value": 1.15,
+      "System": "buildings",
+      "Verification": "Declared presentation value; native action/progress remains authoritative and no collision/economy changes"
+    },
+    {
+      "Id": "view_item_reference_fov",
+      "Value": 75,
+      "System": "avatar",
+      "Verification": "Scale viewmodel with FOV tangent so requested right placement and projected size remain stable at supported55..110 degrees"
+    },
+    {
+      "Id": "mc_hand_x",
+      "Value": 0.56,
+      "System": "avatar",
+      "Verification": "Native ItemInHandRenderer right-hand origin before per-item contextual display"
+    },
+    {
+      "Id": "mc_hand_y",
+      "Value": -0.52,
+      "System": "avatar",
+      "Verification": "Native idle equip translation, source bytecode"
+    },
+    {
+      "Id": "mc_hand_z",
+      "Value": 0.72,
+      "System": "avatar",
+      "Verification": "Native camera -Z forward converted to Unity +Z forward"
+    },
+    {
+      "Id": "mc_item_arm_pitch",
+      "Value": 18,
+      "System": "avatar",
+      "Verification": "Native HumanoidModel ITEM arm pitch=-pi/10 in idle/walk"
+    },
+    {
+      "Id": "meditation_hip_out",
+      "Value": 0.02,
+      "System": "avatar",
+      "Verification": "Move upper leg joints slightly outward within the seated pelvis"
+    },
+    {
+      "Id": "meditation_leg_front",
+      "Value": 0.08,
+      "System": "avatar",
+      "Verification": "Crossed leg joints sit in front of the pelvis in +Z"
+    },
+    {
+      "Id": "meditation_cross_offset",
+      "Value": 0.035,
+      "System": "avatar",
+      "Verification": "Stagger crossing rigid legs slightly in depth"
+    },
+    {
+      "Id": "meditation_leg_pitch",
+      "Value": -87,
+      "System": "avatar",
+      "Verification": "Seated legs extend forward almost horizontally"
+    },
+    {
+      "Id": "meditation_leg_cross",
+      "Value": 40,
+      "System": "avatar",
+      "Verification": "Each leg crosses toward the opposite side forming an X"
+    },
+    {
+      "Id": "meditation_arm_pitch",
+      "Value": -35,
+      "System": "avatar",
+      "Verification": "Hands reach forward/down onto crossed-leg upper surface"
+    },
+    {
+      "Id": "meditation_arm_inward",
+      "Value": 25,
+      "System": "avatar",
+      "Verification": "Hands turn inward toward crossed knees without spreading arms outward"
+    },
+    {
+      "Id": "book_arm_lateral",
+      "Value": 0.45,
+      "System": "avatar",
+      "Verification": "Retarget native arm height/timing into a forward 3D reach, limiting chest-crossing lateral sweep"
+    },
+    {
+      "Id": "book_shoulder_depth",
+      "Value": 0.075,
+      "System": "avatar",
+      "Verification": "Front shoulder hinge offset during book actions only; prevents inward rigid arms sweeping through torso"
+    },
+    {
+      "Id": "book_chest_clearance",
+      "Value": 0.22,
+      "System": "avatar",
+      "Verification": "Minimum book center depth in front of chest in model coordinates"
+    },
+    {
+      "Id": "pickup_height_fraction",
+      "Value": 0.28,
+      "System": "assets",
+      "Verification": "Creator steering: previous0.18 ratio too small and hard to see; enlarge1.56x to0.28, retain45degree volumetric presentation"
+    },
+    {
+      "Id": "pickup_half_depth",
+      "Value": 0.04,
+      "System": "assets",
+      "Verification": "Extruded generated-item half depth relative to its unit model"
+    },
+    {
+      "Id": "pickup_spin_speed",
+      "Value": 90.0,
+      "System": "assets",
+      "Verification": "Dropped meshes rotate around the native world vertical (negative Z), 90 degrees per second."
+    },
+    {
+      "Id": "experience_pickup_volume",
+      "Value": 0.55,
+      "System": "assets",
+      "Verification": "Minecraft experience pickup gain multiplied by native SFX/master preferences"
+    },
+    {
+      "Id": "campfire_work_offset",
+      "Value": 0.65,
+      "System": "buildings",
+      "Verification": "Creator0.7.3 gameplay: cook overlaps centered fire; move facade down0.65 XY world units along working axis, keep native cooking point/colliders unchanged"
+    },
+    {
+      "Id": "death_fall_duration",
+      "Value": 0.7,
+      "System": "avatar",
+      "Verification": "Native death side fall duration in scaled seconds; native GameOver world freeze continues presentation at quarter speed, pauses respected"
+    }
+  ]
+}
