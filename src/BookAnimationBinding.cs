@@ -15,6 +15,8 @@ namespace CultCraft
         private Slot book;
         private Bone hip,head,shoulderR,shoulderL,handR,handL,legR,legL,footR,footL;
         private Bone refHip,refHead,refTool,back,refBack;
+        private Vector2 idleHead, idleShoulders, idleRightArm, idleLeftArm;
+        private float idleHipY, idleHeadAngle;
         private Bone refFootR,refFootL;
         private readonly float[] corners=new float[512];
         private Vector2 center,rightDirection;
@@ -36,6 +38,7 @@ namespace CultCraft
         private readonly MinecraftAssets assets;
         public bool GestureActive {get;private set;}
         public string CeremonyClip {get;private set;}="";
+        internal string BodyClip {get;private set;}="";
         public bool Grounded {get;private set;}
         public int PageGameDrawFrames {get{return pages==null?0:pages.GameDrawFrames;}}
         public bool PageThrown {get{return pages!=null&&pages.ThrowObserved;}}
@@ -67,7 +70,7 @@ namespace CultCraft
             SkeletonAnimation next=player==null?null:player.Spine;
             if(next==source && (next==null || ReferenceEquals(skeleton,next.Skeleton)))return;
             if(!ReferenceEquals(source,null))source.OnMeshAndMaterialsUpdated-=AfterNativePose;
-            source=next;skeleton=source==null?null:source.Skeleton;reference=null;book=null;Visible=false;PoseActive=false;PoseDriven=false;CeremonyClip="";open=0f;previousTrack=null;lastTime=-1f;
+            source=next;skeleton=source==null?null:source.Skeleton;reference=null;book=null;Visible=false;PoseActive=false;PoseDriven=false;CeremonyClip=BodyClip="";open=0f;previousTrack=null;lastTime=-1f;
             if(skeleton==null){glyphs.Suspend();return;}
             book=skeleton.FindSlot("BOOK");hip=skeleton.FindBone("HIP");head=skeleton.FindBone("HEAD");
             shoulderR=skeleton.FindBone("SHOULDER_RIGHT");shoulderL=skeleton.FindBone("SHOULDER_LEFT");handR=skeleton.FindBone("HAND_RIGHT");handL=skeleton.FindBone("HAND_LEFT");
@@ -76,6 +79,7 @@ namespace CultCraft
             refHip=reference.FindBone("HIP");refHead=reference.FindBone("HEAD");refTool=reference.FindBone("TOOL");
             refFootR=reference.FindBone("FOOT_RIGHT");refFootL=reference.FindBone("FOOT_LEFT");
             back=skeleton.FindBone("BACK_BTM");refBack=reference.FindBone("BACK_BTM");
+            CaptureIdleReference();
             for(int i=0;i<6;i++)cardSlots[i]=skeleton.FindSlot("Card_"+(i+1));
             // Spine's header bounds are unscaled; the actual bones already include
             // SkeletonDataAsset.scale. Retarget in that same physical coordinate space.
@@ -87,6 +91,24 @@ namespace CultCraft
             source.OnMeshAndMaterialsUpdated+=AfterNativePose;
         }
         private void AfterNativePose(SkeletonRenderer renderer){Capture();}
+        private void CaptureIdleReference()
+        {
+            // Use the authored neutral stance. The rig's bind pose has its
+            // arms out to the sides and is not a useful resting reference.
+            var idle=new Skeleton(skeleton.Data);
+            if(skeleton.Skin!=null)idle.SetSkin(skeleton.Skin);
+            idle.Data.FindAnimation("idle")?.Apply(idle,0f,0f,false,null,1f,MixBlend.Replace,MixDirection.In);
+            idle.UpdateWorldTransform();
+            Vector2 hipPoint=Rest(idle.FindBone("HIP"));
+            Bone idleHeadBone=idle.FindBone("HEAD");
+            Vector2 shoulderR=Rest(idle.FindBone("SHOULDER_RIGHT")),shoulderL=Rest(idle.FindBone("SHOULDER_LEFT"));
+            idleHipY=hipPoint.y;
+            idleHead=Rest(idleHeadBone)-hipPoint;
+            idleHeadAngle=idleHeadBone?.Rotation??0f;
+            idleShoulders=(shoulderR+shoulderL)*0.5f-hipPoint;
+            idleRightArm=Rest(idle.FindBone("HAND_RIGHT"))-shoulderR;
+            idleLeftArm=Rest(idle.FindBone("HAND_LEFT"))-shoulderL;
+        }
         private static bool TrackHasBook(Spine.Animation animation,int slot)
         {
             if(animation==null)return false;bool found;if(bookTracks.TryGetValue(animation,out found))return found;
@@ -107,8 +129,8 @@ namespace CultCraft
         }
         public static bool ObserveNativeSermonEffect(SkeletonAnimation effect){return NativeSermonGlyphs.Observe(effect);}
         private Vector2 Point(Bone bone){return bone==null?Vector2.zero:new Vector2(bone.WorldX*(skeleton.ScaleX<0f?-1f:1f),bone.WorldY*(skeleton.ScaleY<0f?-1f:1f));}
-        private static Vector2 Rest(Bone bone){return new Vector2(bone.WorldX,bone.WorldY);}
-        private void Capture()
+        private static Vector2 Rest(Bone bone){return bone==null?Vector2.zero:new Vector2(bone.WorldX,bone.WorldY);}
+        internal void Capture()
         {
             if(disposed||source==null||skeleton==null||book==null||hip==null||head==null||source.AnimationState==null)return;
             // Keep a complete immutable-for-the-frame pose: the next native Update may
@@ -119,6 +141,7 @@ namespace CultCraft
             PoseRevision++;AttachmentName=book.Attachment==null?"":book.Attachment.Name;
             TrackEntry baseTrack=source.AnimationState.GetCurrent(0);
             string baseClip=baseTrack?.Animation?.Name??"";
+            BodyClip=baseClip;
             CeremonyClip=IsCeremony(baseClip)?baseClip:"";
             TrackEntry track=null;
             foreach(TrackEntry entry in source.AnimationState.Tracks)if(entry!=null&&entry.Alpha>0f&&TrackHasBook(entry.Animation,book.Data.Index))track=entry;
@@ -210,6 +233,38 @@ namespace CultCraft
             float weight=Mathf.InverseLerp(0.03f,0.18f,footHeight);
             Vector2 direction=native.sqrMagnitude>0.00001f?native.normalized:Vector2.down;
             leg.localRotation=Quaternion.Euler(direction.x*24f*weight,side*6f*weight,direction.x*14f*weight);
+        }
+
+        internal bool ApplyGroundedAction(string clip,Transform torso,Transform steveHead,
+            Transform rightArm,Transform leftArm,Transform rightLeg,Transform leftLeg)
+        {
+            if(BodyClip!=clip||reference==null||hip==null||head==null||shoulderR==null||
+                shoulderL==null||handR==null||handL==null)return false;
+            Vector2 shoulders=((poseShoulderR+poseShoulderL)*0.5f-poseHip-idleShoulders)*scale;
+            Vector2 look=(poseHead-poseHip-idleHead)*scale;
+            float dip=Mathf.Clamp((poseHip.y-idleHipY)*scale,-0.09f,0f);
+            float twist=Mathf.Clamp((poseHandL.y-poseShoulderL.y-poseHandR.y+poseShoulderR.y)*scale*26f,-20f,20f);
+            torso.localPosition+=Vector3.up*dip;
+            torso.localRotation=Quaternion.Euler(Mathf.Clamp(-shoulders.y*78f,-18f,28f),
+                Mathf.Clamp(shoulders.x*55f+twist,-28f,28f),Mathf.Clamp(-shoulders.x*45f,-18f,18f));
+            float headRoll=Mathf.Clamp(Mathf.DeltaAngle(idleHeadAngle,poseHeadRotation),-30f,30f);
+            steveHead.localRotation=Quaternion.Euler(Mathf.Clamp(-look.y*54f+headRoll*0.28f,-25f,30f),
+                Mathf.Clamp(look.x*70f,-30f,30f),headRoll*0.65f);
+            GroundedActionArm(rightArm,poseHandR-poseShoulderR,idleRightArm,1f);
+            GroundedActionArm(leftArm,poseHandL-poseShoulderL,idleLeftArm,-1f);
+            rightLeg.localRotation=leftLeg.localRotation=Quaternion.identity;
+            return true;
+        }
+
+        private void GroundedActionArm(Transform arm,Vector2 direction,Vector2 rest,float side)
+        {
+            Vector2 delta=(direction-rest)*scale/Mathf.Max(0.1f,rest.magnitude*scale);
+            float lateral=Mathf.Clamp(side*0.12f+delta.x*0.62f,-0.52f,0.52f);
+            float vertical=Mathf.Clamp(-0.92f+delta.y*1.7f,-1f,0.84f);
+            float depth=Mathf.Clamp(0.11f+Mathf.Abs(delta.x)*0.74f+Mathf.Abs(delta.y)*0.65f,0.11f,1.15f);
+            float roll=Mathf.Clamp(delta.x*28f,-26f,26f);
+            arm.localRotation=Quaternion.FromToRotation(Vector3.down,new Vector3(lateral,vertical,depth).normalized)*
+                Quaternion.AngleAxis(roll,Vector3.down);
         }
 
         public void ApplyPose(Transform root,Transform torso,Transform steveHead,Transform rightArm,Transform leftArm,Transform rightLeg=null,Transform leftLeg=null)

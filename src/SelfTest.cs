@@ -185,6 +185,9 @@ namespace CultCraft
         private Scenes082SelfTest scenesProof;
         private Temple083SelfTest templeProof;
         private Hotbar084SelfTest hotbarProof;
+        private Regression086SelfTest regressionProof;
+        internal void PrepareAnimationAudit(PlayerFarming player) => regressionProof?.PrepareAnimationAudit(player);
+        internal void DrawAnimationAuditLabel() => regressionProof?.DrawAnimationAuditLabel();
         private readonly bool hotbarOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-return-held-items");
         private readonly bool localCoopOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-local-coop");
         private readonly bool templeOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-temple-ceremonies");
@@ -243,6 +246,7 @@ namespace CultCraft
             lootProof=new LootVisualSelfTest(assets,logger,Report);
             if(templeOnly)templeProof=new Temple083SelfTest(avatar,Report);
             if(hotbarOnly)hotbarProof=new Hotbar084SelfTest(gameplay,avatar,Report);
+            if(Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-carry-follower"))regressionProof=new Regression086SelfTest(avatar,assets,Report);
             deathProof=new DeathSelfTest(avatar,logger,(name,passed,why)=>{if(scenesOnly||hotbarOnly){scenesFallPassed=passed;logger.LogInfo("Native death prerequisite "+passed+": "+why);}else Report(name,passed,why);});
             RegisterActions();
             logger.LogInfo("Melty marker verified: autonomous checks use a fresh memory-only world; personal saves are blocked.");
@@ -501,7 +505,7 @@ namespace CultCraft
                 Report("first-person-camera-active", CameraProof, CameraProof ? null : "Observation timeout: "+CameraProofDetail);
                 foreach (TestRow test in Spec.TestRows)
                     if (test.Id != "mod-loads" && !reported.Contains(test.Id)) Report(test.Id, false, "Observation timeout at stage " + stage + (lastError == null ? "" : "; " + lastError));
-                foreach(string required in scenesOnly||templeOnly||hotbarOnly||localCoopOnly?new string[0]:new[]{"minecraft-resource-visuals","minecraft-enchantment-progression","minecraft-attack-cooldown","minecraft-broom","minecraft-food","minecraft-fishing"})
+                foreach(string required in scenesOnly||templeOnly||hotbarOnly||localCoopOnly||regressionProof!=null?new string[0]:new[]{"minecraft-resource-visuals","minecraft-enchantment-progression","minecraft-attack-cooldown","minecraft-broom","minecraft-food","minecraft-fishing"})
                     if(!reported.Contains(required))Report(required,false,"Required native subcheck timed out at stage "+stage);
                 stage = 12;
                 return;
@@ -521,6 +525,17 @@ namespace CultCraft
             if(scenesOnly){RunScenesOnly(player);return;}
             if(hotbarOnly){RunHotbar084(player);return;}
             if(localCoopOnly){RunLocalCoop(player);return;}
+            if(regressionProof!=null)
+            {
+                if(!reported.Contains("minecraft-assets-loaded")&&assets.Ready&&assets.PlayerSkin!=null)Report("minecraft-assets-loaded",true,null);
+                if(stage==0&&Time.unscaledTime-started>=V("test_menu_settle")&&BeginNewGame())Next(1);
+                if(stage==1&&startedWorld)
+                {
+                    regressionProof.Tick(player,Ready(player)&&PlayerFarming.Location==FollowerLocation.Base);
+                    if(regressionProof.Complete)Next(12);
+                }
+                return;
+            }
             if(templeOnly)
             {
                 if(!reported.Contains("minecraft-assets-loaded")&&assets.Ready&&assets.PlayerSkin!=null)Report("minecraft-assets-loaded",true,null);

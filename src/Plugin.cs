@@ -146,6 +146,7 @@ namespace CultCraft
                 avatar.SetEnchantment(gameplay.DisplayedEnchantmentLevel);
                 var choice=skins.Get(PlayerSkins.Role(player));
                 avatar.SetSkin(choice.Texture,choice.Slim);
+                test?.PrepareAnimationAudit(player);
                 avatar.Tick(player!=null&&cinematicActors.Owns(player.gameObject)?null:player, camera.Active, gameplay.SelectedItemId);
                 foreach(PlayerFarming other in PlayerFarming.players)
                 {
@@ -208,6 +209,7 @@ namespace CultCraft
             if (devotionHud != null) devotionHud.Draw(PlayerFarming.Instance);
             if (PlayerFarming.Instance == null || !PlayerFarming.Instance.gameObject.activeInHierarchy) return;
             if (gameplay != null) gameplay.DrawHotbar();
+            test?.DrawAnimationAuditLabel();
             if (attackCooldown != null) attackCooldown.Draw(PlayerFarming.Instance);
             if (camera != null) camera.DrawSettings();
             if (camera != null && camera.Active && !camera.SettingsOpen)

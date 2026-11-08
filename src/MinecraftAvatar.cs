@@ -81,6 +81,9 @@ namespace CultCraft
         private readonly BookAnimationBinding bookBinding;
         private readonly FishingAnimationBinding fishingBinding = new FishingAnimationBinding();
         private readonly FishingVisuals fishingVisuals;
+        private readonly CarriedFollowerVisual carriedFollower = new CarriedFollowerVisual();
+        internal int CarriedFollowerDraws { get { return carriedFollower.Draws; } }
+        internal bool CarryHandsRaised { get; private set; }
         internal int FishingDraws { get; private set; }
         internal int FishingRevision { get { return fishingBinding.Revision; } }
         internal int FishingBobberDraws { get { return fishingVisuals.BobberDraws; } }
@@ -120,6 +123,16 @@ namespace CultCraft
             public Quaternion Body,Head,RightArm,LeftArm,RightLeg,LeftLeg;
         }
         private string ceremonyClip;
+        private float crouchWeight;
+        private bool sleepBedSearched;
+        private Structure sleepBed;
+        private BuildingRow sleepBedDesign;
+        private float sleepEntrySide;
+        private bool wakeExitSearched, wakeExitFound;
+        private readonly Collider2D[] wakeObstacles=new Collider2D[24];
+        internal bool SleepOnBed {get;private set;}
+        internal float CrouchWeight=>crouchWeight;
+        internal float FootGroundError=>Mathf.Max(Mathf.Abs(SoleHeight(rightLeg)),Mathf.Abs(SoleHeight(leftLeg)));
         private float ceremonyMix;
         private CeremonyFrame ceremonyFrom,ceremonyDrawn;
         internal float DeathRoll { get; private set; }
@@ -127,6 +140,24 @@ namespace CultCraft
         internal int DeathDrawFrames { get; private set; }
         public int ConfirmedDamageReactions { get { return feedback.ConfirmedHits; } }
         public string AnimationPose { get; private set; }
+        internal void SampleAuditPose(PlayerFarming owner)
+        {
+            bookBinding.Bind(owner);
+            fishingBinding.Bind(owner);
+            bookBinding.Capture();
+            fishingBinding.Capture(owner.Spine);
+        }
+
+        internal void ReadAuditPose(Quaternion[] rotations)
+        {
+            rotations[0]=Root.rotation;
+            rotations[1]=body.localRotation;
+            rotations[2]=head.localRotation;
+            rotations[3]=rightArm.localRotation;
+            rotations[4]=leftArm.localRotation;
+            rotations[5]=rightLeg.localRotation;
+            rotations[6]=leftLeg.localRotation;
+        }
         public bool BookVisible { get { return worldBook != null && (worldBook.Visible || firstPersonBook.Visible); } }
         public bool BookNativeBound { get { return bookBinding.Visible && BookVisible; } }
         public bool BookPoseDriven { get { return bookBinding.PoseDriven; } }
@@ -336,6 +367,7 @@ namespace CultCraft
                 RestoreLamb();
                 player = null;
                 ceremonyClip=null;
+                crouchWeight=0f;sleepBedSearched=false;sleepBed=null;
                 return;
             }
             if (worldObject == null) Create(p);
@@ -346,6 +378,7 @@ namespace CultCraft
                 dying=false;deathTime=0f;observedDeath=feedback.DeathSerial;
                 lastFacing=p.state==null?V("default_facing"):p.state.facingAngle;
                 ceremonyClip=null;
+                crouchWeight=0f;sleepBedSearched=false;sleepBed=null;
                 lambRenderer = p.Spine == null ? null : p.Spine.GetComponent<Renderer>();
                 if (lambRenderer != null) lambWasEnabled = lambRenderer.enabled;
                 lastPosition = p.transform.position;
@@ -411,10 +444,21 @@ namespace CultCraft
             float nativeDuration = nativeTrack != null && nativeTrack.Animation != null ? Mathf.Max(0.001f, nativeTrack.Animation.Duration) : 1f;
             float nativePhase = nativeTrack == null ? 0f : nativeTrack.TrackTime / nativeDuration;
             bool meditating = currentState == StateMachine.State.Meditate;
-            bool crouching = Time.unscaledTime < feedback.CrouchUntil;
+            bool crouchPressed=Time.unscaledTime<feedback.CrouchUntil;
+            crouchWeight=Mathf.MoveTowards(crouchWeight,crouchPressed?1f:0f,Time.unscaledDeltaTime/(crouchPressed?0.09f:0.13f));
+            bool crouching=crouchWeight>0f;
             bool warpingOut = currentState == StateMachine.State.CustomAnimation && nativeAnimation.StartsWith("warp-out", StringComparison.Ordinal);
             bool warpingIn = currentState == StateMachine.State.CustomAnimation && nativeAnimation.StartsWith("warp-in", StringComparison.Ordinal);
             bool utilityAllowed = !meditating && !crouching && !warpingOut && !warpingIn;
+            bool sleeping=utilityAllowed&&nativeAnimation.StartsWith("sleeping",StringComparison.Ordinal);
+            SleepOnBed=false;
+            if(!sleeping)
+            {
+                sleepBedSearched=false;sleepBed=null;sleepEntrySide=0f;
+                wakeExitSearched=false;wakeExitFound=false;
+            }
+            bool carrying = p.CarryingDeadFollowerID >= 0 &&
+                (currentState == StateMachine.State.Idle_CarryingBody || currentState == StateMachine.State.Moving_CarryingBody);
             bool sweeping = currentState == StateMachine.State.CustomAnimation && nativeAnimation == "cleaning";
             bool showingBroom = currentState == StateMachine.State.CustomAnimation &&
                 (nativeAnimation.StartsWith("Mop/upgrade-mop-", StringComparison.Ordinal) || nativeAnimation == "Mop/collect");
@@ -425,8 +469,12 @@ namespace CultCraft
                 broomLift = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0f, 0.42f, nativePhase));
             else if (nativeAnimation == "Mop/upgrade-mop-stop")
                 broomLift = Mathf.SmoothStep(1f, 0f, nativePhase);
-            bool chopping = utilityAllowed && currentState == StateMachine.State.CustomAnimation && nativeAnimation == "actions/chop-wood";
-            bool mining = utilityAllowed && currentState == StateMachine.State.CustomAnimation && nativeAnimation == "actions/chop-stone";
+            Spine.TrackEntry harvest = null;
+            if (currentState == StateMachine.State.CustomAnimation && p.Spine?.AnimationState != null)
+                foreach (Spine.TrackEntry track in p.Spine.AnimationState.Tracks)
+                    if (track?.Animation?.Name == "actions/chop-wood" || track?.Animation?.Name == "actions/chop-stone") harvest = track;
+            bool chopping = harvest?.Animation.Name == "actions/chop-wood";
+            float harvestPhase = harvest == null ? 0f : Mathf.Repeat(harvest.TrackTime / Mathf.Max(0.001f, harvest.Animation.Duration), 1f);
             bool collecting = utilityAllowed && nativeAnimation == "actions/collect-berries" && currentState == StateMachine.State.TimedAction;
             bool constructing = utilityAllowed && nativeAnimation == "actions/hammer" && currentState == StateMachine.State.CustomAnimation;
             var secondTrack = p.Spine != null && p.Spine.AnimationState != null ? p.Spine.AnimationState.GetCurrent(1) : null;
@@ -440,7 +488,26 @@ namespace CultCraft
             bool showingWeapon=utilityAllowed&&Gameplay.IsWeaponPresentation(p,nativeAnimation);
             ResetPartPositions();
             AnimationPose = "walk/idle";
-            if (ceremony)
+            if (carrying)
+            {
+                AnimationPose = "carry-follower";
+                weaponId = "";
+                body.localRotation = Quaternion.Euler(10f + 3f * move, 0f, stride * 0.1f);
+                head.localRotation = Quaternion.Euler(-8f, 0f, 0f);
+                rightArm.localRotation = Quaternion.Euler(-165f, 0f, 14f);
+                leftArm.localRotation = Quaternion.Euler(-165f, 0f, -14f);
+            }
+            else if (harvest != null)
+            {
+                AnimationPose = chopping ? "chop-wood" : "chop-stone";
+                weaponId = chopping ? "stone_axe" : "stone_pickaxe";
+                swing = 0.5f - 0.5f * Mathf.Cos(harvestPhase * Mathf.PI * 2f);
+                rightArm.localRotation = Quaternion.Euler(-25f - swing * 105f, -15f, 8f + swing * 12f);
+                leftArm.localRotation = Quaternion.Euler(-25f - swing * 55f, 15f, -18f);
+                body.localRotation = Quaternion.Euler(10f * swing, -8f * swing, 0f);
+                head.localRotation = Quaternion.Euler(14f, 0f, 0f);
+            }
+            else if (ceremony)
             {
                 if(ceremonyClip==null)ceremonyDrawn=CaptureCeremony(ceremonyAnchor);
                 AnimationPose="ceremony/"+bookBinding.CeremonyClip;
@@ -472,16 +539,6 @@ namespace CultCraft
                     ? Quaternion.Euler(-27f, -12f, 24f * sweepStroke - 8f)
                     : Quaternion.Euler(Mathf.Lerp(-25f, -118f, broomLift), -9f, Mathf.Lerp(5f, 20f, broomLift));
                 leftArm.localRotation = Quaternion.Euler(-12f, 0f, -12f);
-            }
-            else if (chopping || mining)
-            {
-                AnimationPose = chopping ? "chop-wood" : "chop-stone";
-                weaponId = chopping ? "stone_axe" : "stone_pickaxe";
-                swing = 0.5f - 0.5f * Mathf.Cos(Mathf.Repeat(nativePhase, 1f) * Mathf.PI * 2f);
-                rightArm.localRotation = Quaternion.Euler(-25f - swing * 105f, -15f, 8f + swing * 12f);
-                leftArm.localRotation = Quaternion.Euler(-25f - swing * 55f, 15f, -18f);
-                body.localRotation = Quaternion.Euler(10f * swing, -8f * swing, 0f);
-                head.localRotation = Quaternion.Euler(14f, 0f, 0f);
             }
             else if (collecting)
             {
@@ -544,18 +601,25 @@ namespace CultCraft
             else if (crouching)
             {
                 AnimationPose = "crouch";
-                LowerTorso(V("crouch_drop"));
-                body.localRotation = Quaternion.Euler(25f, 0f, 0f);
-                head.localRotation = Quaternion.Euler(-10f, 0f, 0f);
-                rightLeg.localRotation = leftLeg.localRotation = Quaternion.Euler(-30f, 0f, 0f);
-                rightArm.localRotation = Quaternion.Euler(15f, 0f, 3f);
-                leftArm.localRotation = Quaternion.Euler(15f, 0f, -3f);
+                ApplyCrouch(crouchWeight);
+            }
+            else if(sleeping)
+            {
+                AnimationPose="sleep/"+nativeAnimation;
+                weaponId="";
+                ApplySleep(p,nativeAnimation,nativePhase);
             }
             else if (warpingOut || warpingIn || currentState == StateMachine.State.Teleporting || currentState == StateMachine.State.SpawnIn || currentState == StateMachine.State.SpawnOut)
             {
                 weaponId = "";
                 if (ApplyWarpPose(warpingIn, warpingOut, nativePhase) < 0.015f)
                 { worldObject.SetActive(false); viewObject.SetActive(false); }
+            }
+            else if(IsScriptedPose(currentState,nativeAnimation)&&
+                bookBinding.ApplyGroundedAction(nativeAnimation,body,head,rightArm,leftArm,rightLeg,leftLeg))
+            {
+                AnimationPose="native/"+nativeAnimation;
+                if(!IsCombatGesture(currentState))weaponId=ActionItem(nativeAnimation);
             }
             else if (weaponId == "bow" || Gameplay.IsCrossbowItem(weaponId))
             {
@@ -576,7 +640,8 @@ namespace CultCraft
             }
             SetDamageTint(dying || Time.unscaledTime < feedback.RedUntil);
             if (currentState == StateMachine.State.Dodging) worldObject.transform.rotation *= Quaternion.Euler(V("dodge_degrees"), 0f, 0f);
-            if (useProgress > 0f && !ceremony)
+            if (useProgress > 0f && !ceremony && harvest == null && !carrying && !sleeping && !crouching &&
+                !AnimationPose.StartsWith("native/",StringComparison.Ordinal))
             {
                 AnimationPose = "eat";
                 float bite = Mathf.Sin(useProgress * Mathf.PI * 8f);
@@ -605,6 +670,17 @@ namespace CultCraft
             // Item geometry is anchored at the handle pixel, independent of model-center translation.
             // Keep its camera-space orientation readable while the right arm follows the native swing.
             SetWeapon(weaponId);
+            Vector3 rightPalm = Vector3.zero, leftPalm = Vector3.zero;
+            CarryHandsRaised = false;
+            if (carrying && !dying)
+            {
+                rightPalm = rightArm.TransformPoint(new Vector3(PalmX(rightArm, true), -10f, 0f) * PixelSize);
+                leftPalm = leftArm.TransformPoint(new Vector3(PalmX(leftArm, false), -10f, 0f) * PixelSize);
+                CarryHandsRaised = Vector3.Dot(rightPalm - rightArm.position, worldObject.transform.up) > 0.2f &&
+                    Vector3.Dot(leftPalm - leftArm.position, worldObject.transform.up) > 0.2f;
+            }
+            carriedFollower.Tick(CarryHandsRaised && visible && !firstPerson ? p : null, camera, worldObject.transform,
+                (rightPalm + leftPalm) * 0.5f, lambRenderer);
             if (broom != null && itemId == broom.Id)
             {
                 PoseBroom(broom, sweeping, sweepStroke, nativePhase, nativeAnimation, broomLift);
@@ -614,9 +690,9 @@ namespace CultCraft
                 float unit=16f*PixelSize;
                 Vector3 hand=new Vector3(V("mc_hand_x"),V("mc_hand_y"),V("mc_hand_z"))*unit;
                 Quaternion action=Quaternion.identity;Vector3 swingOffset=Vector3.zero;
-                if(swingTime>0f || chopping || mining)
+                if(swingTime>0f || harvest != null)
                 {
-                    float phase=chopping||mining?Mathf.Repeat(nativePhase,1f):Mathf.Clamp01(1f-swingTime/V("swing_duration"));
+                    float phase=harvest != null ? harvestPhase : Mathf.Clamp01(1f-swingTime/V("swing_duration"));
                     float a=Mathf.Sin(Mathf.PI*phase*phase),b=Mathf.Sin(Mathf.PI*Mathf.Sqrt(phase));
                     action=Quaternion.AngleAxis(-45f+20f*a,Vector3.up)*Quaternion.AngleAxis(-20f*b,Vector3.forward)*Quaternion.AngleAxis(80f*b,Vector3.right)*Quaternion.AngleAxis(45f,Vector3.up);
                     swingOffset=new Vector3(-0.4f*b,0.2f*Mathf.Sin(2f*Mathf.PI*Mathf.Sqrt(phase)),0.2f*Mathf.Sin(Mathf.PI*phase))*unit;
@@ -1030,7 +1106,7 @@ namespace CultCraft
             return value != null && value.Length >= 3 ? new Vector3(value[0], value[1], value[2]) : fallback;
         }
 
-        private static bool IsBlockItem(string id) { return id=="oak_log" || id=="oak_planks" || id=="stone" || id=="cobblestone" || id=="stone_bricks" || id=="pumpkin" || id=="melon" || id=="black_shulker_box"; }
+        internal static bool IsBlockItem(string id) { return id=="oak_log" || id=="oak_planks" || id=="stone" || id=="cobblestone" || id=="stone_bricks" || id=="pumpkin" || id=="melon" || id=="black_shulker_box"; }
         private static Quaternion MinecraftDisplayRotation(Vector3 degrees)
         { return Quaternion.AngleAxis(-degrees.x,Vector3.right)*Quaternion.AngleAxis(-degrees.y,Vector3.up)*Quaternion.AngleAxis(degrees.z,Vector3.forward); }
 
@@ -1061,23 +1137,24 @@ namespace CultCraft
         {
             Mesh mesh=GenerateBlockMesh(id,V("item_world_size"));meshes.Add(mesh);return mesh;
         }
-        public static Mesh GenerateBlockMesh(string id,float size)
+        public static Mesh GenerateBlockMesh(string id,float size,bool reward=false)
         {
             float h=size*0.5f;
             Vector3 min=Vector3.one*-h,max=Vector3.one*h;
             var builder=new MeshBuilder();
-            BlockItemFace(builder,new Vector3(min.x,min.y,max.z),new Vector3(max.x,min.y,max.z),max,new Vector3(min.x,max.y,max.z),0,V("front_shade"));
-            BlockItemFace(builder,new Vector3(max.x,min.y,min.z),min,new Vector3(min.x,max.y,min.z),new Vector3(max.x,max.y,min.z),0,V("back_shade"));
-            BlockItemFace(builder,min,new Vector3(min.x,min.y,max.z),new Vector3(min.x,max.y,max.z),new Vector3(min.x,max.y,min.z),0,V("left_shade"));
-            BlockItemFace(builder,new Vector3(max.x,min.y,max.z),new Vector3(max.x,min.y,min.z),new Vector3(max.x,max.y,min.z),max,0,V("right_shade"));
-            BlockItemFace(builder,new Vector3(min.x,max.y,max.z),max,new Vector3(max.x,max.y,min.z),new Vector3(min.x,max.y,min.z),1,V("top_shade"));
-            BlockItemFace(builder,min,new Vector3(max.x,min.y,min.z),new Vector3(max.x,min.y,max.z),new Vector3(min.x,min.y,max.z),2,V("bottom_shade"));
+            int tiles=reward?4:3;
+            BlockItemFace(builder,new Vector3(min.x,min.y,max.z),new Vector3(max.x,min.y,max.z),max,new Vector3(min.x,max.y,max.z),0,V("front_shade"),tiles);
+            BlockItemFace(builder,new Vector3(max.x,min.y,min.z),min,new Vector3(min.x,max.y,min.z),new Vector3(max.x,max.y,min.z),0,V("back_shade"),tiles);
+            BlockItemFace(builder,min,new Vector3(min.x,min.y,max.z),new Vector3(min.x,max.y,max.z),new Vector3(min.x,max.y,min.z),reward?3:0,V("left_shade"),tiles);
+            BlockItemFace(builder,new Vector3(max.x,min.y,max.z),new Vector3(max.x,min.y,min.z),new Vector3(max.x,max.y,min.z),max,reward?3:0,V("right_shade"),tiles);
+            BlockItemFace(builder,new Vector3(min.x,max.y,max.z),max,new Vector3(max.x,max.y,min.z),new Vector3(min.x,max.y,min.z),1,V("top_shade"),tiles);
+            BlockItemFace(builder,min,new Vector3(max.x,min.y,min.z),new Vector3(max.x,min.y,max.z),new Vector3(min.x,min.y,max.z),2,V("bottom_shade"),tiles);
             return builder.Build("CultCraft Minecraft centered block "+id);
         }
 
-        private static void BlockItemFace(MeshBuilder builder,Vector3 a,Vector3 b,Vector3 c,Vector3 d,int tile,float shade)
+        private static void BlockItemFace(MeshBuilder builder,Vector3 a,Vector3 b,Vector3 c,Vector3 d,int tile,float shade,int tiles)
         {
-            float low=tile/3f,high=(tile+1f)/3f;
+            float low=(float)tile/tiles,high=(float)(tile+1)/tiles;
             builder.Face(a,b,c,d,new Vector2(0f,low),new Vector2(1f,low),new Vector2(1f,high),new Vector2(0f,high),shade);
         }
 
@@ -1184,6 +1261,220 @@ namespace CultCraft
             rightLeg.localPosition -= drop; leftLeg.localPosition -= drop;
         }
 
+        private void ApplyCrouch(float amount)
+        {
+            float bend=Mathf.SmoothStep(0f,1f,amount);
+            rightLeg.localRotation=leftLeg.localRotation=Quaternion.identity;
+            body.localPosition+=new Vector3(0f,-V("crouch_drop")*0.75f,-PixelSize*0.7f)*bend;
+            body.localRotation=Quaternion.Euler(28f*bend,0f,0f);
+            head.localRotation=Quaternion.Inverse(body.localRotation);
+            rightArm.localRotation=Quaternion.Euler(3f*bend,0f,V("arm_rest_roll"));
+            leftArm.localRotation=Quaternion.Euler(3f*bend,0f,-V("arm_rest_roll"));
+        }
+
+        private float SoleHeight(Transform leg)
+        {
+            Bounds bounds=leg.GetComponent<MeshFilter>().sharedMesh.bounds;
+            float lowest=float.PositiveInfinity;
+            for(int x=0;x<2;x++)
+                for(int z=0;z<2;z++)
+                {
+                    Vector3 corner=new Vector3(x==0?bounds.min.x:bounds.max.x,bounds.min.y,z==0?bounds.min.z:bounds.max.z);
+                    lowest=Mathf.Min(lowest,Root.InverseTransformPoint(leg.TransformPoint(corner)).y);
+                }
+            return lowest;
+        }
+
+        private void ApplySleep(PlayerFarming owner,string clip,float phase)
+        {
+            bool waking=clip.StartsWith("sleeping-stop",StringComparison.Ordinal);
+            bool movingAtBed=waking||clip.StartsWith("sleeping-start",StringComparison.Ordinal);
+            float bedPhase=waking?1f-Mathf.InverseLerp(0.06f,1f,phase):phase;
+            if(!waking){wakeExitSearched=false;wakeExitFound=false;}
+            if(!sleepBedSearched)
+            {
+                sleepBedSearched=true;
+                float distance=1.65f*1.65f;
+                foreach(Interaction interaction in Interaction.interactions)
+                {
+                    if(!(interaction is Interaction_Bed bed)||bed.Structure==null||bed.Structure.Structure_Info==null||
+                        !bed.gameObject.activeInHierarchy)continue;
+                    float candidate=((Vector2)(bed.transform.position-owner.transform.position)).sqrMagnitude;
+                    if(candidate>=distance)continue;
+                    foreach(BuildingRow design in Spec.BuildingRows)
+                    {
+                        if(design.NativeType!=(int)bed.Structure.Structure_Info.Type||
+                            (design.Model!="bed"&&design.Model!="straw_bed"))continue;
+                        distance=candidate;sleepBed=bed.Structure;sleepBedDesign=design;break;
+                    }
+                }
+            }
+            Transform root=worldObject.transform;
+            Quaternion reclined=root.rotation*Quaternion.Euler(-90f,0f,0f);
+            Vector3 anchor=root.position, target=anchor;
+            if(sleepBed!=null&&StationVisuals.TryBedPose(sleepBed,sleepBedDesign,out Vector3 bedOrigin,out Quaternion bedRotation))
+            {
+                SleepOnBed=true;
+                Vector3 pillow=bedOrigin+bedRotation*BlockModels.BedPillow(sleepBedDesign);
+                reclined=Quaternion.LookRotation(-(bedRotation*Vector3.forward),Vector3.back)*Quaternion.Euler(-90f,0f,0f);
+                target=pillow+Vector3.back*(4f*PixelSize)-reclined*(Vector3.up*28f*PixelSize*root.localScale.y);
+                if(movingAtBed)
+                {
+                    float height=sleepBedDesign.Height*(sleepBedDesign.Model=="straw_bed"?0.8f:1f);
+                    if(waking&&!wakeExitSearched)
+                    {
+                        wakeExitSearched=true;
+                        wakeExitFound=TryLeaveBed(owner,target,reclined,bedOrigin,bedRotation);
+                        if(wakeExitFound)
+                        {
+                            Vector3 exit=owner.transform.position;
+                            anchor=new Vector3(exit.x,exit.y,anchor.z);
+                            lastPosition=exit;
+                        }
+                    }
+                    MoveAtBedEdge(root,anchor,target,reclined,bedOrigin,bedRotation,sleepBedDesign.Width,height,
+                        bedPhase,waking&&wakeExitFound);
+                    return;
+                }
+            }
+            if(movingAtBed)
+            {
+                MoveAtBedEdge(root,anchor,target,reclined,anchor,root.rotation,0.55f,0f,bedPhase);
+                return;
+            }
+            root.SetPositionAndRotation(target,reclined);
+            body.localRotation=head.localRotation=Quaternion.identity;
+            rightLeg.localRotation=leftLeg.localRotation=Quaternion.identity;
+            rightArm.localRotation=Quaternion.Euler(-9f,0f,5f);
+            leftArm.localRotation=Quaternion.Euler(-9f,0f,-5f);
+            KeepAboveGround(anchor.z);
+        }
+
+        private bool TryLeaveBed(PlayerFarming owner,Vector3 target,Quaternion reclined,Vector3 bedOrigin,Quaternion bedRotation)
+        {
+            var feet=owner.GetComponent<CircleCollider2D>();
+            var room=BiomeBaseManager.Instance?.Room;
+            if(feet==null||room==null||PlayerFarming.Location!=FollowerLocation.Base)return false;
+            float radius=feet.radius*Mathf.Max(Mathf.Abs(feet.transform.lossyScale.x),Mathf.Abs(feet.transform.lossyScale.y));
+            Vector3 hip=target+reclined*(PartPosition("torso")*Root.localScale.y);
+            Vector3 bedRight=bedRotation*Vector3.right;
+            Vector3 from=owner.transform.position;
+            float preferred=sleepEntrySide!=0f?sleepEntrySide:Vector3.Dot(from-bedOrigin,bedRight)<0f?-1f:1f;
+            var filter=new ContactFilter2D {useTriggers=false};
+            filter.SetLayerMask(Physics2D.GetLayerCollisionMask(feet.gameObject.layer));
+            int supported=0;
+            string blocker="";
+            for(int side=0;side<2;side++)
+            {
+                float sign=side==0?preferred:-preferred;
+                for(int step=0;step<3;step++)
+                {
+                    Vector3 exit=new Vector3(hip.x,hip.y,from.z)+bedRight*(sign*(sleepBedDesign.Width*0.5f+radius+0.08f+step*0.13f));
+                    Vector2 center=(Vector2)(exit+feet.transform.TransformVector(feet.offset));
+                    bool floor=false;
+                    foreach(var piece in room.Pieces)floor|=piece.Collider!=null&&piece.Collider.OverlapPoint(center);
+                    if(!floor&&PlacementRegion.Instance!=null)
+                    {
+                        var tile=PlacementRegion.Instance.GetFreeClosestTileGridTileAtWorldPosition(exit);
+                        floor=tile!=null&&Vector2.Distance(tile.WorldPosition,exit)<0.55f;
+                    }
+                    if(!floor)continue;
+                    supported++;
+                    int hits=Physics2D.OverlapCircle(center,radius,filter,wakeObstacles);
+                    bool blocked=hits==wakeObstacles.Length;
+                    for(int i=0;i<hits&&!blocked;i++)
+                    {
+                        Collider2D hit=wakeObstacles[i];
+                        if(hit==null||hit.transform.IsChildOf(owner.transform))continue;
+                        bool ground=false;
+                        foreach(var piece in room.Pieces)ground|=piece.Collider==hit;
+                        blocked=!ground;
+                        if(blocked)blocker=hit.name;
+                    }
+                    if(blocked)continue;
+                    owner.transform.position=exit;
+                    sleepEntrySide=sign;
+                    return true;
+                }
+            }
+            Debug.Log("CultCraft bed exit: no free candidate, supported="+supported+", last blocker="+blocker+", radius="+radius);
+            return false;
+        }
+
+        private void MoveAtBedEdge(Transform root,Vector3 anchor,Vector3 target,Quaternion reclined,
+            Vector3 bedOrigin,Quaternion bedRotation,float width,float mattressHeight,float phase,bool fromOutside=false)
+        {
+            Vector3 up=Vector3.back;
+            Vector3 bedRight=bedRotation*Vector3.right;
+            if(sleepEntrySide==0f)sleepEntrySide=Vector3.Dot(anchor-bedOrigin,bedRight)<0f?-1f:1f;
+            Vector3 outward=bedRight*sleepEntrySide;
+            Quaternion upright=root.rotation;
+            Quaternion seated=Quaternion.LookRotation(outward,up);
+            Vector3 pelvis=PartPosition("torso")*root.localScale.y;
+            Vector3 restHip=target+reclined*pelvis;
+            Vector3 mattressCenter=new Vector3(restHip.x,restHip.y,bedOrigin.z);
+            Vector3 edgeHip=mattressCenter+outward*(width*0.41f)+up*(mattressHeight+2f*PixelSize*root.localScale.y);
+            Vector3 standHip=fromOutside?anchor+up*pelvis.y:
+                mattressCenter+outward*(width*0.5f+2f*PixelSize)+up*pelvis.y;
+            float approach=SleepStage(phase,0f,0.24f);
+            float sit=SleepStage(phase,0.21f,0.52f);
+            float settle=SleepStage(phase,0.52f,0.98f);
+            Vector3 hip=Vector3.Lerp(Vector3.Lerp(anchor+upright*pelvis,standHip,approach),edgeHip,sit);
+            hip=Vector3.Lerp(hip,restHip,settle);
+            Quaternion rotation=Quaternion.Slerp(Quaternion.Slerp(upright,seated,approach),reclined,settle);
+            root.SetPositionAndRotation(hip-rotation*pelvis,rotation);
+
+            float perch=sit*(1f-settle);
+            float seatLeg=Mathf.Acos(Mathf.Clamp01((mattressHeight+PixelSize)/pelvis.y))*Mathf.Rad2Deg;
+            float step=Mathf.Sin(approach*Mathf.PI)*18f;
+            float lead=Mathf.Sin(SleepStage(phase,0.52f,0.89f)*Mathf.PI);
+            float follow=Mathf.Sin(SleepStage(phase,0.62f,0.98f)*Mathf.PI);
+            rightLeg.localRotation=Quaternion.Euler(step-seatLeg*perch-43f*lead,0f,0f);
+            leftLeg.localRotation=Quaternion.Euler(-step-seatLeg*perch-43f*follow,0f,0f);
+            body.localRotation=Quaternion.Euler(13f*perch,0f,sleepEntrySide*8f*Mathf.Sin(settle*Mathf.PI));
+            head.localRotation=Quaternion.Euler(-8f*perch,0f,0f);
+            rightArm.localRotation=Quaternion.Euler(-9f*settle+13f*perch,0f,5f*settle+12f*perch);
+            leftArm.localRotation=Quaternion.Euler(-9f*settle+7f*perch,0f,-5f*settle-14f*perch);
+            KeepAboveGround(anchor.z);
+        }
+
+        private static float SleepStage(float phase,float from,float to)
+        {return Mathf.SmoothStep(0f,1f,Mathf.InverseLerp(from,to,phase));}
+
+        private static bool IsCombatGesture(StateMachine.State state)
+        {
+            return state==StateMachine.State.Casting||state==StateMachine.State.Defending||
+                state==StateMachine.State.Aiming||state==StateMachine.State.ChargingHeavyAttack||
+                state==StateMachine.State.Charging||state==StateMachine.State.Grapple;
+        }
+
+        private static bool IsScriptedPose(StateMachine.State state,string clip)
+        {
+            if(String.IsNullOrEmpty(clip)||clip=="idle"||clip=="idle2"||
+                clip.StartsWith("idle-",StringComparison.Ordinal)||clip.StartsWith("run",StringComparison.Ordinal)||
+                clip.StartsWith("walk",StringComparison.Ordinal))return false;
+            return IsCombatGesture(state)||state==StateMachine.State.CustomAnimation||state==StateMachine.State.TimedAction||
+                state==StateMachine.State.CustomAction0||state==StateMachine.State.Worshipping||state==StateMachine.State.Sleeping||
+                state==StateMachine.State.FoundItem||state==StateMachine.State.Building||state==StateMachine.State.Dancing||
+                state==StateMachine.State.Idle_CarryingBody||state==StateMachine.State.Moving_CarryingBody||
+                state==StateMachine.State.ChargingSnowball||state==StateMachine.State.Reeling||state==StateMachine.State.Heal||
+                state==StateMachine.State.KnockBack||state==StateMachine.State.HitThrown||
+                state==StateMachine.State.CoopReviving||state==StateMachine.State.KnockedOut||
+                state==StateMachine.State.Grabbed||state==StateMachine.State.TiedToAltar;
+        }
+
+        private static string ActionItem(string clip)
+        {
+            switch(clip)
+            {
+                case "actions/shear":return "shears";
+                case "drink-good":case "drink-bad":return "glass_bottle";
+                case "give-item/gift-small":return "black_bundle";
+                case "give-item/gift-medium":return "black_shulker_box";
+                default:return "";
+            }
+        }
+
         private void KeepAboveGround(float ground)
         {
             float lowest=ground;
@@ -1261,6 +1552,7 @@ namespace CultCraft
             if (disposed) return;
             disposed = true;
             cinematicPose.Dispose();
+            carriedFollower.Dispose();
             if(hurtSkin!=null)UnityEngine.Object.Destroy(hurtSkin);
             feedback.Dispose();
             fishingBinding.Dispose();

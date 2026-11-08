@@ -13,6 +13,38 @@
   },
   "rows": [
     {
+      "Id": "shears",
+      "Entry": "assets/minecraft/textures/item/shears.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Imported at runtime from the installed Java 1.21 client",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_shears",
+      "Entry": "assets/minecraft/models/item/shears.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Reads the installed Minecraft item display transforms",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "glass_bottle",
+      "Entry": "assets/minecraft/textures/item/glass_bottle.png",
+      "Kind": "texture",
+      "System": "avatar",
+      "Verification": "Imported at runtime from the installed Java 1.21 client",
+      "SourceJarVersion": "primary"
+    },
+    {
+      "Id": "display_model_glass_bottle",
+      "Entry": "assets/minecraft/models/item/glass_bottle.json",
+      "Kind": "data",
+      "System": "avatar",
+      "Verification": "Reads the installed Minecraft item display transforms",
+      "SourceJarVersion": "primary"
+    },
+    {
       "Id": "steve",
       "Entry": "assets/minecraft/textures/entity/player/wide/steve.png",
       "Kind": "skin",

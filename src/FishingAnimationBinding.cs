@@ -35,7 +35,7 @@ namespace CultCraft
             source.OnMeshAndMaterialsUpdated += Capture;
         }
 
-        private void Capture(SkeletonRenderer renderer)
+        internal void Capture(SkeletonRenderer renderer)
         {
             TrackEntry track = source.AnimationState == null ? null : source.AnimationState.GetCurrent(0);
             Clip = track?.Animation?.Name ?? "";

@@ -14,6 +14,20 @@
   },
   "rows": [
     {
+      "Id": "shears",
+      "Asset": "shears",
+      "Model": "display_model_shears",
+      "System": "avatar",
+      "Verification": "Uses the native Minecraft held-item display contexts"
+    },
+    {
+      "Id": "glass_bottle",
+      "Asset": "glass_bottle",
+      "Model": "display_model_glass_bottle",
+      "System": "avatar",
+      "Verification": "Uses the native Minecraft held-item display contexts"
+    },
+    {
       "Id": "berry",
       "Asset": "berry",
       "Model": "display_model_berry",

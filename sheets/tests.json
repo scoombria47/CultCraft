@@ -23,10 +23,52 @@
       "Verification": "Runtime observation required; static design is not a pass"
     },
     {
-      "Id": "minecraft-local-coop",
-      "Evidence": "The native Goat joins and leaves in a shared settlement. Both Minecraft avatars render with their assigned skins and arm widths.",
+      "Id": "minecraft-tree-tool",
+      "Evidence": "The native tree interaction renders the stone axe during chopping.",
       "System": "testing",
-      "Verification": "Observe real join and removal, separate character rendering, and the surviving main avatar."
+      "Verification": "Read the held mesh during the real chopping track."
+    },
+    {
+      "Id": "minecraft-stone-tool",
+      "Evidence": "The native rubble interaction renders the stone pickaxe during mining.",
+      "System": "testing",
+      "Verification": "Read the held mesh during the real mining track."
+    },
+    {
+      "Id": "minecraft-carry-follower",
+      "Evidence": "Native corpse pickup and drop, raised hands, an actual wrapped follower draw, and a clean localized Drop prompt.",
+      "System": "testing",
+      "Verification": "Use the actual body interaction and inspect the game camera rendering."
+    },
+    {
+      "Id": "minecraft-gift-reward",
+      "Evidence": "Native reward reveals draw compact cubes and fitted sprites for berries, the small gift, meat and seeds.",
+      "System": "testing",
+      "Verification": "Use native reward initialization and reveal with deterministic test choices."
+    },
+    {
+      "Id": "minecraft-animation-catalog",
+      "Evidence": "Sample every clip from the installed player Spine skeleton on the in-game Minecraft avatar and record pose coverage.",
+      "System": "testing",
+      "Verification": "Compare sampled native joint motion with rendered avatar poses. No native gameplay events are fired during this sweep."
+    },
+    {
+      "Id": "minecraft-grounded-poses",
+      "Evidence": "Petting, shearing, drumming, harvesting meat and drinking move the model in depth while both soles stay planted.",
+      "System": "testing",
+      "Verification": "Sample the native clips and check the real avatar's joint rotations, floor contact and camera draws."
+    },
+    {
+      "Id": "minecraft-bed-sleep",
+      "Evidence": "The player moves through the seat and swings each leg during entry and wake, preserving a continuous transition between standing and sleeping.",
+      "System": "testing",
+      "Verification": "Use a native bed structure and drive its real start, loop and stop clips."
+    },
+    {
+      "Id": "minecraft-bleat-crouch",
+      "Evidence": "Native B input eases into a grounded crouch and returns to idle with the classic sound.",
+      "System": "testing",
+      "Verification": "Feed the B key through the isolated test input and measure the visible Minecraft foot mesh."
     }
   ]
 }

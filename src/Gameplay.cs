@@ -15,6 +15,7 @@ namespace CultCraft
     public sealed class Gameplay : IDisposable
     {
         private const string HarmonyId = "cultcraft.gameplay";
+        internal const string NativePromptPlaceholder = "asdasdasdasdasdasdasdasddfdsfdsfdsf";
         private readonly MinecraftAssets assets;
         private readonly ManualLogSource logger;
         private readonly Harmony harmony;
@@ -226,6 +227,9 @@ namespace CultCraft
             MethodInfo firearm = AccessTools.Method(typeof(PlayerWeapon), "DoBlunderbussAttack", new[] { typeof(float), typeof(Vector3), typeof(Health.AttackTypes), typeof(bool) });
             if (firearm == null) throw new MissingMethodException(typeof(PlayerWeapon).FullName, "DoBlunderbussAttack");
             harmony.Patch(firearm, prefix: new HarmonyMethod(typeof(Gameplay), "NativeFirearmPrefix"));
+            harmony.Patch(AccessTools.Method(typeof(Indicator), nameof(Indicator.Reset)),
+                prefix: new HarmonyMethod(typeof(Gameplay), nameof(ClearIndicatorPlaceholder)));
+            Patch(typeof(Indicator), "LateUpdate", Type.EmptyTypes, nameof(LiftCarryPrompt));
             Patch(typeof(PlayerWeapon),"SetWeapon",new[]{typeof(EquipmentType),typeof(int)},nameof(WeaponChangedPostfix));
             Patch(typeof(BiomeBaseManager),"PlacePlayer",Type.EmptyTypes,nameof(PlacedInBasePostfix));
             Patch(typeof(Interaction_BaseTeleporter),"TeleportIn",Type.EmptyTypes,nameof(PlacedInBasePostfix));
@@ -239,6 +243,38 @@ namespace CultCraft
             MethodInfo method = AccessTools.Method(type, name, args);
             if (method == null) throw new MissingMethodException(type.FullName, name);
             harmony.Patch(method, postfix: new HarmonyMethod(typeof(Gameplay), postfix));
+        }
+
+        private static void ClearIndicatorPlaceholder(Indicator __instance)
+        {
+            // These fields start with sample text in the native prefab. The
+            // carry branch sets Drop and clears the secondary label only.
+            if (__instance.Thirdtext != null && __instance.Thirdtext.text == NativePromptPlaceholder)
+                __instance.Thirdtext.text = "";
+            if (__instance.Fourthtext != null && __instance.Fourthtext.text == NativePromptPlaceholder)
+                __instance.Fourthtext.text = "";
+        }
+
+        private static void LiftCarryPrompt(Indicator __instance, RectTransform ____container)
+        {
+            PlayerFarming owner = __instance.playerFarming;
+            if (owner == null || owner.CarryingDeadFollowerID < 0 || !__instance.UpdatePosition ||
+                ____container == null || !(____container.parent is RectTransform parent) ||
+                (owner.state.CURRENT_STATE != StateMachine.State.Idle_CarryingBody &&
+                 owner.state.CURRENT_STATE != StateMachine.State.Moving_CarryingBody))
+                return;
+            RectTransform label = __instance.text.rectTransform;
+            Canvas canvas = label.GetComponentInParent<Canvas>();
+            if (canvas == null) return;
+            Camera camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+            Vector2 bottom = RectTransformUtility.WorldToScreenPoint(camera,
+                label.TransformPoint(new Vector3(label.rect.center.x, label.rect.yMin)));
+            Rect bar = Hotbar.ScreenRect;
+            float minimum = Screen.height - bar.y + bar.height;
+            if (bottom.y >= minimum) return;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, bottom, camera, out Vector2 from) &&
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, new Vector2(bottom.x, minimum), camera, out Vector2 to))
+                ____container.anchoredPosition += to - from;
         }
 
         public void Tick(PlayerFarming value)

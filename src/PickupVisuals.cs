@@ -23,6 +23,8 @@ namespace CultCraft
         private static PickupVisuals current;
         private readonly Harmony harmony=new Harmony("cultcraft.pickup.visuals");
         private readonly Func<string,Sprite> sprite;
+        private readonly MinecraftAssets assets;
+        private readonly Dictionary<(Sprite,Texture2D),Sprite> rewardPreviews=new Dictionary<(Sprite,Texture2D),Sprite>();
         private readonly Func<EquipmentType,int,Sprite> weaponSprite;
         private readonly ManualLogSource logger;
         private readonly Dictionary<SpriteRenderer,SpriteState> renderers=new Dictionary<SpriteRenderer,SpriteState>();
@@ -45,7 +47,7 @@ namespace CultCraft
         public PickupVisuals(Func<string,Sprite> sprite,Func<EquipmentType,int,Sprite> weaponSprite,ManualLogSource logger,MinecraftAssets assets)
         {
             dropped=new DroppedItemVisuals(assets);
-            this.sprite=sprite;this.weaponSprite=weaponSprite;this.logger=logger;current=this;
+            this.sprite=sprite;this.weaponSprite=weaponSprite;this.logger=logger;this.assets=assets;current=this;
             try
             {
                 Hook(typeof(PickUp),"OnEnable",Type.EmptyTypes,"PickupRestorePrefix","PickupEnablePostfix");
@@ -141,7 +143,7 @@ namespace CultCraft
             if(id==null){Restore(renderer);probe.Expect(null,type);waiting.Remove(pickup);return;}
             Sprite replacement=sprite(id);
             if(replacement==null){Restore(renderer);probe.Expect(null,type);waiting.Add(pickup);return;}
-            Set(renderer,replacement);probe.Expect(replacement,type);dropped.Apply(renderer,replacement);waiting.Remove(pickup);
+            Set(renderer,replacement);probe.Expect(replacement,type);dropped.Apply(renderer,replacement,id);waiting.Remove(pickup);
         }
         private void ApplyWeapon(Interaction_WeaponPickUp pickup)
         {
@@ -153,10 +155,55 @@ namespace CultCraft
         private void ApplyDisplay(InventoryItemDisplay display,InventoryItem.ITEM_TYPE type)
         {
             if(disposed||display==null)return;string id=ResourceTexture(type);if(id==null)return;
-            Sprite replacement=sprite(id);if(replacement==null)return;
             SpriteRenderer renderer=display.spriteRenderer!=null?display.spriteRenderer:display.GetComponent<SpriteRenderer>();
+            bool reward=display.GetComponentInParent<SingleChoiceRewardOption>(true)!=null;
+            if(reward&&type==InventoryItem.ITEM_TYPE.GIFT_MEDIUM)
+            {
+                if(renderer!=null)Set(renderer,GiftPreview(renderer.sprite));
+                if(display.image!=null)Set(display.image,GiftPreview(display.image.sprite));
+                if(display.outline!=null)Set(display.outline,GiftPreview(display.outline.sprite));
+                return;
+            }
+            Sprite replacement=sprite(id);if(replacement==null)return;
+            if(reward&&renderer!=null&&renderer.sprite!=null&&MinecraftAvatar.IsBlockItem(id))
+            {
+                Bounds nativeBounds=renderer.sprite.bounds;
+                Set(renderer,replacement);
+                dropped.Apply(renderer,replacement,id,nativeBounds);
+                return;
+            }
+            if(reward)
+            {
+                if(renderer!=null)Set(renderer,FitRewardPreview(renderer.sprite,replacement.texture,replacement.rect,replacement.name));
+                if(display.image!=null)Set(display.image,FitRewardPreview(display.image.sprite,replacement.texture,replacement.rect,replacement.name));
+                if(display.outline!=null)Set(display.outline,FitRewardPreview(display.outline.sprite,replacement.texture,replacement.rect,replacement.name));
+                return;
+            }
             Set(renderer,replacement);Set(display.image,replacement);Set(display.outline,replacement);
             PickUp pickup=display.GetComponentInParent<PickUp>();if(pickup!=null)Apply(pickup,false,type);
+        }
+
+        private Sprite GiftPreview(Sprite native)
+        {
+            Texture2D texture=assets.Texture("black_shulker_reward");
+            return texture==null?null:FitRewardPreview(native,texture,new Rect(0,0,texture.width,texture.height),
+                "CultCraft fitted black shulker reward");
+        }
+
+        private Sprite FitRewardPreview(Sprite native,Texture2D texture,Rect rect,string name)
+        {
+            if(native==null||texture==null)return null;
+            var key=(native,texture);
+            if(rewardPreviews.TryGetValue(key,out Sprite preview))return preview;
+            Vector2 nativeSize=native.rect.size/native.pixelsPerUnit;
+            if(nativeSize.x<=0f||nativeSize.y<=0f)return null;
+            float ppu=Mathf.Max(rect.width/nativeSize.x,rect.height/nativeSize.y);
+            Vector2 center=(native.rect.size*0.5f-native.pivot)/native.pixelsPerUnit;
+            Vector2 pivot=Vector2.one*0.5f-new Vector2(center.x*ppu/rect.width,center.y*ppu/rect.height);
+            preview=Sprite.Create(texture,rect,pivot,ppu,0,SpriteMeshType.FullRect);
+            preview.name=name;
+            rewardPreviews.Add(key,preview);
+            return preview;
         }
         private void Set(SpriteRenderer renderer,Sprite replacement)
         {
@@ -214,6 +261,7 @@ namespace CultCraft
             if(disposed)return;harmony.UnpatchSelf();SceneManager.sceneLoaded-=SceneLoaded;
             foreach(SpriteRenderer renderer in new List<SpriteRenderer>(renderers.Keys))Restore(renderer);
             foreach(Image image in new List<Image>(images.Keys))Restore(image);
+            foreach(Sprite preview in rewardPreviews.Values)UnityEngine.Object.Destroy(preview);
             waiting.Clear();dropped.Dispose();disposed=true;if(current==this)current=null;
         }
     }

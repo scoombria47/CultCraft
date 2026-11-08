@@ -4,15 +4,20 @@
 
 ## English
 
-CultCraft brings Steve, Alex, and Minecraft gear into Cult of the Lamb. Version **0.8.5-multiplayer** supports two-player co-op on a shared screen, including through Steam Remote Play Together.
+CultCraft brings Steve, Alex, and Minecraft gear into Cult of the Lamb. Version **0.8.6** supports two-player co-op on a shared screen, including through Steam Remote Play Together.
 
 ### Play and install
 
 - **Play through Melty.** Install Cult of the Lamb and Minecraft: Java Edition. Launch Minecraft `1.21` once to the main menu and close it. Then open [CultCraft on Melty](https://melty.gg/m/cultcraft) and select **Play**. Melty installs BepInEx and the mod.
+- **Install the ZIP manually.** Download `CultCraft-0.8.6.zip` from [GitHub](downloads/CultCraft-0.8.6.zip) and follow the [Windows installation guide](INSTALL.md#вручную-из-готового-архива).
 - **Build from source.** For a personal Windows build, follow the [installation and build guide in Russian](INSTALL.md).
 - **Add a second player.** Load a save, open the pause menu, select **Add Co-Op Player**, and assign the second controller. For two PCs, invite your friend through Steam Remote Play Together before adding them in the game. Both players share the host's screen.
 
-### Features in 0.8.5
+### What’s new in 0.8.6
+
+Gathering uses the correct axe or pickaxe. Reward choices show compact 3D blocks and properly sized item icons. The player carries wrapped followers overhead and moves through a seated pose when getting into and out of bed. Scripted gestures now follow the native animations, and **B** uses a Minecraft-style crouch.
+
+### Features in 0.8.6
 
 - **Steve, Alex, and custom skins.** The Lamb appears as Steve and the Goat as Alex by default. Each character has a separate skin and arm model in **F6**. Enter a Minecraft Java username to load a skin from Mojang, then choose automatic, classic, or slim arms. Loading a skin requires internet access.
 - **Camera and settings.** **F5** switches between top-down and first-person views. **F6** opens Minecraft-style settings for mouse sensitivity, field of view, dropped-item size, and hints. The menu supports mouse, keyboard, and controller input.
@@ -37,15 +42,20 @@ The original code is proprietary. The creator permits remixes through Melty. See
 
 ## Русский
 
-CultCraft переносит Стива, Алекс и снаряжение Minecraft в Cult of the Lamb. Версия **0.8.5-multiplayer** поддерживает кооператив на двоих на общем экране, в том числе через Steam Remote Play Together.
+CultCraft переносит Стива, Алекс и снаряжение Minecraft в Cult of the Lamb. Версия **0.8.6** поддерживает кооператив на двоих на общем экране, в том числе через Steam Remote Play Together.
 
 ### Установка и запуск
 
 - **Через Melty.** Установите Cult of the Lamb и Minecraft: Java Edition. Один раз запустите Minecraft `1.21` до главного меню и закройте игру. Затем откройте [CultCraft в Melty](https://melty.gg/m/cultcraft) и нажмите **Play**. Melty установит BepInEx и мод.
+- **Из готового ZIP.** Скачайте `CultCraft-0.8.6.zip` из [GitHub](downloads/CultCraft-0.8.6.zip) и следуйте [инструкции для Windows](INSTALL.md#вручную-из-готового-архива).
 - **Из исходников.** Для личной сборки на Windows следуйте [инструкции по установке и сборке](INSTALL.md).
 - **Вдвоём.** Загрузите сохранение, откройте меню паузы, добавьте второго игрока и назначьте ему второй контроллер. Для игры с двух компьютеров сначала пригласите друга через Steam Remote Play Together, затем добавьте его в игре. Оба игрока делят экран ведущего.
 
-### Возможности 0.8.5
+### Что нового в 0.8.6
+
+При сборе ресурсов появляются топор и кирка. В выборе наград блоки отображаются объёмно, а иконки предметов вписываются в штатный размер. Персонаж несёт свёрток на поднятых руках, садится на край кровати при укладывании и подъёме. Жесты повторяют игровые анимации, а **B** включает приседание в стиле Minecraft.
+
+### Возможности 0.8.6
 
 - **Стив, Алекс и свои скины.** По умолчанию Ягнёнок выглядит как Стив, а Козёл — как Алекс. У каждого персонажа свой скин и тип рук в меню **F6**. Введите ник Minecraft Java, чтобы загрузить скин с серверов Mojang, и выберите тип рук «Авто», «Обычные» или «Тонкие». Для загрузки скина нужен интернет.
 - **Камера и настройки.** **F5** переключает вид сверху и вид от первого лица. **F6** открывает меню в стиле Minecraft с настройками чувствительности мыши, поля зрения, размера выпавших предметов и подсказок. Меню поддерживает мышь, клавиатуру и контроллер.

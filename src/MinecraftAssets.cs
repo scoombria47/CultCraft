@@ -137,6 +137,7 @@ namespace CultCraft
             if (entry == "spider_eye_red") return RecolouredResource("spider_eye_red", "spider_eye");
             if (entry == "rainbow_dye") return RecolouredResource("rainbow_dye", "lime_dye");
             if (entry == "black_shulker_box") return BlackShulkerIcon();
+            if (entry == "black_shulker_reward") return BlackShulkerIcon(true);
             if (!entry.StartsWith("assets/", StringComparison.Ordinal))
             {
                 // The design sheet owns asset identifiers; paths remain supported for callers reading client data.
@@ -306,6 +307,27 @@ namespace CultCraft
             result.Apply();textures.Add(key,result);return result;
         }
 
+        internal Texture2D RewardBlockTexture(string id)
+        {
+            string key="cultcraft-reward-block:"+id;
+            if(textures.TryGetValue(key,out Texture2D result))return result;
+            Texture2D source=HeldBlockTexture(id);
+            int width=source.width,height=source.height/3;
+            result=new Texture2D(width,height*4,TextureFormat.RGBA32,false)
+                {name="CultCraft shaded reward block "+id,filterMode=FilterMode.Point,wrapMode=TextureWrapMode.Clamp};
+            float[] shades={0.83f,1f,0.67f,0.61f};
+            for(int tile=0;tile<shades.Length;tile++)
+            {
+                Color[] pixels=source.GetPixels(0,(tile%3)*height,width,height);
+                for(int i=0;i<pixels.Length;i++)
+                {
+                    pixels[i].r*=shades[tile];pixels[i].g*=shades[tile];pixels[i].b*=shades[tile];
+                }
+                result.SetPixels(0,tile*height,width,height,pixels);
+            }
+            result.Apply();textures.Add(key,result);return result;
+        }
+
         private Texture2D BlackShulkerAtlas()
         {
             const string key="cultcraft-held-block:black_shulker_box";Texture2D result;
@@ -318,20 +340,31 @@ namespace CultCraft
             for(int y=0;y<32;y++)for(int x=0;x<32;x++)
             {
                 int sx=x/2,sy=y/2,sideRow=sy<4?51-sy:31-sy;
-                result.SetPixel(x,y,entity.GetPixel(16+sx,63-sideRow));
+                Color side=entity.GetPixel(16+sx,63-sideRow);
+                // In the closed model the lower four lid rows overlap the
+                // upper four base rows. The lid's cutouts reveal that base.
+                if(sy>=4&&sy<8&&side.a<1f)
+                {
+                    Color under=entity.GetPixel(16+sx,63-(51-sy));
+                    float lidAlpha=side.a;
+                    side=Color.Lerp(under,side,lidAlpha);
+                    side.a=lidAlpha+under.a*(1f-lidAlpha);
+                }
+                result.SetPixel(x,y,side);
                 result.SetPixel(x,y+32,top.GetPixel(sx,sy));
                 result.SetPixel(x,y+64,entity.GetPixel(32+sx,20+sy));
             }
             result.Apply();textures.Add(key,result);return result;
         }
 
-        private Texture2D BlackShulkerIcon()
+        private Texture2D BlackShulkerIcon(bool reward = false)
         {
-            const string key="cultcraft-isometric:black_shulker_box";Texture2D result;
+            string key=reward?"cultcraft-isometric:black_shulker_reward":"cultcraft-isometric:black_shulker_box";Texture2D result;
             if(textures.TryGetValue(key,out result))return result;
             Texture2D atlas=BlackShulkerAtlas();if(atlas==null)return null;
-            result=new Texture2D(32,32,TextureFormat.RGBA32,false){name="CultCraft black shulker cube icon",filterMode=FilterMode.Point,wrapMode=TextureWrapMode.Clamp};
-            result.SetPixels(new Color[32*32]);
+            int size=reward?128:32;
+            result=new Texture2D(size,size,TextureFormat.RGBA32,false){name=reward?"CultCraft shulker reward preview":"CultCraft black shulker cube icon",filterMode=reward?FilterMode.Bilinear:FilterMode.Point,wrapMode=TextureWrapMode.Clamp};
+            result.SetPixels(new Color[size*size]);
             IconFace(result,atlas,new Vector2(16,2),new Vector2(14,7),new Vector2(-14,7),1,1f);
             IconFace(result,atlas,new Vector2(2,23),new Vector2(14,7),new Vector2(0,-14),0,0.7f);
             IconFace(result,atlas,new Vector2(16,30),new Vector2(14,-7),new Vector2(0,-14),0,0.9f);
@@ -340,13 +373,15 @@ namespace CultCraft
         private static void IconFace(Texture2D icon,Texture2D atlas,Vector2 origin,Vector2 axisU,Vector2 axisV,int tile,float shade)
         {
             float determinant=axisU.x*axisV.y-axisU.y*axisV.x;
-            for(int y=0;y<32;y++)for(int x=0;x<32;x++)
+            int size=icon.width;
+            float unit=32f/size;
+            for(int y=0;y<size;y++)for(int x=0;x<size;x++)
             {
-                Vector2 p=new Vector2(x+0.5f,y+0.5f)-origin;
+                Vector2 p=new Vector2(x+0.5f,y+0.5f)*unit-origin;
                 float u=(p.x*axisV.y-p.y*axisV.x)/determinant,v=(axisU.x*p.y-axisU.y*p.x)/determinant;
                 if(u<0f||u>=1f||v<0f||v>=1f)continue;
                 Color c=atlas.GetPixel(Mathf.Min(31,(int)(u*32f)),tile*32+Mathf.Min(31,(int)(v*32f)));
-                c.r*=shade;c.g*=shade;c.b*=shade;icon.SetPixel(x,31-y,c);
+                c.r*=shade;c.g*=shade;c.b*=shade;icon.SetPixel(x,size-1-y,c);
             }
         }
 
