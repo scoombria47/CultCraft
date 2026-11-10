@@ -10,12 +10,12 @@ using UnityEngine.Networking;
 
 namespace CultCraft
 {
-    /// <summary>Optional, verified official clients. Never modifies a game installation.</summary>
+    /// <summary>Verified official client archives stored separately from the installed game.</summary>
     internal sealed class MinecraftClientSources : IDisposable
     {
         private sealed class Source : IDisposable
         {
-            public string Version, Hash, Url, Status="pending";
+            public string Version, Hash, Url, Path, Status="pending";
             public long Size;
             public readonly List<string> Entries=new List<string>();
             public FileStream File;
@@ -25,6 +25,7 @@ namespace CultCraft
         }
         private readonly Dictionary<string,Source> sources=new Dictionary<string,Source>(StringComparer.Ordinal);
         private readonly List<string> roots;
+        private readonly bool primaryOnly;
         private UnityWebRequest activeRequest;
         private string activePartial;
         private bool started,disposed;
@@ -34,17 +35,26 @@ namespace CultCraft
             get {var values=new List<string>();foreach(Source source in sources.Values)values.Add(source.Version+"="+source.Status);return String.Join(", ",values.ToArray());}
         }
 
-        public MinecraftClientSources(IEnumerable<string> ownerRoots)
+        public MinecraftClientSources(IEnumerable<string> ownerRoots, bool primaryOnly = false)
         {
             roots=new List<string>(ownerRoots);
+            this.primaryOnly = primaryOnly;
             foreach(AssetRow row in Spec.AssetRows)
             {
-                if(String.IsNullOrEmpty(row.SourceJarVersion)||row.SourceJarVersion=="primary")continue;
+                bool primary = String.IsNullOrEmpty(row.SourceJarVersion) || row.SourceJarVersion == "primary";
+                if (primary != primaryOnly) continue;
+                string version = primary ? Spec.Source("minecraft_java").PreferredVersion : row.SourceJarVersion;
                 Source source;
-                if(!sources.TryGetValue(row.SourceJarVersion,out source))
+                if(!sources.TryGetValue(version,out source))
                 {
-                    source=new Source{Version=row.SourceJarVersion};
-                    if(source.Version=="26.3")
+                    source=new Source{Version=version};
+                    if (primary && version == "1.21")
+                    {
+                        source.Hash = "0e9a07b9bb3390602f977073aa12884a4ce12431";
+                        source.Size = 26836080L;
+                        source.Url = "https://piston-data.mojang.com/v1/objects/" + source.Hash + "/client.jar";
+                    }
+                    else if(source.Version=="26.3")
                     {
                         source.Hash="e877b6a07acd633fb3bb475002175cec036e7b87";
                         source.Size=41483720L;
@@ -69,6 +79,11 @@ namespace CultCraft
         }
 
         public ZipArchive Archive(string version){Source source;return !disposed&&sources.TryGetValue(version,out source)?source.Archive:null;}
+        public string PreparedPath(string version)
+        {
+            Source source;
+            return !disposed && sources.TryGetValue(version, out source) && source.Archive != null ? source.Path : null;
+        }
 
         private IEnumerable<string> Candidates(Source source)
         {
@@ -97,18 +112,18 @@ namespace CultCraft
         {
             try
             {
-                source.File=new FileStream(path,FileMode.Open,FileAccess.Read,FileShare.Read);
+                source.File=new FileStream(path,FileMode.Open,FileAccess.Read,FileShare.Read | FileShare.Delete);
                 source.Archive=new ZipArchive(source.File,ZipArchiveMode.Read,false);
-                foreach(string entry in source.Entries)if(source.Archive.GetEntry(entry)==null)throw new InvalidDataException("Declared optional entry is missing: "+entry);
-                source.Status="ready";Revision++;return true;
+                foreach(string entry in source.Entries)if(source.Archive.GetEntry(entry)==null)throw new InvalidDataException("Declared Minecraft entry is missing: "+entry);
+                source.Path=path;source.Status="ready";Revision++;return true;
             }
             catch(Exception){source.Dispose();return false;}
         }
 
-        private static void Fail(Source source,ManualLogSource logger,string reason)
+        private void Fail(Source source,ManualLogSource logger,string reason)
         {
             source.Status="unavailable";
-            if(!source.LoggedFailure&&logger!=null)logger.LogWarning("Optional Minecraft "+source.Version+" unavailable; native art retained: "+reason);
+            if(!source.LoggedFailure&&logger!=null)logger.LogWarning("Minecraft "+source.Version+(primaryOnly?" resource fallback":" optional resources")+" unavailable: "+reason);
             source.LoggedFailure=true;
         }
 
@@ -168,9 +183,17 @@ namespace CultCraft
                     activePartial=null;
                 }
                 catch(Exception error){commitError=error.Message;}
-                if(commitError!=null){ClearPending();Fail(source,logger,commitError);continue;}
-                if(!Open(source,cache))Fail(source,logger,"verified client does not contain its declared optional entries");
-                else if(logger!=null)logger.LogInfo("Optional Minecraft "+source.Version+" assets ready from verified CultCraft cache.");
+                if(commitError!=null)
+                {
+                    ClearPending();
+                    // Another game instance can populate the shared cache during this download.
+                    Task<bool> check=System.Threading.Tasks.Task.Run(()=>Verified(cache,source));
+                    while(!disposed&&!check.IsCompleted)yield return null;
+                    if(disposed)yield break;
+                    if(check.IsFaulted||!check.Result){Fail(source,logger,commitError);continue;}
+                }
+                if(!Open(source,cache))Fail(source,logger,"verified client does not contain its declared entries");
+                else if(logger!=null)logger.LogInfo("Minecraft "+source.Version+" assets ready from verified CultCraft cache.");
             }
         }
 

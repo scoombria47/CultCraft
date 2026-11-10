@@ -18,7 +18,7 @@
   "rows": [
     {
       "Id": "current",
-      "Version": "0.8.6",
+      "Version": "0.8.7",
       "Title": "CultCraft",
       "Guid": "local.cultcraft",
       "Primary": "cult-of-the-lamb",

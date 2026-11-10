@@ -19,6 +19,9 @@ namespace CultCraft
         private bool disposed;
         private InstalledSounds sounds;
         private MinecraftClientSources optionalSources;
+        private MinecraftClientSources primaryFallback;
+        private string installedSoundClient;
+        private List<string> installedRoots;
         private readonly Dictionary<string,string> entrySources=new Dictionary<string,string>(StringComparer.Ordinal);
 
         public bool Ready { get; private set; }
@@ -26,6 +29,8 @@ namespace CultCraft
         public string ClientJar { get; private set; }
         public string Error { get; private set; }
         public Texture2D PlayerSkin { get; private set; }
+        public bool CanPreparePrimary { get { return primaryFallback != null; } }
+        public string PrimaryStatus { get { return primaryFallback == null ? "" : primaryFallback.Status; } }
         public int SourceRevision { get { return optionalSources==null?0:optionalSources.Revision; } }
         public string OptionalSourceStatus { get { return optionalSources==null?"not prepared":optionalSources.Status; } }
 
@@ -54,28 +59,10 @@ namespace CultCraft
                 {
                     try
                     {
-                        clientFile = new FileStream(candidate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                        archive = new ZipArchive(clientFile, ZipArchiveMode.Read, false);
-                        // Compatibility means the whole declared asset set, including late-game materials.
-                        foreach (AssetRow row in Spec.AssetRows)
-                        {
-                            if(!String.IsNullOrEmpty(row.SourceJarVersion)&&row.SourceJarVersion!="primary")continue;
-                            if (archive.GetEntry(row.Entry) == null) throw new InvalidDataException("Required Minecraft asset is missing: " + row.Id + " (" + row.Entry + ").");
-                            if (row.Entry.EndsWith(".png", StringComparison.OrdinalIgnoreCase) && Texture(row.Entry) == null) throw new InvalidDataException("Required Minecraft texture could not be decoded: " + row.Id + ".");
-                        }
-                        string skin = Spec.Asset("steve").Entry;
-                        // Require the modern 64x64 wide skin: the UV layout below is exact for this format.
-                        PlayerSkin = Texture(skin);
-                        int skinSize = (int)Spec.Visual("skin_size").Value;
-                        if (PlayerSkin == null || PlayerSkin.width != skinSize || PlayerSkin.height != skinSize) throw new InvalidDataException("The installed Steve texture does not match the declared " + skinSize + "x" + skinSize + " wide-player UV layout.");
-                        ClientJar = candidate;
-                        Version = Path.GetFileNameWithoutExtension(candidate);
-                        DirectoryInfo versionFolder=Directory.GetParent(candidate);
-                        if(versionFolder!=null&&versionFolder.Parent!=null&&versionFolder.Parent.Name=="versions"&&versionFolder.Parent.Parent!=null)folders.Add(versionFolder.Parent.Parent.FullName);
-                        optionalSources=new MinecraftClientSources(folders);
-                        try { sounds = new InstalledSounds(candidate); } catch { sounds = null; }
-                        Error = null;
-                        Ready = true;
+                        OpenClient(candidate);
+                        if (installedSoundClient == null && IsMinecraftClient(archive)) installedSoundClient = candidate;
+                        ValidatePrimary();
+                        ActivatePrimary(candidate, candidate, Path.GetFileNameWithoutExtension(candidate), folders);
                         return;
                     }
                     catch (Exception ex)
@@ -87,6 +74,81 @@ namespace CultCraft
                 }
                 Error = "No compatible installed Minecraft Java client was found. Searched: " + String.Join("; ", folders.ToArray()) + ".";
                 if (rejections.Count > 0) Error += " Rejected clients: " + String.Join("; ", rejections.ToArray());
+                if (installedSoundClient != null)
+                {
+                    installedRoots = folders;
+                    primaryFallback = new MinecraftClientSources(folders, primaryOnly: true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+                CloseArchive();
+                ClearTextures();
+            }
+        }
+
+        private static bool IsMinecraftClient(ZipArchive candidate)
+        {
+            bool hasStone = candidate.GetEntry("assets/minecraft/textures/block/stone.png") != null ||
+                            candidate.GetEntry("assets/minecraft/textures/blocks/stone.png") != null;
+            return hasStone && (candidate.GetEntry("assets/minecraft/lang/en_us.json") != null ||
+                                candidate.GetEntry("assets/minecraft/lang/en_US.lang") != null);
+        }
+
+        private void OpenClient(string candidate)
+        {
+            clientFile = new FileStream(candidate, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            archive = new ZipArchive(clientFile, ZipArchiveMode.Read, false);
+        }
+
+        private void ValidatePrimary()
+        {
+            foreach (AssetRow row in Spec.AssetRows)
+            {
+                if (!String.IsNullOrEmpty(row.SourceJarVersion) && row.SourceJarVersion != "primary") continue;
+                if (archive.GetEntry(row.Entry) == null) throw new InvalidDataException("Required Minecraft asset is missing: " + row.Id + " (" + row.Entry + ").");
+                if (row.Entry.EndsWith(".png", StringComparison.OrdinalIgnoreCase) && Texture(row.Entry) == null)
+                    throw new InvalidDataException("Required Minecraft texture could not be decoded: " + row.Id + ".");
+            }
+            PlayerSkin = Texture(Spec.Asset("steve").Entry);
+            int skinSize = (int)Spec.Visual("skin_size").Value;
+            if (PlayerSkin == null || PlayerSkin.width != skinSize || PlayerSkin.height != skinSize)
+                throw new InvalidDataException("The Steve texture does not match the declared " + skinSize + "x" + skinSize + " wide-player UV layout.");
+        }
+
+        private void ActivatePrimary(string archivePath, string soundClient, string version, List<string> folders)
+        {
+            ClientJar = archivePath;
+            Version = version;
+            DirectoryInfo versionFolder = Directory.GetParent(soundClient);
+            if (versionFolder?.Parent?.Name == "versions" && versionFolder.Parent.Parent != null)
+                folders.Add(versionFolder.Parent.Parent.FullName);
+            optionalSources = new MinecraftClientSources(folders);
+            try { sounds = new InstalledSounds(soundClient); } catch { sounds = null; }
+            Error = null;
+            Ready = true;
+        }
+
+        public IEnumerator PreparePrimary(ManualLogSource logger)
+        {
+            if (disposed || primaryFallback == null) yield break;
+            yield return primaryFallback.Prepare(logger);
+            if (disposed) yield break;
+            string version = Spec.Source("minecraft_java").PreferredVersion;
+            string path = primaryFallback.PreparedPath(version);
+            primaryFallback.Dispose();
+            primaryFallback = null;
+            if (path == null)
+            {
+                Error = "Could not prepare the verified Minecraft " + version + " resource archive. " + Error;
+                yield break;
+            }
+            try
+            {
+                OpenClient(path);
+                ValidatePrimary();
+                ActivatePrimary(path, installedSoundClient, version, installedRoots);
             }
             catch (Exception ex)
             {
@@ -428,6 +490,7 @@ namespace CultCraft
             if (disposed) return;
             disposed = true;
             Ready = false;
+            if(primaryFallback!=null){primaryFallback.Dispose();primaryFallback=null;}
             if(optionalSources!=null){optionalSources.Dispose();optionalSources=null;}
             if(sounds!=null){sounds.Dispose();sounds=null;}
             CloseArchive();

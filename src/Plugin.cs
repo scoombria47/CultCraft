@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using BepInEx;
 using UnityEngine;
@@ -44,42 +45,62 @@ namespace CultCraft
             try
             {
                 assets = new MinecraftAssets(Environment.GetEnvironmentVariable("CULTCRAFT_MINECRAFT"));
-                if (!assets.Ready) throw new InvalidOperationException(assets.Error);
-                avatar = new MinecraftAvatar(assets);
-                camera = new CameraRig(Logger, Config, assets);
-                skins=new PlayerSkins(this,assets,Config,Logger);
-                camera.SetSkins(skins);
-                cinematicActors=new CinematicActors(assets,skins);
-                knucklebonesHeads=new KnucklebonesHeads(assets,skins);
-                camera.RenderPoseApplied += avatar.AlignViewCamera;
-                gameplay = new Gameplay(assets, Logger);
-                gameplay.SetCamera(camera);
-                devotion = new DevotionVisuals(assets, Logger);
-                devotionHud = new DevotionHud(assets);
-                worldResources = new WorldResourceVisuals(assets, gameplay, Logger);
-                stations = new StationVisuals(assets, Logger);
-                sermonAudio = new SermonAudio(assets, Logger);
-                attackCooldown = new AttackCooldownUi(assets, gameplay, camera, Logger);
-                test = new SelfTest(assets, avatar, camera, gameplay, Logger, stations, attackCooldown);
-                test.ConfigureSkinTest(this,skins,FindAvatar);
-                test.ConfigureScenesTest(this,skins,cinematicActors,knucklebonesHeads);
-                gameplay.AllowTestInput(test.Active);
-                StartCoroutine(assets.PrepareOptionalSources(Logger));
-                Logger.LogInfo("CultCraft " + Spec.Version + " loaded; authentic installed Minecraft client " + assets.Version + "; solo and local co-op.");
+                if (!assets.Ready && assets.CanPreparePrimary)
+                {
+                    Logger.LogWarning(assets.Error + " Preparing verified Minecraft resource fallback.");
+                    StartCoroutine(LoadPrimaryFallback());
+                    return;
+                }
+                Initialize();
             }
-            catch (Exception error)
-            {
-                startupError = error.Message;
-                Logger.LogError(error);
-                MeltyTest.Report("minecraft-assets-loaded", false, error.Message);
-                DisposeParts();
-            }
+            catch (Exception error) { FailStartup(error); }
+        }
+
+        private IEnumerator LoadPrimaryFallback()
+        {
+            yield return assets.PreparePrimary(Logger);
+            try { Initialize(); }
+            catch (Exception error) { FailStartup(error); }
+        }
+
+        private void Initialize()
+        {
+            if (!assets.Ready) throw new InvalidOperationException(assets.Error);
+            avatar = new MinecraftAvatar(assets);
+            camera = new CameraRig(Logger, Config, assets);
+            skins=new PlayerSkins(this,assets,Config,Logger);
+            camera.SetSkins(skins);
+            cinematicActors=new CinematicActors(assets,skins);
+            knucklebonesHeads=new KnucklebonesHeads(assets,skins);
+            camera.RenderPoseApplied += avatar.AlignViewCamera;
+            gameplay = new Gameplay(assets, Logger);
+            gameplay.SetCamera(camera);
+            devotion = new DevotionVisuals(assets, Logger);
+            devotionHud = new DevotionHud(assets);
+            worldResources = new WorldResourceVisuals(assets, gameplay, Logger);
+            stations = new StationVisuals(assets, Logger);
+            sermonAudio = new SermonAudio(assets, Logger);
+            attackCooldown = new AttackCooldownUi(assets, gameplay, camera, Logger);
+            test = new SelfTest(assets, avatar, camera, gameplay, Logger, stations, attackCooldown);
+            test.ConfigureSkinTest(this,skins,FindAvatar);
+            test.ConfigureScenesTest(this,skins,cinematicActors,knucklebonesHeads);
+            gameplay.AllowTestInput(test.Active);
+            StartCoroutine(assets.PrepareOptionalSources(Logger));
+            Logger.LogInfo("CultCraft " + Spec.Version + " loaded; official Minecraft resources " + assets.Version + "; solo and local co-op.");
+        }
+
+        private void FailStartup(Exception error)
+        {
+            startupError = error.Message;
+            Logger.LogError(error);
+            MeltyTest.Report("minecraft-assets-loaded", false, error.Message);
+            DisposeParts();
         }
 
         private void Update()
         {
             if (!firstTick) { firstTick = true; Logger.LogInfo("CultCraft first Update; runtime component active and persistent."); }
-            if (startupError != null) return;
+            if (test == null) return;
             try
             {
                 MeltyPlay.Tick();
@@ -203,7 +224,13 @@ namespace CultCraft
             if (startupError != null)
             {
                 GUI.Box(new Rect(18, 18, 600, 100), "");
-                GUI.Label(new Rect(30, 28, 575, 80), "CultCraft: " + startupError + "\nMinecraft Java должен быть установлен и запущен хотя бы один раз.", hud);
+                GUI.Label(new Rect(30, 28, 575, 80), "CultCraft could not load Minecraft resources. Install and launch Minecraft: Java Edition 1.21, then restart Cult of the Lamb. Details: BepInEx/LogOutput.log.", hud);
+                return;
+            }
+            if (assets != null && assets.CanPreparePrimary)
+            {
+                GUI.Box(new Rect(18, 18, 600, 56), "");
+                GUI.Label(new Rect(30, 28, 575, 42), "CultCraft is preparing Minecraft resources (" + assets.PrimaryStatus + ").", hud);
                 return;
             }
             if (devotionHud != null) devotionHud.Draw(PlayerFarming.Instance);

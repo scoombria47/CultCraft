@@ -4,20 +4,22 @@
 
 ## English
 
-CultCraft brings Steve, Alex, and Minecraft gear into Cult of the Lamb. Version **0.8.6** supports two-player co-op on a shared screen, including through Steam Remote Play Together.
+CultCraft brings Steve, Alex, and Minecraft gear into Cult of the Lamb. Version **0.8.7** supports two-player co-op on a shared screen, including through Steam Remote Play Together.
 
 ### Play and install
 
-- **Play through Melty.** Install Cult of the Lamb and Minecraft: Java Edition. Launch Minecraft `1.21` once to the main menu and close it. Then open [CultCraft on Melty](https://melty.gg/m/cultcraft) and select **Play**. Melty installs BepInEx and the mod.
-- **Install the ZIP manually.** Download `CultCraft-0.8.6.zip` from [GitHub](downloads/CultCraft-0.8.6.zip) and follow the [Windows installation guide](INSTALL.md#вручную-из-готового-архива).
+- **Play through Melty.** Install Cult of the Lamb and Minecraft: Java Edition. Then open [CultCraft on Melty](https://melty.gg/m/cultcraft) and select **Play**. Melty installs BepInEx and the mod.
+- **Install the ZIP manually.** Download `CultCraft-0.8.7.zip` from [GitHub](downloads/CultCraft-0.8.7.zip) and follow the [Windows installation guide](INSTALL.md#вручную-из-готового-архива).
 - **Build from source.** For a personal Windows build, follow the [installation and build guide in Russian](INSTALL.md).
 - **Add a second player.** Load a save, open the pause menu, select **Add Co-Op Player**, and assign the second controller. For two PCs, invite your friend through Steam Remote Play Together before adding them in the game. Both players share the host's screen.
 
-### What’s new in 0.8.6
+### What’s new in 0.8.7
 
-Gathering uses the correct axe or pickaxe. Reward choices show compact 3D blocks and properly sized item icons. The player carries wrapped followers overhead and moves through a seated pose when getting into and out of bed. Scripted gestures now follow the native animations, and **B** uses a Minecraft-style crouch.
+**0.8.7 fixes startup compatibility.** Minecraft: Java Edition must be installed, but you no longer need to install version 1.21 separately. If your installed client is missing required resources, CultCraft downloads and verifies the official 1.21 resource archive in its own cache. The first download requires an internet connection.
 
-### Features in 0.8.6
+In 0.8.6, gathering uses the correct axe or pickaxe. Reward choices show compact 3D blocks and properly sized item icons. The player carries wrapped followers overhead and moves through a seated pose when getting into and out of bed. Scripted gestures now follow the native animations, and **B** uses a Minecraft-style crouch.
+
+### Features in 0.8.7
 
 - **Steve, Alex, and custom skins.** The Lamb appears as Steve and the Goat as Alex by default. Each character has a separate skin and arm model in **F6**. Enter a Minecraft Java username to load a skin from Mojang, then choose automatic, classic, or slim arms. Loading a skin requires internet access.
 - **Camera and settings.** **F5** switches between top-down and first-person views. **F6** opens Minecraft-style settings for mouse sensitivity, field of view, dropped-item size, and hints. The menu supports mouse, keyboard, and controller input.
@@ -28,7 +30,7 @@ Gathering uses the correct axe or pickaxe. Reward choices show compact 3D blocks
 
 ### Requirements and build notes
 
-Use legitimate copies of both games. The tested setup is Cult of the Lamb for Windows x64 (Steam build `25223484`), Minecraft: Java Edition `1.21`, and BepInEx `5.4.23.5`. Minecraft can stay closed while you play.
+Use legitimate copies of both games. The game test used Cult of the Lamb for Windows x64 (Steam build `25223484`), Minecraft: Java Edition `1.21` and BepInEx `5.4.23.5`. Minecraft can stay closed while you play.
 
 CultCraft reads assets from the installed Minecraft client. It can fetch extra assets from official Mojang client archives (`1.21.2`, `1.21.9`, and `26.3`) into its own cache. Game assets and libraries are excluded from this repository.
 
@@ -42,20 +44,22 @@ The original code is proprietary. The creator permits remixes through Melty. See
 
 ## Русский
 
-CultCraft переносит Стива, Алекс и снаряжение Minecraft в Cult of the Lamb. Версия **0.8.6** поддерживает кооператив на двоих на общем экране, в том числе через Steam Remote Play Together.
+CultCraft переносит Стива, Алекс и снаряжение Minecraft в Cult of the Lamb. Версия **0.8.7** поддерживает кооператив на двоих на общем экране, в том числе через Steam Remote Play Together.
 
 ### Установка и запуск
 
-- **Через Melty.** Установите Cult of the Lamb и Minecraft: Java Edition. Один раз запустите Minecraft `1.21` до главного меню и закройте игру. Затем откройте [CultCraft в Melty](https://melty.gg/m/cultcraft) и нажмите **Play**. Melty установит BepInEx и мод.
-- **Из готового ZIP.** Скачайте `CultCraft-0.8.6.zip` из [GitHub](downloads/CultCraft-0.8.6.zip) и следуйте [инструкции для Windows](INSTALL.md#вручную-из-готового-архива).
+- **Через Melty.** Установите Cult of the Lamb и Minecraft: Java Edition. Затем откройте [CultCraft в Melty](https://melty.gg/m/cultcraft) и нажмите **Play**. Melty установит BepInEx и мод.
+- **Из готового ZIP.** Скачайте `CultCraft-0.8.7.zip` из [GitHub](downloads/CultCraft-0.8.7.zip) и следуйте [инструкции для Windows](INSTALL.md#вручную-из-готового-архива).
 - **Из исходников.** Для личной сборки на Windows следуйте [инструкции по установке и сборке](INSTALL.md).
 - **Вдвоём.** Загрузите сохранение, откройте меню паузы, добавьте второго игрока и назначьте ему второй контроллер. Для игры с двух компьютеров сначала пригласите друга через Steam Remote Play Together, затем добавьте его в игре. Оба игрока делят экран ведущего.
 
-### Что нового в 0.8.6
+### Что нового в 0.8.7
 
-При сборе ресурсов появляются топор и кирка. В выборе наград блоки отображаются объёмно, а иконки предметов вписываются в штатный размер. Персонаж несёт свёрток на поднятых руках, садится на край кровати при укладывании и подъёме. Жесты повторяют игровые анимации, а **B** включает приседание в стиле Minecraft.
+**В 0.8.7 исправлен запуск мода.** Minecraft: Java Edition должна быть установлена, но отдельно устанавливать версию 1.21 больше не нужно. Если в установленном клиенте не хватает ресурсов, CultCraft скачает официальный архив 1.21 в свой кэш и проверит его. Для первой загрузки нужен интернет.
 
-### Возможности 0.8.6
+В 0.8.6 при сборе ресурсов появляются топор и кирка. В выборе наград блоки отображаются объёмно, а иконки предметов вписываются в штатный размер. Персонаж несёт свёрток на поднятых руках, садится на край кровати при укладывании и подъёме. Жесты повторяют игровые анимации, а **B** включает приседание в стиле Minecraft.
+
+### Возможности 0.8.7
 
 - **Стив, Алекс и свои скины.** По умолчанию Ягнёнок выглядит как Стив, а Козёл — как Алекс. У каждого персонажа свой скин и тип рук в меню **F6**. Введите ник Minecraft Java, чтобы загрузить скин с серверов Mojang, и выберите тип рук «Авто», «Обычные» или «Тонкие». Для загрузки скина нужен интернет.
 - **Камера и настройки.** **F5** переключает вид сверху и вид от первого лица. **F6** открывает меню в стиле Minecraft с настройками чувствительности мыши, поля зрения, размера выпавших предметов и подсказок. Меню поддерживает мышь, клавиатуру и контроллер.
@@ -66,7 +70,7 @@ CultCraft переносит Стива, Алекс и снаряжение Mine
 
 ### Требования и сборка
 
-Используйте легальные копии обеих игр. Проверенная конфигурация включает Cult of the Lamb для Windows x64 (сборка Steam `25223484`), Minecraft: Java Edition `1.21` и BepInEx `5.4.23.5`. Во время игры Minecraft можно держать закрытой.
+Используйте легальные копии обеих игр. Игровой тест прошёл на Cult of the Lamb для Windows x64 (сборка Steam `25223484`), Minecraft: Java Edition `1.21` и BepInEx `5.4.23.5`. Во время игры Minecraft можно держать закрытой.
 
 CultCraft читает ресурсы из установленного клиента Minecraft. Дополнительные ресурсы из официальных клиентских архивов Mojang (`1.21.2`, `1.21.9` и `26.3`) мод может загрузить в свой кэш. Игровые ресурсы и библиотеки в репозиторий не входят.
 
