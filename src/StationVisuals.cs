@@ -60,7 +60,7 @@ namespace CultCraft
 
         private void SceneLoaded(Scene scene, LoadSceneMode mode) { bedBindings.Clear(); }
 
-        public void Tick(PlayerFarming player = null)
+        public void Tick()
         {
             if (disposed) return;
             queue.Clear(); queue.AddRange(pending); pending.Clear();
@@ -70,7 +70,6 @@ namespace CultCraft
                 try { Register(native); }
                 catch (Exception error) { logger.LogWarning("Minecraft construction table kept native art: " + error.Message); }
             }
-            LateTick();
         }
 
         private void Register(Interaction_PlacementRegion native)
@@ -115,11 +114,15 @@ namespace CultCraft
                 { stations.Remove(station.Native); ordered.RemoveAt(i); Release(station); continue; }
                 bool active = station.Native.isActiveAndEnabled &&
                     (station.Native.ActiveObject != null && station.Native.ActiveObject.activeInHierarchy || station.Native.InactiveObject != null && station.Native.InactiveObject.activeInHierarchy);
-                station.Visual.SetActive(active);
+                if(station.Visual.activeSelf!=active)station.Visual.SetActive(active);
                 Transform art = station.Native.ActiveObject != null ? station.Native.ActiveObject.transform : station.Native.transform;
                 Vector3 position = art.position; position.z = station.Native.transform.position.z;
-                station.Visual.transform.position = position;
-                foreach (var pair in station.Hidden) if (pair.Key != null) pair.Key.forceRenderingOff = pair.Value || active;
+                if(station.Visual.transform.position!=position)station.Visual.transform.position = position;
+                foreach (var pair in station.Hidden)
+                {
+                    bool hidden=pair.Value||active;
+                    if(pair.Key!=null&&pair.Key.forceRenderingOff!=hidden)pair.Key.forceRenderingOff=hidden;
+                }
             }
         }
 

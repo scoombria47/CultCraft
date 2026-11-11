@@ -143,19 +143,36 @@ namespace CultCraft
             int columns = Mathf.Clamp(2 * Mathf.CeilToInt((width / u - 1f) * 0.5f) + 1, 1, 25);
             int rows = Mathf.Clamp(2 * Mathf.CeilToInt((depth / u - 1f) * 0.5f) + 1, 1, 21);
             int layers = Mathf.Clamp(Mathf.CeilToInt(height / u), 1, 15);
+            float xCenter = (columns - 1f) * 0.5f, zCenter = (rows - 1f) * 0.5f;
+            var stacks = new int[columns, rows];
             for (int x = 0; x < columns; x++)
             for (int z = 0; z < rows; z++)
             {
-                float rx = columns == 1 ? 0f : (x - (columns - 1f) * 0.5f) / ((columns - 1f) * 0.5f);
-                float rz = rows == 1 ? 0f : (z - (rows - 1f) * 0.5f) / ((rows - 1f) * 0.5f);
+                float rx = columns == 1 ? 0f : (x - xCenter) / xCenter;
+                float rz = rows == 1 ? 0f : (z - zCenter) / zCenter;
                 float radius = Mathf.Sqrt(rx * rx + rz * rz);
                 if (radius > 1.08f) continue;
-                Vector3 cell = new Vector3((x - (columns - 1f) * 0.5f) * u, 0f, (z - (rows - 1f) * 0.5f) * u);
+                Vector3 cell = new Vector3((x - xCenter) * u, 0f, (z - zCenter) * u);
                 if (footprint != null && !footprint.ContainsCell(parent.TransformPoint(cell), u * 0.5f)) continue;
                 int stack = 1 + Mathf.FloorToInt((layers - 1f) * Mathf.Pow(Mathf.Clamp01(1f - radius), 0.7f));
                 if (stack > 2 && (x * 31 + z * 17) % 5 == 0) stack--;
-                for (int y = 0; y < stack; y++)
-                    Cube(cell + Vector3.up * (y + 0.5f) * u, Vector3.one * u, "stone");
+                stacks[x, z] = stack;
+            }
+            for (int x = 0; x < columns; x++)
+            for (int z = 0; z < rows; z++)
+            for (int y = 0; y < stacks[x, z]; y++)
+            {
+                // Adjacent opaque cubes share hidden faces. Keep every outer
+                // face, including the bottom used for the native footprint fit.
+                int faces = 0;
+                if (x + 1 == columns || stacks[x + 1, z] <= y) faces |= 1;
+                if (x == 0 || stacks[x - 1, z] <= y) faces |= 2;
+                if (y + 1 == stacks[x, z]) faces |= 4;
+                if (y == 0) faces |= 8;
+                if (z + 1 == rows || stacks[x, z + 1] <= y) faces |= 16;
+                if (z == 0 || stacks[x, z - 1] <= y) faces |= 32;
+                if (faces != 0)
+                    Cube(new Vector3((x - xCenter) * u, (y + 0.5f) * u, (z - zCenter) * u), Vector3.one * u, "stone", faceMask: faces);
             }
         }
 

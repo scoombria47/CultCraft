@@ -35,6 +35,18 @@
       "Verification": "Select each native language by its exact name and verify both text sources and the pirate coin names."
     },
     {
+      "Id": "minecraft-survival-food",
+      "Evidence": "Hotbar food restores the native Survival hunger bar. Settlement restrictions, the blue heart cap and the native inventory are preserved.",
+      "System": "testing",
+      "Verification": "Start an isolated Survival save and drive the actual food picker and LMB in the settlement and Darkwood. Check 13 and 25 points, the 100% clamp, unchanged hearts in the settlement, special foods, and exact inventory consumption."
+    },
+    {
+      "Id": "minecraft-settlement-spawns",
+      "Evidence": "Pooled native resources draw their Minecraft models on the first game-camera frame, including after recycling.",
+      "System": "testing",
+      "Verification": "Spawn six waves of 12 logs, stones and berries in the isolated settlement. Check visual reuse and native rock fit. Record spawn and frame timings plus a large stone model's build time and triangle count."
+    },
+    {
       "Id": "minecraft-language-picker",
       "Evidence": "F6 opens a separate scrollable language list in the same order as the native settings.",
       "System": "testing",

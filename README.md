@@ -4,14 +4,20 @@
 
 ## English
 
-CultCraft brings Steve, Alex, and Minecraft gear into Cult of the Lamb. Version **0.8.8** supports two-player co-op on a shared screen, including through Steam Remote Play Together.
+CultCraft brings Steve, Alex, and Minecraft gear into Cult of the Lamb. Version **0.9.0-survival** supports two-player co-op on a shared screen, including through Steam Remote Play Together.
 
 ### Play and install
 
 - **Play through Melty.** Install Cult of the Lamb and Minecraft: Java Edition. Then open [CultCraft on Melty](https://melty.gg/m/cultcraft) and select **Play**. Melty installs BepInEx and the mod.
-- **Install the ZIP manually.** Download `CultCraft-0.8.8.zip` from [GitHub](downloads/CultCraft-0.8.8.zip) and follow the [Windows installation guide](INSTALL.md#вручную-из-готового-архива).
+- **Install the ZIP manually.** Download `CultCraft-0.9.0-survival.zip` from [GitHub](downloads/CultCraft-0.9.0-survival.zip) and follow the [Windows installation guide](INSTALL.md#вручную-из-готового-архива).
 - **Build from source.** For a personal Windows build, follow the [installation and build guide in Russian](INSTALL.md).
 - **Add a second player.** Load a save, open the pause menu, select **Add Co-Op Player**, and assign the second controller. For two PCs, invite your friend through Steam Remote Play Together before adding them in the game. Both players share the host's screen.
+
+### What’s new in 0.9.0-survival
+
+Hotbar food now restores hunger in Survival mode. Half-heart foods refill 13% of the hunger meter and full-heart foods refill 25%. Regular food restores hunger only in the settlement. Follower meat and blowfish are unavailable there, and follower meat can add blue health up to one full blue heart.
+
+CultCraft reuses dropped item models and spreads world object creation across frames to reduce stutters in the settlement. Stone piles use fewer triangles while retaining their visible shape and collision footprint.
 
 ### What’s new in 0.8.8
 
@@ -50,14 +56,20 @@ The original code is proprietary. The creator permits remixes through Melty. See
 
 ## Русский
 
-CultCraft переносит Стива, Алекс и снаряжение Minecraft в Cult of the Lamb. Версия **0.8.8** поддерживает кооператив на двоих на общем экране, в том числе через Steam Remote Play Together.
+CultCraft переносит Стива, Алекс и снаряжение Minecraft в Cult of the Lamb. Версия **0.9.0-survival** поддерживает кооператив на двоих на общем экране, в том числе через Steam Remote Play Together.
 
 ### Установка и запуск
 
 - **Через Melty.** Установите Cult of the Lamb и Minecraft: Java Edition. Затем откройте [CultCraft в Melty](https://melty.gg/m/cultcraft) и нажмите **Play**. Melty установит BepInEx и мод.
-- **Из готового ZIP.** Скачайте `CultCraft-0.8.8.zip` из [GitHub](downloads/CultCraft-0.8.8.zip) и следуйте [инструкции для Windows](INSTALL.md#вручную-из-готового-архива).
+- **Из готового ZIP.** Скачайте `CultCraft-0.9.0-survival.zip` из [GitHub](downloads/CultCraft-0.9.0-survival.zip) и следуйте [инструкции для Windows](INSTALL.md#вручную-из-готового-архива).
 - **Из исходников.** Для личной сборки на Windows следуйте [инструкции по установке и сборке](INSTALL.md).
 - **Вдвоём.** Загрузите сохранение, откройте меню паузы, добавьте второго игрока и назначьте ему второй контроллер. Для игры с двух компьютеров сначала пригласите друга через Steam Remote Play Together, затем добавьте его в игре. Оба игрока делят экран ведущего.
+
+### Что нового в 0.9.0-survival
+
+Еда из хотбара теперь восстанавливает голод в режиме выживания. Еда с эффектом в полсердца заполняет 13% шкалы, а с эффектом в целое сердце — 25%. В поселении обычная еда восстанавливает только сытость, а мясо последователя и рыбу-шар съесть нельзя. Мясо последователя может добавить голубое здоровье до одного полного сердца.
+
+CultCraft переиспользует модели выпавших предметов и распределяет создание объектов по кадрам, чтобы уменьшить рывки в поселении. У каменных груд меньше треугольников при той же видимой форме и коллизии.
 
 ### Что нового в 0.8.8
 

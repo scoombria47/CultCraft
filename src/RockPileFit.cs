@@ -104,26 +104,35 @@ namespace CultCraft
             Vector2 a = ProjectSize(source), b = ProjectSize(model);
             float centerError = Mathf.Abs(Vector3.Dot(source.center - model.center, Up));
             float xError = Mathf.Abs(source.center.x - model.center.x);
-            // BlockModels batches twelve independent triangles (36 vertices) per cube.
             bool fixedBlocks = true, insideBlocking = true;
-            int cubes = 0;
+            var columns = new HashSet<Vector3>();
             Footprint footprint = BlockingFootprint(native);
             foreach (MeshFilter filter in visual.GetComponentsInChildren<MeshFilter>(true))
             {
-                Vector3[] vertices = filter.sharedMesh.vertices;
-                if (vertices.Length % 36 != 0) { fixedBlocks = false; break; }
-                for (int i = 0; i < vertices.Length; i += 36)
+                Mesh mesh = filter.sharedMesh;
+                Vector3[] vertices = mesh.vertices, normals = mesh.normals;
+                if (vertices.Length % 3 != 0 || normals.Length != vertices.Length) { fixedBlocks = false; break; }
+                for (int i = 0; i < vertices.Length; i += 3)
                 {
-                    Bounds cube = new Bounds(filter.transform.TransformPoint(vertices[i]), Vector3.zero);
-                    for (int j = 1; j < 36; j++) cube.Encapsulate(filter.transform.TransformPoint(vertices[i + j]));
-                    if ((cube.size - Vector3.one * BlockEdge).sqrMagnitude > 0.0001f) { fixedBlocks = false; break; }
-                    cubes++;
-                    if (footprint != null && !footprint.ContainsCell(cube.center, BlockEdge * 0.5f)) insideBlocking = false;
+                    var face = new Bounds(vertices[i], Vector3.zero);
+                    face.Encapsulate(vertices[i + 1]);
+                    face.Encapsulate(vertices[i + 2]);
+                    Vector3 normal = normals[i];
+                    Vector3 expected = (Vector3.one - new Vector3(Mathf.Abs(normal.x), Mathf.Abs(normal.y), Mathf.Abs(normal.z))) * BlockEdge;
+                    if ((face.size - expected).sqrMagnitude > 0.0001f) { fixedBlocks = false; break; }
+                    // Each column has two retained bottom triangles, even when
+                    // its sides and the faces between its blocks are culled.
+                    if (normal.y < -0.5f)
+                    {
+                        Vector3 center = filter.transform.TransformPoint(face.center);
+                        if (columns.Add(center) && footprint != null && !footprint.ContainsCell(center, BlockEdge * 0.5f))
+                            insideBlocking = false;
+                    }
                 }
             }
-            detail = "native silhouette=" + a + ", Minecraft=" + b + ", cubes=" + cubes + ", fixed0.4=" + fixedBlocks +
+            detail = "native silhouette=" + a + ", Minecraft=" + b + ", columns=" + columns.Count + ", fixed0.4=" + fixedBlocks +
                 ", blocking colliders=" + (footprint == null ? 0 : footprint.Colliders.Length) + ", all columns inside obstruction=" + insideBlocking;
-            if (footprint != null) return cubes > 0 && fixedBlocks && insideBlocking &&
+            if (footprint != null) return columns.Count > 0 && fixedBlocks && insideBlocking &&
                 model.size.x <= footprint.Bounds.size.x + 0.01f && model.size.y <= footprint.Bounds.size.y + 0.01f &&
                 (visual.localScale - Vector3.one).sqrMagnitude < 0.0001f;
             return b.x >= a.x * 0.95f && b.y >= a.y * 0.90f && centerError < 0.08f && xError < 0.06f && fixedBlocks && (visual.localScale - Vector3.one).sqrMagnitude < 0.0001f;

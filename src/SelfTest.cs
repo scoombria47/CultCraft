@@ -189,6 +189,8 @@ namespace CultCraft
         internal void PrepareAnimationAudit(PlayerFarming player) => regressionProof?.PrepareAnimationAudit(player);
         internal void DrawAnimationAuditLabel() => regressionProof?.DrawAnimationAuditLabel();
         private readonly bool hotbarOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-return-held-items");
+        private readonly bool survivalFoodOnly = Array.Exists(Spec.TestRows, row => row.Id == FoodSelfTest.SurvivalId);
+        private readonly SettlementPerformanceSelfTest settlementPerformance;
         private readonly bool localCoopOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-local-coop");
         private readonly bool templeOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-temple-ceremonies");
         private readonly bool scenesOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-cutscene-player");
@@ -242,7 +244,9 @@ namespace CultCraft
             broomProof = new BroomSelfTest(avatar, camera, logger, Report);
             stoneWalk = new RockCollisionSelfTest(camera, logger);
             fishingProof = new FishingSelfTest(avatar, camera, logger, Report);
-            foodProof = new FoodSelfTest(gameplay, logger, Report);
+            foodProof = new FoodSelfTest(gameplay, logger, Report, survivalFoodOnly);
+            if (survivalFoodOnly && Array.Exists(Spec.TestRows, row => row.Id == SettlementPerformanceSelfTest.Id))
+                settlementPerformance = new SettlementPerformanceSelfTest(assets, logger, Report);
             lootProof=new LootVisualSelfTest(assets,logger,Report);
             if(templeOnly)templeProof=new Temple083SelfTest(avatar,Report);
             if(hotbarOnly)hotbarProof=new Hotbar084SelfTest(gameplay,avatar,Report);
@@ -522,6 +526,7 @@ namespace CultCraft
 
         private void Run(PlayerFarming player)
         {
+            if (survivalFoodOnly) { RunSurvivalFood(player); return; }
             if(scenesOnly){RunScenesOnly(player);return;}
             if(hotbarOnly){RunHotbar084(player);return;}
             if(localCoopOnly){RunLocalCoop(player);return;}
@@ -573,9 +578,9 @@ namespace CultCraft
                 if (startedWorld) broomProof.Tick(player, Ready(player) && PlayerFarming.Location == FollowerLocation.Base);
                 return;
             }
-            if (stage == 1 && !foodProof.Complete)
+            if (stage == 6 && !foodProof.Complete)
             {
-                foodProof.Tick(player, Ready(player) && PlayerFarming.Location == FollowerLocation.Base);
+                foodProof.TickDungeon(player, Ready(player) && gameplay.IsDungeon);
                 return;
             }
             if(stage==1&&startedWorld&&elapsed>=V("test_world_settle")&&skinProof!=null&&!skinProof.Complete)
@@ -794,6 +799,40 @@ namespace CultCraft
                     if (camera.FirstPerson) camera.Toggle();
                     Next(12);
                     break;
+            }
+        }
+
+        private void RunSurvivalFood(PlayerFarming player)
+        {
+            if (stage == 12) return;
+            if (!reported.Contains("minecraft-assets-loaded") && assets.Ready && assets.PlayerSkin != null)
+                Report("minecraft-assets-loaded", true, null);
+            if (Time.unscaledTime - started > 215f)
+            {
+                foodProof.Dispose();
+                Report(FoodSelfTest.SurvivalId, false, "Timed out entering the settlement or dungeon at stage " + stage + ": " + lastError);
+                Next(12);
+                return;
+            }
+            bool ready = Ready(player);
+            if (stage == 0 && Time.unscaledTime - started >= V("test_menu_settle") && BeginNewGame()) Next(1);
+            if (stage == 1 && startedWorld)
+            {
+                bool atSettlement = ready && PlayerFarming.Location == FollowerLocation.Base;
+                if (settlementPerformance != null && !settlementPerformance.Complete)
+                {
+                    settlementPerformance.Tick(player, atSettlement);
+                    return;
+                }
+                foodProof.TickSettlement(player, atSettlement);
+                if (foodProof.Complete) Next(12);
+                else if (foodProof.SettlementComplete) Next(30);
+            }
+            if (stage == 30 && ready && EnterDungeon()) Next(31);
+            if (stage == 31 && gameplay.IsDungeon)
+            {
+                foodProof.TickDungeon(player, ready);
+                if (foodProof.Complete) Next(12);
             }
         }
 
@@ -1080,10 +1119,20 @@ namespace CultCraft
             UIMainMenuController main = UIMainMenuController.Instance;
             if (main == null || main.LoadMenu == null || MMTransition.IsPlaying) return false;
             SaveAndLoad.SAVE_SLOT = 0; // Every resulting filename is uniquely intercepted; no slot is read or written.
-            var options = new UINewGameOptionsMenuController.NewGameOptions { QuickStart = true, DifficultyIndex = 1, PermadeathMode = false, SurvivalMode = false, WinterMode = false };
+            var options = new UINewGameOptionsMenuController.NewGameOptions { QuickStart = true, DifficultyIndex = 1, PermadeathMode = false, SurvivalMode = survivalFoodOnly, WinterMode = false };
             MethodInfo begin = AccessTools.Method(typeof(LoadMenu), "BeginNewGame", new[] { typeof(UINewGameOptionsMenuController.NewGameOptions) });
             if (begin == null) throw new MissingMethodException("Native LoadMenu.BeginNewGame was not found.");
             begin.Invoke(main.LoadMenu, new object[] { options });
+            if (survivalFoodOnly)
+            {
+                // Keep the native mode enabled in this fresh save and skip unrelated onboarding popups.
+                DataManager data = DataManager.Instance;
+                data.SurvivalModeFirstSpawn = false;
+                data.SurvivalModeOnboarded = true;
+                data.ShownInventoryTutorial = true;
+                if (!data.RevealedTutorialTopics.Contains(TutorialTopic.Omnipresence))
+                    data.RevealedTutorialTopics.Add(TutorialTopic.Omnipresence);
+            }
             startedWorld = true;
             logger.LogInfo("Native QuickStart new game requested with save isolation active.");
             return true;
@@ -2212,6 +2261,7 @@ namespace CultCraft
         public void Dispose()
         {
             if (disposed) return;
+            settlementPerformance?.Dispose();
             if(scenesProof!=null)scenesProof.Dispose();
             disposed = true;
             if (!markerFound) return;

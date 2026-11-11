@@ -22,7 +22,9 @@ namespace CultCraft
         private readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>(StringComparer.Ordinal);
         private readonly PickupVisuals pickupVisuals;
         private readonly List<BlockVisual> blocks = new List<BlockVisual>();
-        private readonly HashSet<Structure> blockIndex = new HashSet<Structure>();
+        private readonly Dictionary<Structure, BlockVisual> blockIndex = new Dictionary<Structure, BlockVisual>();
+        private readonly List<Structure> structureScan = new List<Structure>();
+        private int structureCursor;
         private readonly List<Arrow> arrows = new List<Arrow>();
         private Mesh arrowEntityMesh;
         private Material arrowEntityMaterial;
@@ -54,6 +56,7 @@ namespace CultCraft
             public string[] Items;
         }
         private bool readingPrimary;
+        private const float FoodBlueHeartLimit = 2f; // Native health is measured in half-hearts.
         private float eatingTime;
         private float eatingHealth;
         private float nextFoodUse;
@@ -116,7 +119,7 @@ namespace CultCraft
         public void DrawHotbar() { hotbar.Draw(player, CanUseHotbar()); }
         public void SelectSlot(int slot) { hotbar.Select(slot); }
         public void SetCamera(CameraRig rig) { viewRig = rig; }
-        public void AllowTestInput(bool allowed) { testInputAllowed = allowed; }
+        public void AllowTestInput(bool allowed) { testInputAllowed = allowed; pickupVisuals.TestDraws = allowed; }
         public bool TestShootAt(PlayerFarming owner, Vector2 target)
         {
             string marker = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Melty", "test", "cultcraft.json");
@@ -178,10 +181,11 @@ namespace CultCraft
 
         public Transform NativeStructureVisual(Structure native)
         {
-            foreach (BlockVisual block in blocks)
-                if (block.Native == native && block.Object != null) return block.Object.transform;
-            return null;
+            return native != null && blockIndex.TryGetValue(native, out BlockVisual block) && block.Object != null
+                ? block.Object.transform : null;
         }
+
+        internal bool StructureScanPending => structureCursor < structureScan.Count;
 
         public string NativeVegetationId(Structure native)
         {
@@ -348,12 +352,8 @@ namespace CultCraft
             TickFood(value, primaryHeld);
             TickArrows();
             if (!CombatLocation) ClearArrows();
-            if (Time.unscaledTime >= nextVisualScan)
-            {
-                nextVisualScan = Time.unscaledTime + combat.ScanInterval;
-                ScanVisuals();
-            }
             TickBlocks();
+            ScanVisuals();
         }
 
         private static void PlacedInBasePostfix(){if(current!=null)current.homeEquipPending=true;}
@@ -494,25 +494,43 @@ namespace CultCraft
             ConsumableRow food = hotbar.Food;
             HealthPlayer health = owner == null ? null : owner.health;
             bool canEat = hotbar.SelectedSlot == 2 && !hotbar.FoodPickerOpen && !BowKeyHeld() && CanUseHotbar() && CanAct(owner) && !hotbar.PointerOverBar && primaryHeld &&
-                Time.time >= nextFoodUse && health != null && health.CurrentHP > 0f &&
-                (food.Heart != "red" || health.HP < health.totalHP) && FoodCount > 0;
+                Time.time >= nextFoodUse && health != null && health.CurrentHP > 0f;
             if (!canEat) { eatingTime = 0f; return; }
+
+            bool settlement = PlayerFarming.Location == FollowerLocation.Base;
+            if (settlement && food.Heart != "red") { eatingTime = 0f; return; }
+            DataManager data = DataManager.Instance;
+            if (data == null || CountFood(food) == 0) { eatingTime = 0f; return; }
+            float healing = settlement ? 0f : FoodHealing(food, health);
+            float hungerBefore = data.SurvivalMode_Hunger;
+            float hungerAfter = data.SurvivalModeActive && hungerBefore < 100f
+                ? Mathf.Clamp(hungerBefore + (food.Healing >= 2f ? 25f : 13f), 0f, 100f)
+                : hungerBefore;
+            if (healing <= 0f && hungerAfter <= hungerBefore) { eatingTime = 0f; return; }
+
             if (eatingFoodId != food.NativeId) { eatingFoodId = food.NativeId; eatingTime = 0f; }
             if (eatingTime <= 0f) eatingHealth = health.CurrentHP;
             else if (health.CurrentHP < eatingHealth) { eatingTime = 0f; nextFoodUse = Time.time + 0.3f; return; }
             eatingTime += Time.deltaTime;
             if (eatingTime < food.UseSeconds) return;
             eatingTime = 0f;
-            if (CountFood(food) == 0) return;
             float before = health.CurrentHP;
-            switch (food.Heart)
+            if (healing > 0f)
             {
-                case "blue": health.BlueHearts += food.Healing; break;
-                case "diseased": health.BlackHearts += food.Healing; break;
-                default: health.Heal(food.Healing); break;
+                switch (food.Heart)
+                {
+                    case "blue": health.BlueHearts += healing; break;
+                    case "diseased": health.BlackHearts += healing; break;
+                    default: health.Heal(healing); break;
+                }
+            }
+            if (hungerAfter > hungerBefore)
+            {
+                data.SurvivalMode_Hunger = hungerAfter;
+                if (data.SurvivalMode_Sleep > 0f) TimeManager.SurvivalDamagedTimer = -1f;
             }
             LastFoodHealing = health.CurrentHP - before;
-            if (LastFoodHealing <= 0f) return;
+            if (LastFoodHealing <= 0f && hungerAfter <= hungerBefore) return;
             // Dungeon loot is a subset of the global inventory. Consume it too, so exit/death
             // reconciliation cannot restore eaten food or subtract it for a second time.
             InventoryItem dungeonFood = Inventory.GetDungeonItemByType(food.NativeId);
@@ -524,6 +542,16 @@ namespace CultCraft
             Inventory.ChangeItemQuantity(food.NativeId, -1);
             FoodsEaten++;
             nextFoodUse = Time.time + food.Cooldown;
+        }
+
+        private static float FoodHealing(ConsumableRow food, HealthPlayer health)
+        {
+            switch (food.Heart)
+            {
+                case "blue": return Mathf.Clamp(FoodBlueHeartLimit - health.BlueHearts, 0f, food.Healing);
+                case "diseased": return food.Healing;
+                default: return health.HP < health.totalHP ? food.Healing : 0f;
+            }
         }
 
         private static WeaponRow RowForLevel(int level, out int tier)
@@ -761,42 +789,57 @@ namespace CultCraft
 
         private void ScanVisuals()
         {
-            RefreshBlockStates();
-            // Pickups are styled synchronously by their real pool, SetImage and
-            // factory hooks. This maintained structure list is not an item scan.
-            if (Structure.Structures == null) return;
-            foreach (Structure structure in Structure.Structures)
+            if (!StructureScanPending && Time.unscaledTime >= nextVisualScan)
             {
-                if (structure == null || !structure.gameObject.activeInHierarchy || structure.Brain == null || structure.Structure_Info == null || HasBlock(structure)) continue;
-                if (VegetationState.IsVegetation(structure) && VegetationState.Resolve(structure) == null) continue;
+                structureScan.Clear();
+                structureCursor = 0;
+                if (Structure.Structures != null) structureScan.AddRange(Structure.Structures);
+            }
+            else if (!StructureScanPending) return;
+            double deadline = Time.realtimeSinceStartupAsDouble + 0.0015;
+            int checkedCount = 0;
+            while (StructureScanPending && (checkedCount == 0 || (checkedCount < 16 && Time.realtimeSinceStartupAsDouble < deadline)))
+            {
+                Structure structure = structureScan[structureCursor++];
+                checkedCount++;
+                if (structure == null || !structure.gameObject.activeInHierarchy || structure.Brain == null || structure.Structure_Info == null) continue;
+                if (blockIndex.TryGetValue(structure, out BlockVisual existing))
+                {
+                    RefreshBlockState(existing);
+                    continue;
+                }
                 if ((structure.Type == StructureBrain.TYPES.RUBBLE || structure.Type == StructureBrain.TYPES.RUBBLE_BIG) && structure.Structure_Info.LootToDrop != InventoryItem.ITEM_TYPE.STONE) continue;
                 foreach (BuildingRow building in Spec.BuildingRows)
                     if ((int)structure.Type == building.NativeType)
                     {
                         if(building.Model=="straw_bed" && (!assets.IsAssetReady("straw_bed") || !assets.IsAssetReady("straw_bed_head_model") || !assets.IsAssetReady("straw_bed_foot_model"))) break;
-                        AddBlock(structure, building); break;
+                        string profile = VegetationState.Resolve(structure);
+                        if (profile != null || !VegetationState.IsVegetation(structure)) AddBlock(structure, building, profile);
+                        break;
                     }
+            }
+            if (!StructureScanPending)
+            {
+                structureScan.Clear();
+                structureCursor = 0;
+                nextVisualScan = Time.unscaledTime + combat.ScanInterval;
             }
         }
 
         private Sprite PickupWeaponSprite(EquipmentType type,int level)
         {WeaponRow pickupRow=RowForLevel(Math.Max(1,level),out int ignored);return Sprite(WeaponTexture(pickupRow.Texture,type));}
 
-        private bool HasBlock(Structure native)
+        private void AddBlock(Structure native, BuildingRow design, string profile)
         {
-            return blockIndex.Contains(native);
-        }
-
-        private void AddBlock(Structure native, BuildingRow design)
-        {
-            var record = new BlockVisual { Native = native, NativeType = (int)native.Type, NativeData = native.Structure_Info, Design = design, VegetationId = VegetationState.Resolve(native), VegetationScale = VegetationState.Scale(native) };
+            var record = new BlockVisual { Native = native, NativeType = (int)native.Type, NativeData = native.Structure_Info, Design = design, VegetationId = profile, VegetationScale = VegetationState.Scale(native) };
             CaptureBlockSources(record);
             record.AnchorOffset = WorldResourceVisuals.NativeVisualAnchor(native) - native.transform.position;
             record.Berries = native.GetComponentInChildren<Interaction_Berries>(true);
             record.RockReadyAt = Time.unscaledTime + 0.4f;
             BuildBlockObject(record);
             blocks.Add(record);
-            blockIndex.Add(native);
+            blockIndex.Add(native, record);
+            UpdateBlockTransform(record);
         }
 
         private void CaptureBlockSources(BlockVisual record)
@@ -878,55 +921,51 @@ namespace CultCraft
             record.Revisions++;
         }
 
-        private void RefreshBlockStates()
+        private void RefreshBlockState(BlockVisual record)
         {
-            // Stage discovery is throttled with the ordinary 1s visual scan. Meshes
-            // rebuild only when native growth/picking actually changes the profile.
-            for (int i = blocks.Count - 1; i >= 0; i--)
+            if (record.Design.Model == "rock_pile")
             {
-                BlockVisual record = blocks[i];
-                if (record.Native == null || record.Native.Brain == null || record.Native.Structure_Info != record.NativeData) continue;
-                if (record.Design.Model == "rock_pile")
+                int count = record.Renderers.Count;
+                CaptureBlockRenderers(record);
+                bool refit = Time.unscaledTime >= record.RockReadyAt && (!record.RockFitted || count != record.Renderers.Count);
+                if (refit)
                 {
-                    int count = record.Renderers.Count;
-                    CaptureBlockRenderers(record);
-                    if (Time.unscaledTime >= record.RockReadyAt && (!record.RockFitted || count != record.Renderers.Count))
+                    ReleaseBlockObject(record);
+                    record.AnchorOffset = WorldResourceVisuals.NativeVisualAnchor(record.Native) - record.Native.transform.position;
+                    try { BuildBlockObject(record); record.RockFitted = true; }
+                    catch { RestoreBlock(record); blocks.Remove(record); throw; }
+                    if (testInputAllowed)
                     {
-                        ReleaseBlockObject(record);
-                        record.AnchorOffset = WorldResourceVisuals.NativeVisualAnchor(record.Native) - record.Native.transform.position;
-                        BuildBlockObject(record); record.RockFitted = true;
                         RockPileFit.Aligned(record.Object.transform, record.Native.transform, out string detail);
                         logger.LogInfo("Native stone hill assembled with fixed0.4 cubes: " + record.Native.Type + "; " + detail);
                     }
-                    continue;
                 }
-                if (!VegetationState.IsVegetation(record.Native)) continue;
-                // Refresh late-created crop art even if the growth profile has not
-                // changed. The collider baseline is untouched on these scans.
-                if (record.Native.Type == StructureBrain.TYPES.FARM_PLOT) CaptureBlockRenderers(record);
-                string next = VegetationState.Resolve(record.Native);
-                float nextScale = VegetationState.Scale(record.Native);
-                if (next == null)
-                {
-                    RestoreBlock(record);
-                    blocks.RemoveAt(i);
-                    continue;
-                }
-                if (next == record.VegetationId && nextScale == record.VegetationScale) continue;
-                // Native growth can legitimately alter colliders. Snapshot those
-                // current states before replacing only the visual model.
+                if (refit || count != record.Renderers.Count) UpdateBlockTransform(record);
+                return;
+            }
+            if (!VegetationState.IsVegetation(record.Native)) return;
+            // Planting may create new crop renderers while keeping the growth profile.
+            bool crop = record.Native.Type == StructureBrain.TYPES.FARM_PLOT;
+            if (crop) CaptureBlockRenderers(record);
+            string next = VegetationState.Resolve(record.Native);
+            float nextScale = VegetationState.Scale(record.Native);
+            if (next == null)
+            {
+                RestoreBlock(record);
+                blocks.Remove(record);
+                return;
+            }
+            if (next != record.VegetationId || nextScale != record.VegetationScale)
+            {
                 CaptureBlockSources(record);
                 ReleaseBlockObject(record);
                 record.VegetationId = next;
                 record.VegetationScale = nextScale;
                 try { BuildBlockObject(record); }
-                catch
-                {
-                    RestoreBlock(record);
-                    blocks.RemoveAt(i);
-                    throw;
-                }
+                catch { RestoreBlock(record); blocks.Remove(record); throw; }
+                UpdateBlockTransform(record);
             }
+            else if (crop) UpdateBlockTransform(record);
         }
 
         private static bool IsInteractionVisual(string name)
@@ -989,16 +1028,27 @@ namespace CultCraft
                     blocks.RemoveAt(i);
                     continue;
                 }
-                foreach (var entry in block.Renderers) if (entry.Key != null) entry.Key.enabled = false;
-                if (block.Object != null)
-                {
-                    block.Object.transform.position = block.Crop != null ? block.Crop.transform.position : block.Native.transform.position + block.AnchorOffset;
-                    ApplyBedPose(block);
-                    bool visible = block.Native.gameObject.activeInHierarchy;
-                    if ((block.Native.Type == StructureBrain.TYPES.BERRY_BUSH || block.Native.Type == StructureBrain.TYPES.RED_FLOWER_BUSH) && block.Berries != null && block.Berries.DisableOnDie && !block.Berries.gameObject.activeInHierarchy) visible = false;
-                    block.Object.SetActive(visible);
-                }
+                UpdateBlockTransform(block);
             }
+        }
+
+        private static void UpdateBlockTransform(BlockVisual block)
+        {
+            if (block.Object == null) return;
+            foreach (Renderer renderer in block.Renderers.Keys) if (renderer != null && renderer.enabled) renderer.enabled = false;
+            bool visible = block.Native.gameObject.activeInHierarchy;
+            if ((block.Native.Type == StructureBrain.TYPES.BERRY_BUSH || block.Native.Type == StructureBrain.TYPES.RED_FLOWER_BUSH) && block.Berries != null && block.Berries.DisableOnDie && !block.Berries.gameObject.activeInHierarchy) visible = false;
+            if (block.Object.activeSelf != visible) block.Object.SetActive(visible);
+            if (!visible) return;
+            Transform visual = block.Object.transform;
+            Vector3 position;
+            if ((block.Design.Model == "bed" || block.Design.Model == "straw_bed") &&
+                StationVisuals.TryBedPose(block.Native, block.Design, out position, out Quaternion rotation))
+            {
+                if (visual.rotation != rotation) visual.rotation = rotation;
+            }
+            else position = block.Crop != null ? block.Crop.transform.position : block.Native.transform.position + block.AnchorOffset;
+            if (visual.position != position) visual.position = position;
         }
 
         private void RestoreBlock(BlockVisual block)
@@ -1027,6 +1077,9 @@ namespace CultCraft
         {
             foreach (BlockVisual block in blocks) RestoreBlock(block);
             blocks.Clear();
+            structureScan.Clear();
+            structureCursor = 0;
+            nextVisualScan = 0f;
         }
 
         private void ClearArrows()

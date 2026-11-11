@@ -40,6 +40,9 @@ namespace CultCraft
         private readonly Gameplay gameplay;
         private readonly ManualLogSource logger;
         private readonly List<Resource> resources = new List<Resource>();
+        private readonly List<Resource> refreshScan = new List<Resource>();
+        private readonly Queue<(Component Source, Kind Kind, Structure Native)> pendingModels = new Queue<(Component, Kind, Structure)>();
+        private int refreshCursor;
         private readonly Dictionary<int,Resource> owners = new Dictionary<int,Resource>();
         private readonly HashSet<Health> inspectedHealth = new HashSet<Health>();
         private readonly HashSet<string> reportedKinds = new HashSet<string>();
@@ -97,18 +100,33 @@ namespace CultCraft
         private void SceneLoaded(Scene scene,LoadSceneMode mode)
         {
             sceneDirty=true;nextScan=0f;inspectedHealth.Clear();
+            pendingModels.Clear();refreshScan.Clear();refreshCursor=0;
         }
 
-        public void Tick(PlayerFarming player)
+        public void Tick()
         {
             if(disposed)return;
-            if(Time.unscaledTime>=nextScan)
+            if(gameplay.StructureScanPending)return;
+            if(pendingModels.Count==0&&refreshCursor>=refreshScan.Count&&Time.unscaledTime>=nextScan)
             {
                 nextScan=Time.unscaledTime+Math.Max(0.25f,Spec.Combat("bow").ScanInterval);
                 Discover();
-                Refresh();
+                refreshScan.AddRange(resources);
             }
-            LateTick();
+            double deadline=Time.realtimeSinceStartupAsDouble+0.0015;
+            int checkedCount=0;
+            while(checkedCount<16&&(checkedCount==0||Time.realtimeSinceStartupAsDouble<deadline))
+            {
+                checkedCount++;
+                if(pendingModels.Count>0)
+                {
+                    var pending=pendingModels.Dequeue();
+                    Register(pending.Source,pending.Kind,pending.Native);
+                }
+                else if(refreshCursor<refreshScan.Count)Refresh(refreshScan[refreshCursor++]);
+                else break;
+            }
+            if(refreshCursor>=refreshScan.Count){refreshScan.Clear();refreshCursor=0;}
         }
 
         public void LateTick()
@@ -129,9 +147,14 @@ namespace CultCraft
                     if(item.Visual.activeSelf!=visible)item.Visual.SetActive(visible);
                     if(!visible)continue;
                     Vector3 position=item.Native!=null ? NativeVisualAnchor(item.Native) : item.Owner.position;
-                    item.Visual.transform.position=position+item.AnchorOffset;
+                    position+=item.AnchorOffset;
+                    if(item.Visual.transform.position!=position)item.Visual.transform.position=position;
                 }
-                foreach(var pair in item.Hidden)if(pair.Key!=null)pair.Key.forceRenderingOff=item.Visual!=null || pair.Value;
+                foreach(var pair in item.Hidden)
+                {
+                    bool hidden=item.Visual!=null||pair.Value;
+                    if(pair.Key!=null&&pair.Key.forceRenderingOff!=hidden)pair.Key.forceRenderingOff=hidden;
+                }
             }
         }
 
@@ -148,18 +171,18 @@ namespace CultCraft
             // These are maintained by the actual resource classes, including
             // objects that never enter Structure.Structures.
             foreach(TreeBase tree in TreeBase.Trees)
-                if(tree!=null)Register(tree,Kind.Tree,tree.Structure);
+                if(tree!=null)QueueModel(tree,Kind.Tree,tree.Structure);
             foreach(Tree tree in Tree.Trees)
-                if(tree!=null)Register(tree,Kind.Tree,tree.GetComponent<Structure>());
+                if(tree!=null)QueueModel(tree,Kind.Tree,tree.GetComponent<Structure>());
             foreach(Interaction_Berries bush in Interaction_Berries.Berries)
                 if(bush!=null && bush.GetComponentInParent<CropController>()==null)
                 {
-                    if(bush.BerryBushType==InventoryItem.ITEM_TYPE.BERRY)Register(bush,Kind.Berry,bush.Structure);
-                    else if(bush.BerryBushType==InventoryItem.ITEM_TYPE.FLOWER_RED||bush.BerryBushType==InventoryItem.ITEM_TYPE.FLOWERS)Register(bush,Kind.Flower,bush.Structure);
+                    if(bush.BerryBushType==InventoryItem.ITEM_TYPE.BERRY)QueueModel(bush,Kind.Berry,bush.Structure);
+                    else if(bush.BerryBushType==InventoryItem.ITEM_TYPE.FLOWER_RED||bush.BerryBushType==InventoryItem.ITEM_TYPE.FLOWERS)QueueModel(bush,Kind.Flower,bush.Structure);
                 }
             foreach(Rubble rubble in Rubble.Rubbles)
                 if(rubble!=null && rubble.Structure!=null && rubble.StructureInfo!=null && rubble.StructureInfo.LootToDrop==InventoryItem.ITEM_TYPE.STONE)
-                    Register(rubble,Kind.Stone,rubble.Structure);
+                    QueueModel(rubble,Kind.Stone,rubble.Structure);
             if(sceneDirty)
             {
                 sceneDirty=false;
@@ -182,10 +205,17 @@ namespace CultCraft
             if(data!=null&&data.MultipleLootToDrop!=null&&data.MultipleLootToDrop.Contains(InventoryItem.ITEM_TYPE.FLOWERS))type=InventoryItem.ITEM_TYPE.FLOWERS;
             if(drop.Structure!=null&&drop.Structure.Type==StructureBrain.TYPES.RED_FLOWER_BUSH)type=InventoryItem.ITEM_TYPE.FLOWER_RED;
             if(!drop.IsNaturalResource&&type!=InventoryItem.ITEM_TYPE.FLOWER_RED&&type!=InventoryItem.ITEM_TYPE.FLOWERS)return;
-            if(type==InventoryItem.ITEM_TYPE.STONE)Register(drop,Kind.Stone,drop.Structure);
-            else if(type==InventoryItem.ITEM_TYPE.LOG)Register(drop,Kind.Tree,drop.Structure);
-            else if(type==InventoryItem.ITEM_TYPE.BERRY && drop.GetComponentInParent<CropController>()==null)Register(drop,Kind.Berry,drop.Structure);
-            else if((type==InventoryItem.ITEM_TYPE.FLOWER_RED||type==InventoryItem.ITEM_TYPE.FLOWERS) && drop.GetComponentInParent<CropController>()==null)Register(drop,Kind.Flower,drop.Structure);
+            if(type==InventoryItem.ITEM_TYPE.STONE)QueueModel(drop,Kind.Stone,drop.Structure);
+            else if(type==InventoryItem.ITEM_TYPE.LOG)QueueModel(drop,Kind.Tree,drop.Structure);
+            else if(type==InventoryItem.ITEM_TYPE.BERRY && drop.GetComponentInParent<CropController>()==null)QueueModel(drop,Kind.Berry,drop.Structure);
+            else if((type==InventoryItem.ITEM_TYPE.FLOWER_RED||type==InventoryItem.ITEM_TYPE.FLOWERS) && drop.GetComponentInParent<CropController>()==null)QueueModel(drop,Kind.Flower,drop.Structure);
+        }
+
+        private void QueueModel(Component source,Kind kind,Structure native)
+        {
+            if(!source.gameObject.activeInHierarchy||HasNativeFacade(native))return;
+            Transform owner=native!=null?native.transform:source.transform;
+            if(!owners.ContainsKey(owner.GetInstanceID()))pendingModels.Enqueue((source,kind,native));
         }
 
         private void Register(Component source,Kind kind,Structure native)
@@ -256,26 +286,24 @@ namespace CultCraft
                 item.AnchorOffset=item.Visual.transform.position-(item.Native!=null?NativeVisualAnchor(item.Native):item.Owner.position);
         }
 
-        private void Refresh()
+        private void Refresh(Resource item)
         {
-            foreach(Resource item in resources)
+            // A queued model may have been recycled or hidden since discovery.
+            if(!owners.TryGetValue(item.OwnerId,out Resource active)||active!=item||
+                item.Source==null||item.Owner==null||!item.Source.gameObject.activeInHierarchy||!item.Owner.gameObject.activeInHierarchy)return;
+            int captured=item.Hidden.Count;
+            Capture(item);
+            bool refitStone=item.Kind==Kind.Stone && Time.unscaledTime>=item.RockReadyAt && (!item.RockFitted || captured!=item.Hidden.Count);
+            string profile=Profile(item);
+            float scale=item.Native!=null?VegetationState.Scale(item.Native):1f;
+            if(item.Visual!=null && profile==item.Profile && scale==item.Scale && !refitStone)return;
+            ReleaseVisual(item);
+            try { Build(item); if(refitStone)item.RockFitted=true; }
+            catch(Exception error)
             {
-                // The temple disables the settlement root. Refresh its models when it is visible again.
-                if(item.Source==null||item.Owner==null||!item.Source.gameObject.activeInHierarchy||!item.Owner.gameObject.activeInHierarchy)continue;
-                int captured=item.Hidden.Count;
-                Capture(item);
-                bool refitStone=item.Kind==Kind.Stone && Time.unscaledTime>=item.RockReadyAt && (!item.RockFitted || captured!=item.Hidden.Count);
-                string profile=Profile(item);
-                float scale=item.Native!=null?VegetationState.Scale(item.Native):1f;
-                if(item.Visual!=null && profile==item.Profile && scale==item.Scale && !refitStone)continue;
                 ReleaseVisual(item);
-                try { Build(item); if(refitStone)item.RockFitted=true; }
-                catch(Exception error)
-                {
-                    ReleaseVisual(item);
-                    foreach(var pair in item.Hidden)if(pair.Key!=null)pair.Key.forceRenderingOff=pair.Value;
-                    if(logger!=null)logger.LogWarning("World resource update: "+error.Message);
-                }
+                foreach(var pair in item.Hidden)if(pair.Key!=null)pair.Key.forceRenderingOff=pair.Value;
+                if(logger!=null)logger.LogWarning("World resource update: "+error.Message);
             }
         }
 
@@ -308,7 +336,7 @@ namespace CultCraft
             if(disposed)return;
             disposed=true;SceneManager.sceneLoaded-=SceneLoaded;harmony.UnpatchSelf();if(current==this)current=null;pendingDrops.Clear();
             for(int i=resources.Count-1;i>=0;i--)Remove(i,true);
-            inspectedHealth.Clear();owners.Clear();
+            inspectedHealth.Clear();owners.Clear();pendingModels.Clear();refreshScan.Clear();
         }
     }
 }

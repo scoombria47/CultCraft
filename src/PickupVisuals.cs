@@ -30,8 +30,16 @@ namespace CultCraft
         private readonly Dictionary<SpriteRenderer,SpriteState> renderers=new Dictionary<SpriteRenderer,SpriteState>();
         private readonly Dictionary<Image,ImageState> images=new Dictionary<Image,ImageState>();
         private readonly HashSet<PickUp> waiting=new HashSet<PickUp>();
+        private readonly List<PickUp> retries=new List<PickUp>();
+        private readonly List<SpriteRenderer> pickupRenderers=new List<SpriteRenderer>();
+        private readonly List<InventoryItemDisplay> pickupDisplays=new List<InventoryItemDisplay>();
+        private readonly List<PickupFirstDrawProbe> pickupProbes=new List<PickupFirstDrawProbe>();
+        private static readonly Dictionary<int,string> resourceTextures=BuildResourceLookup();
+        private static readonly string[] commonDrops={"oak_log","stone","berry","grass","raw_beef","emerald","seeds","bone"};
         private readonly DroppedItemVisuals dropped;
         private bool disposed;
+        private int warmIndex;
+        private float nextRetry;
         private int initializationCount,firstDraws,firstDrawFailures,reuses;
         public static PickupVisuals Current { get { return current; } }
         public int InitializationCount { get { return initializationCount; } }
@@ -42,6 +50,7 @@ namespace CultCraft
         public Sprite NativeSpriteFor(SpriteRenderer renderer)
         {SpriteState state;return renderer!=null&&renderers.TryGetValue(renderer,out state)?state.Native:renderer==null?null:renderer.sprite;}
         internal bool Active { get { return !disposed; } }
+        internal bool TestDraws { get { return dropped.TestDraws; } set { dropped.TestDraws=value; } }
         public DroppedItemBinding DroppedFor(SpriteRenderer renderer){return dropped.Get(renderer);}
 
         public PickupVisuals(Func<string,Sprite> sprite,Func<EquipmentType,int,Sprite> weaponSprite,ManualLogSource logger,MinecraftAssets assets)
@@ -50,8 +59,8 @@ namespace CultCraft
             this.sprite=sprite;this.weaponSprite=weaponSprite;this.logger=logger;this.assets=assets;current=this;
             try
             {
-                Hook(typeof(PickUp),"OnEnable",Type.EmptyTypes,"PickupRestorePrefix","PickupEnablePostfix");
-                Hook(typeof(PickUp),"OnDisable",Type.EmptyTypes,"PickupRestorePrefix",null);
+                Hook(typeof(PickUp),"OnEnable",Type.EmptyTypes,"PickupEnablePrefix","PickupEnablePostfix");
+                Hook(typeof(PickUp),"OnDisable",Type.EmptyTypes,"PickupDisablePrefix",null);
                 Hook(typeof(PickUp),"Start",Type.EmptyTypes,null,"PickupRefreshPostfix");
                 Hook(typeof(PickUp),"SetImage",new[]{typeof(InventoryItem.ITEM_TYPE)},null,"PickupImagePostfix");
                 Hook(typeof(FoundItemPickUp),"OnEnableInteraction",Type.EmptyTypes,null,"FoundPostfix");
@@ -76,8 +85,15 @@ namespace CultCraft
             if(method==null)throw new MissingMethodException(type.FullName,name);
             harmony.Patch(method,prefix:prefix==null?null:new HarmonyMethod(typeof(PickupVisuals),prefix),postfix:postfix==null?null:new HarmonyMethod(typeof(PickupVisuals),postfix));
         }
+        private static Dictionary<int,string> BuildResourceLookup()
+        {
+            var lookup=new Dictionary<int,string>();
+            foreach(ResourceRow row in Spec.ResourceRows)
+                if(!lookup.ContainsKey(row.NativeId))lookup.Add(row.NativeId,row.Texture);
+            return lookup;
+        }
         public static string ResourceTexture(InventoryItem.ITEM_TYPE type)
-        {foreach(ResourceRow row in Spec.ResourceRows)if(row.NativeId==(int)type)return row.Texture;return null;}
+        {return resourceTextures.TryGetValue((int)type,out string texture)?texture:null;}
         public static InventoryItem.ITEM_TYPE SemanticType(PickUp pickup)
         {
             if(pickup==null)return InventoryItem.ITEM_TYPE.NONE;
@@ -91,10 +107,16 @@ namespace CultCraft
             }
             return pickup.type;
         }
-        private static void PickupRestorePrefix(PickUp __instance,MethodBase __originalMethod)
+        private static void PickupEnablePrefix(PickUp __instance){current?.RestorePickup(__instance);}
+        private static void PickupDisablePrefix(PickUp __instance)
         {
             if(current==null)return;
-            if(__originalMethod.Name=="OnDisable")foreach(PickupFirstDrawProbe probe in __instance.GetComponentsInChildren<PickupFirstDrawProbe>(true))probe.MarkDisabled();
+            if(current.TestDraws)
+            {
+                __instance.GetComponentsInChildren(true,current.pickupProbes);
+                foreach(PickupFirstDrawProbe probe in current.pickupProbes)probe.MarkDisabled();
+                current.pickupProbes.Clear();
+            }
             current.RestorePickup(__instance);
         }
         private static void PickupEnablePostfix(PickUp __instance){if(current!=null)current.Apply(__instance,true);}
@@ -132,18 +154,22 @@ namespace CultCraft
             InventoryItem.ITEM_TYPE type=requested??SemanticType(pickup);
             string id=ResourceTexture(type);SpriteRenderer renderer=Art(pickup);
             if(renderer==null)return;
-            PickupFirstDrawProbe probe=renderer.GetComponent<PickupFirstDrawProbe>();
-            if(newLifetime||probe==null||!probe.BelongsTo(this))
+            PickupFirstDrawProbe probe=null;
+            if(TestDraws)
             {
-                if(probe==null)probe=renderer.gameObject.AddComponent<PickupFirstDrawProbe>();
-                bool recycled=probe.Lifetimes>0&&probe.WasDisabled;
-                if(recycled)reuses++;
-                probe.Begin(this,pickup,type,probe.Lifetimes==0||recycled);initializationCount++;
+                probe=renderer.GetComponent<PickupFirstDrawProbe>();
+                if(newLifetime||probe==null||!probe.BelongsTo(this))
+                {
+                    if(probe==null)probe=renderer.gameObject.AddComponent<PickupFirstDrawProbe>();
+                    bool recycled=probe.Lifetimes>0&&probe.WasDisabled;
+                    if(recycled)reuses++;
+                    probe.Begin(this,pickup,type,probe.Lifetimes==0||recycled);initializationCount++;
+                }
             }
-            if(id==null){Restore(renderer);probe.Expect(null,type);waiting.Remove(pickup);return;}
+            if(id==null){Restore(renderer);probe?.Expect(null,type);waiting.Remove(pickup);return;}
             Sprite replacement=sprite(id);
-            if(replacement==null){Restore(renderer);probe.Expect(null,type);waiting.Add(pickup);return;}
-            Set(renderer,replacement);probe.Expect(replacement,type);dropped.Apply(renderer,replacement,id);waiting.Remove(pickup);
+            if(replacement==null){Restore(renderer);probe?.Expect(null,type);waiting.Add(pickup);return;}
+            Set(renderer,replacement);probe?.Expect(replacement,type);dropped.Apply(renderer,replacement,id);waiting.Remove(pickup);
         }
         private void ApplyWeapon(Interaction_WeaponPickUp pickup)
         {
@@ -210,14 +236,14 @@ namespace CultCraft
             if(renderer==null||replacement==null)return;SpriteState state;
             if(!renderers.TryGetValue(renderer,out state)){state=new SpriteState{Native=renderer.sprite};renderers.Add(renderer,state);}
             else if(renderer.sprite!=state.Replacement)state.Native=renderer.sprite;
-            state.Replacement=replacement;renderer.sprite=replacement;
+            state.Replacement=replacement;if(renderer.sprite!=replacement)renderer.sprite=replacement;
         }
         private void Set(Image image,Sprite replacement)
         {
             if(image==null||replacement==null)return;ImageState state;
             if(!images.TryGetValue(image,out state)){state=new ImageState{Native=image.sprite};images.Add(image,state);}
             else if(image.sprite!=state.Replacement)state.Native=image.sprite;
-            state.Replacement=replacement;image.sprite=replacement;
+            state.Replacement=replacement;if(image.sprite!=replacement)image.sprite=replacement;
         }
         private void Restore(SpriteRenderer renderer)
         {
@@ -235,15 +261,28 @@ namespace CultCraft
         private void RestorePickup(PickUp pickup)
         {
             if(disposed||pickup==null)return;
-            foreach(SpriteRenderer renderer in pickup.GetComponentsInChildren<SpriteRenderer>(true))Restore(renderer);
-            foreach(InventoryItemDisplay display in pickup.GetComponentsInChildren<InventoryItemDisplay>(true))RestoreDisplay(display);
+            pickup.GetComponentsInChildren(true,pickupRenderers);
+            foreach(SpriteRenderer renderer in pickupRenderers)Restore(renderer);
+            pickupRenderers.Clear();
+            pickup.GetComponentsInChildren(true,pickupDisplays);
+            foreach(InventoryItemDisplay display in pickupDisplays)RestoreDisplay(display);
+            pickupDisplays.Clear();
             waiting.Remove(pickup);
         }
         public void Tick()
         {
-            if(disposed||waiting.Count==0)return;
-            foreach(PickUp pickup in new List<PickUp>(waiting))
+            if(disposed)return;
+            if(warmIndex<commonDrops.Length)
+            {
+                string id=commonDrops[warmIndex++];
+                dropped.Warm(sprite(id),id);
+            }
+            if(waiting.Count==0||Time.unscaledTime<nextRetry)return;
+            nextRetry=Time.unscaledTime+0.1f;
+            retries.AddRange(waiting);
+            foreach(PickUp pickup in retries)
                 if(pickup==null||!pickup.gameObject.activeInHierarchy)waiting.Remove(pickup);else Apply(pickup,false);
+            retries.Clear();
         }
         private void SceneLoaded(Scene scene,LoadSceneMode mode)
         {

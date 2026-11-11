@@ -123,8 +123,8 @@ namespace CultCraft
                 camera.Tick(player);
                 gameplay.Tick(player!=null&&cinematicActors.Owns(player.gameObject)?null:player);
                 attackCooldown.Tick(player);
-                worldResources.Tick(player);
-                stations.Tick(player);
+                worldResources.Tick();
+                stations.Tick();
                 avatar.SetUseProgress(gameplay.EatingProgress);
                 if (gameplay.ShotsFired != lastBowShots) { lastBowShots=gameplay.ShotsFired; avatar.NotifyBowShot(); }
                 test.Tick(player);
