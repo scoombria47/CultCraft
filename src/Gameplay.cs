@@ -229,7 +229,7 @@ namespace CultCraft
             harmony.Patch(firearm, prefix: new HarmonyMethod(typeof(Gameplay), "NativeFirearmPrefix"));
             harmony.Patch(AccessTools.Method(typeof(Indicator), nameof(Indicator.Reset)),
                 prefix: new HarmonyMethod(typeof(Gameplay), nameof(ClearIndicatorPlaceholder)));
-            Patch(typeof(Indicator), "LateUpdate", Type.EmptyTypes, nameof(LiftCarryPrompt));
+            Patch(typeof(Indicator), "LateUpdate", Type.EmptyTypes, nameof(LiftInteractionPrompt));
             Patch(typeof(PlayerWeapon),"SetWeapon",new[]{typeof(EquipmentType),typeof(int)},nameof(WeaponChangedPostfix));
             Patch(typeof(BiomeBaseManager),"PlacePlayer",Type.EmptyTypes,nameof(PlacedInBasePostfix));
             Patch(typeof(Interaction_BaseTeleporter),"TeleportIn",Type.EmptyTypes,nameof(PlacedInBasePostfix));
@@ -247,21 +247,22 @@ namespace CultCraft
 
         private static void ClearIndicatorPlaceholder(Indicator __instance)
         {
-            // These fields start with sample text in the native prefab. The
-            // carry branch sets Drop and clears the secondary label only.
+            // The native prefab starts with sample text in the additional fields.
+            if (__instance.SecondaryText != null && __instance.SecondaryText.text == NativePromptPlaceholder)
+                __instance.SecondaryText.text = "";
             if (__instance.Thirdtext != null && __instance.Thirdtext.text == NativePromptPlaceholder)
                 __instance.Thirdtext.text = "";
             if (__instance.Fourthtext != null && __instance.Fourthtext.text == NativePromptPlaceholder)
                 __instance.Fourthtext.text = "";
         }
 
-        private static void LiftCarryPrompt(Indicator __instance, RectTransform ____container)
+        private static void LiftInteractionPrompt(Indicator __instance, RectTransform ____container)
         {
-            PlayerFarming owner = __instance.playerFarming;
-            if (owner == null || owner.CarryingDeadFollowerID < 0 || !__instance.UpdatePosition ||
-                ____container == null || !(____container.parent is RectTransform parent) ||
-                (owner.state.CURRENT_STATE != StateMachine.State.Idle_CarryingBody &&
-                 owner.state.CURRENT_STATE != StateMachine.State.Moving_CarryingBody))
+            // Native LateUpdate resets the container to its base position plus its shake each frame.
+            if (current == null || current.player == null || !current.player.gameObject.activeInHierarchy ||
+                __instance.playerFarming == null || !__instance.UpdatePosition || !__instance.IsActive ||
+                __instance.canvasGroup == null || __instance.canvasGroup.alpha <= 0f || __instance.text == null ||
+                ____container == null || !(____container.parent is RectTransform parent))
                 return;
             RectTransform label = __instance.text.rectTransform;
             Canvas canvas = label.GetComponentInParent<Canvas>();
@@ -269,8 +270,7 @@ namespace CultCraft
             Camera camera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
             Vector2 bottom = RectTransformUtility.WorldToScreenPoint(camera,
                 label.TransformPoint(new Vector3(label.rect.center.x, label.rect.yMin)));
-            Rect bar = Hotbar.ScreenRect;
-            float minimum = Screen.height - bar.y + bar.height;
+            float minimum = Hotbar.InteractionPromptMinimumY;
             if (bottom.y >= minimum) return;
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, bottom, camera, out Vector2 from) &&
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, new Vector2(bottom.x, minimum), camera, out Vector2 to))

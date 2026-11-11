@@ -8,15 +8,15 @@ CultCraft работает внутри Cult of the Lamb и читает нуж�
 
 ## Через Melty
 
-1. Установите Cult of the Lamb и Minecraft: Java Edition.
+1. Установите Cult of the Lamb и Minecraft: Java Edition. Запустите установленную Java Edition один раз до главного меню.
 2. Откройте [страницу CultCraft в Melty](https://melty.gg/m/cultcraft) и нажмите **Play**. Если Melty ещё не установлена, страница предложит приложение для Windows.
-3. Melty установит загрузчик и мод, затем запустит Cult of the Lamb. В игре **F5** переключает камеру, **F6** открывает настройки CultCraft и профили скинов.
+3. Melty установит загрузчик и мод, затем запустит Cult of the Lamb. В игре **F5** переключает камеру, **F6** открывает настройки CultCraft, профили скинов и список языков.
 
 ## Вручную из готового архива
 
 1. Убедитесь, что Minecraft: Java Edition установлена. Её можно держать закрытой.
 2. Установите [BepInEx 5.4.23.5 для Windows x64](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.5). Распакуйте загрузчик в папку с `Cult Of The Lamb.exe`, запустите игру один раз и закройте её.
-3. Скачайте `CultCraft-0.8.7.zip` из [GitHub](downloads/CultCraft-0.8.7.zip). Скопируйте содержимое папки `plugins` из архива в `BepInEx\plugins\CultCraft`. Убедитесь, что DLL лежит по пути `BepInEx\plugins\CultCraft\CultCraft.dll`. При обновлении замените старую DLL и проверьте, что в папке загрузчика осталась одна копия мода.
+3. Скачайте `CultCraft-0.8.8.zip` из [GitHub](downloads/CultCraft-0.8.8.zip). Скопируйте содержимое папки `plugins` из архива в `BepInEx\plugins\CultCraft`. Убедитесь, что DLL лежит по пути `BepInEx\plugins\CultCraft\CultCraft.dll`. При обновлении замените старую DLL и проверьте, что в папке загрузчика осталась одна копия мода.
 4. Запустите Cult of the Lamb. Проверьте, что **F6** открывает настройки CultCraft. Для нестандартного расположения Minecraft укажите путь к JAR через `CULTCRAFT_MINECRAFT`, как в примере ниже.
 
 ## Вручную из исходников
@@ -48,7 +48,7 @@ CultCraft работает внутри Cult of the Lamb и читает нуж�
 
 ### Проверка и удаление
 
-- Откройте `BepInEx\LogOutput.log`. Строка `CultCraft 0.8.7 loaded` подтверждает загрузку. При ошибке поиска Minecraft проверьте, что указанный путь ведёт к установленному клиенту Java Edition. Если мод не смог скачать запасной архив, проверьте соединение с серверами Mojang и перезапустите Cult of the Lamb.
+- Откройте `BepInEx\LogOutput.log`. Строка `CultCraft 0.8.8 loaded` подтверждает загрузку. При ошибке поиска Minecraft проверьте, что указанный путь ведёт к установленному клиенту Java Edition. Если мод не смог скачать запасной архив, проверьте соединение с серверами Mojang и перезапустите Cult of the Lamb.
 - Для кооператива загрузите сохранение, откройте меню паузы, добавьте второго игрока и назначьте контроллер. При игре с другого ПК сначала пригласите друга через Steam Remote Play Together. У обоих игроков общий экран.
 - Чтобы убрать ручную установку, закройте игру и удалите `BepInEx\plugins\CultCraft\CultCraft.dll`. Загрузчик можно оставить для других модов.
 

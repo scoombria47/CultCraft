@@ -12,8 +12,6 @@ namespace CultCraft
     {
         private readonly MinecraftAssets assets;
         private readonly Dictionary<string, JObject> languages = new Dictionary<string, JObject>(StringComparer.Ordinal);
-        private readonly Dictionary<string, string> languageFiles = new Dictionary<string, string>(StringComparer.Ordinal);
-        private bool indexed;
         private static readonly Dictionary<string, Font> fonts = new Dictionary<string, Font>(StringComparer.Ordinal);
         private static readonly string[] UiKeys = { "settings", "mouse_sensitivity", "field_of_view", "close", "reset_defaults", "settings_hint", "first_person", "top_down", "use_item", "eat_hold", "no_food", "full_health", "empty", "hotbar_hint", "show_hints" };
         // These are original interface labels. Item and enchantment names come from local Minecraft data.
@@ -78,7 +76,7 @@ namespace CultCraft
         {
             get
             {
-                string code = LanguageCode.Split('_')[0];
+                string code = UiLanguageCode.Split('_')[0];
                 Font font;
                 if (fonts.TryGetValue(code, out font)) return font;
                 string[] names = code == "zh" ? new[] { "Microsoft YaHei", "Microsoft JhengHei", "SimSun", "Arial" } :
@@ -95,6 +93,8 @@ namespace CultCraft
             get
             {
                 string name = LocalizationManager.CurrentLanguage ?? "English";
+                string customCode = CultLanguages.MinecraftCode(name);
+                if (customCode != null) return customCode;
                 if (name == "Chinese (Traditional)") return "zh_tw";
                 if (name == "Chinese (Simplified)") return "zh_cn";
                 if (name == "French (Canadian)") return "fr_ca";
@@ -112,23 +112,27 @@ namespace CultCraft
             }
         }
 
+        internal static string UiLanguageCode => CultLanguages.MinecraftFallbackCode(LocalizationManager.CurrentLanguage) ?? LanguageCode;
+
         private static string Display(string text)
         {
             return LanguageCode.StartsWith("ar", StringComparison.Ordinal) ? LocalizationManager.ApplyRTLfix(text) : text;
         }
 
+        internal static string TranslateOriginal(string text) => CultLanguages.TranslateOriginal(text);
+
         public static string Ui(string key)
         {
-            if(key=="settings")return "CultCraft Settings";
+            if(key=="settings")return TranslateOriginal("CultCraft Settings");
             if(key=="settings_controls")
             {
-                string language=LanguageCode,selected=language=="zh_tw"?language:language.Split('_')[0],hint;
-                return Display(SettingsControls.TryGetValue(selected,out hint)?hint:SettingsControls["en"]);
+                string language=UiLanguageCode,selected=language=="zh_tw"?language:language.Split('_')[0],hint;
+                return Display(TranslateOriginal(SettingsControls.TryGetValue(selected,out hint)?hint:SettingsControls["en"]));
             }
             bool peacefulHint = key == "peaceful_hotbar_hint";
             int index = Array.IndexOf(UiKeys, peacefulHint ? "hotbar_hint" : key);
             if (index < 0) return key;
-            string code = LanguageCode;
+            string code = UiLanguageCode;
             string uiCode = code == "zh_tw" ? code : code.Split('_')[0];
             string[] labels;
             if (!UiLabels.TryGetValue(uiCode, out labels)) labels = UiLabels["en"];
@@ -139,7 +143,7 @@ namespace CultCraft
                 if (!HandPickerHints.TryGetValue(uiCode, out handHint)) handHint = HandPickerHints["en"];
                 label += " · " + handHint;
             }
-            return Display(label);
+            return Display(TranslateOriginal(label));
         }
 
         public string Item(string id)
@@ -160,12 +164,16 @@ namespace CultCraft
         {
             JObject language = GetLanguage(LanguageCode);
             string text = language == null ? null : (string)language[key];
-            if (String.IsNullOrEmpty(text))
+            if (!String.IsNullOrEmpty(text)) return Display(CultLanguages.TranslateMinecraft(text));
+            string fallbackCode = CultLanguages.MinecraftFallbackCode(LocalizationManager.CurrentLanguage);
+            if (fallbackCode != null)
             {
-                JObject english = GetLanguage("en_us");
-                text = english == null ? null : (string)english[key];
+                text = (string)GetLanguage(fallbackCode)?[key];
+                if (!String.IsNullOrEmpty(text)) return Display(TranslateOriginal(text));
             }
-            return Display(text ?? fallback);
+            JObject english = GetLanguage("en_us");
+            text = english == null ? null : (string)english[key];
+            return Display(TranslateOriginal(text ?? fallback));
         }
 
         private JObject GetLanguage(string code)
@@ -177,65 +185,14 @@ namespace CultCraft
                 string text = assets.ReadText("assets/minecraft/lang/" + code + ".json");
                 if (text == null)
                 {
-                    if (!indexed) IndexLanguageObjects();
-                    string path;
-                    if (languageFiles.TryGetValue(code, out path)) text = File.ReadAllText(path);
+                    string path = assets.FindLocalIndexedObject("minecraft/lang/" + code + ".json", 4 * 1024 * 1024);
+                    if (path != null) text = File.ReadAllText(path);
                 }
                 result = text == null ? null : JObject.Parse(text);
             }
             catch { result = null; }
             languages[code] = result;
             return result;
-        }
-
-        private void IndexLanguageObjects()
-        {
-            indexed = true;
-            var roots = new List<string>();
-            DirectoryInfo version = Directory.GetParent(assets.ClientJar);
-            if (version != null && version.Parent != null && version.Parent.Name == "versions" && version.Parent.Parent != null) roots.Add(version.Parent.Parent.FullName);
-            roots.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".minecraft"));
-            foreach (string root in roots)
-            {
-                string indexFolder = Path.Combine(root, "assets", "indexes");
-                if (!Directory.Exists(indexFolder)) continue;
-                var indices = new List<string>();
-                // Prefer the exact client version's asset index before any older local installations.
-                try
-                {
-                    string versionJson = Path.ChangeExtension(assets.ClientJar, ".json");
-                    string id = (string)JObject.Parse(File.ReadAllText(versionJson))["assetIndex"]?["id"];
-                    if (!String.IsNullOrEmpty(id) && Path.GetFileName(id) == id) indices.Add(Path.Combine(indexFolder, id + ".json"));
-                }
-                catch { }
-                indices.AddRange(Directory.GetFiles(indexFolder, "*.json"));
-                foreach (string index in indices)
-                {
-                    try
-                    {
-                        if (!File.Exists(index) || new FileInfo(index).Length > 16 * 1024 * 1024) continue;
-                        var objects = JObject.Parse(File.ReadAllText(index))["objects"] as JObject;
-                        if (objects == null) continue;
-                        foreach (var entry in objects.Properties())
-                        {
-                            if (!entry.Name.StartsWith("minecraft/lang/", StringComparison.Ordinal) || !entry.Name.EndsWith(".json", StringComparison.Ordinal)) continue;
-                            string hash = (string)entry.Value["hash"];
-                            if (hash == null || hash.Length != 40 || !IsHex(hash)) continue;
-                            string code = Path.GetFileNameWithoutExtension(entry.Name);
-                            if (languageFiles.ContainsKey(code)) continue;
-                            string path = Path.Combine(root, "assets", "objects", hash.Substring(0, 2), hash);
-                            if (File.Exists(path) && new FileInfo(path).Length <= 4 * 1024 * 1024) languageFiles.Add(code, path);
-                        }
-                    }
-                    catch { }
-                }
-            }
-        }
-
-        private static bool IsHex(string value)
-        {
-            foreach (char c in value) if (!(c >= '0' && c <= '9') && !(c >= 'a' && c <= 'f')) return false;
-            return true;
         }
 
         private static string Numeral(int level)

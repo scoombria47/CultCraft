@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 namespace CultCraft
 {
     /// <summary>Pixel-aligned camera options using the owner's real Minecraft widget sprites.</summary>
-    internal sealed class MinecraftSettingsUi : IDisposable
+    internal sealed partial class MinecraftSettingsUi : IDisposable
     {
         private readonly MinecraftAssets assets;
         private PixelUi pixels;
@@ -18,13 +18,17 @@ namespace CultCraft
         private int inputFrame=-1,pointerEventFrame=-1,keyEventFrame=-1,renderFrame=-1;
         private int controlId;
         private bool close;
+        private bool testInput;
         private Vector2 pointer;
         private string styleError;
         internal PlayerSkins Skins;
         private int skinRole;
         internal int SelectedSkinRole { get { return skinRole; } }
         private string nickname="";
-        private Rect roleRect,nicknameRect,applyRect,skinResetRect,armsRect,statusRect;
+        private Rect roleRect,nicknameRect,applyRect,skinResetRect,armsRect,statusRect,languageRect;
+        private const int LanguageControl = 11;
+        private static readonly int[] FocusOrder = { 0, 1, 6, 10, 7, 8, 9, LanguageControl, 2, 3, 4, 5 };
+        private static readonly int[] FocusOrderWithoutSkins = { 0, 1, LanguageControl, 2, 3, 4, 5 };
         private bool Editing,selectAll;
         private Keyboard textKeyboard;
         internal Rect NicknameRect { get { return nicknameRect; } }
@@ -80,14 +84,14 @@ namespace CultCraft
 
         public void Open(float sensitivity,float fov)
         {
-            Sensitivity=sensitivity;Fov=fov;focus=0;dragging=pressedButton=-1;close=false;
+            Sensitivity=sensitivity;Fov=fov;focus=0;dragging=pressedButton=-1;close=false;CloseLanguageMenu();
             inputFrame=pointerEventFrame=keyEventFrame=-1;Layout();
             if(Skins!=null)nickname=Skins.Get(skinRole).Nickname;
             Editing=selectAll=false;
             if(textKeyboard!=null)textKeyboard.onTextInput-=Append;
             textKeyboard=Keyboard.current;if(textKeyboard!=null)textKeyboard.onTextInput+=Append;
         }
-        public void Release(){if(textKeyboard!=null)textKeyboard.onTextInput-=Append;textKeyboard=null;Editing=false;if(controlId!=0&&GUIUtility.hotControl==controlId)GUIUtility.hotControl=0;dragging=pressedButton=-1;close=false;}
+        public void Release(){if(textKeyboard!=null)textKeyboard.onTextInput-=Append;textKeyboard=null;Editing=false;if(controlId!=0&&GUIUtility.hotControl==controlId)GUIUtility.hotControl=0;dragging=pressedButton=-1;close=false;CloseLanguageMenu();}
 
         private void Layout()
         {
@@ -97,17 +101,20 @@ namespace CultCraft
             WindowRect=new Rect(Mathf.Round((Screen.width-width*scale)*0.5f),Mathf.Round((Screen.height-height*scale)*0.5f),width*scale,height*scale);
             float padding=V("settings_padding"),controlWidth=width-padding*2f,heightControl=V("settings_control_height");
             for(int i=0;i<2;i++)sliders[i]=At(padding,V("settings_first_slider_y")+i*V("settings_slider_gap"),controlWidth,heightControl);
-            ScaleRect=At(padding,V("settings_button_y")-52f,controlWidth,heightControl);
-            HintsRect=At(padding,V("settings_button_y")-26f,controlWidth,heightControl);
+            float buttonY=V("settings_button_y");
+            languageRect=At(padding,buttonY-62f,controlWidth,heightControl);
+            ScaleRect=At(padding,buttonY-38f,controlWidth,heightControl);
+            HintsRect=At(padding,buttonY-14f,controlWidth,heightControl);
             float gap=V("settings_button_gap"),buttonWidth=(controlWidth-gap)*0.5f;
-            ResetRect=At(padding,V("settings_button_y"),buttonWidth,heightControl);
-            CloseRect=At(padding+buttonWidth+gap,V("settings_button_y"),buttonWidth,heightControl);
+            ResetRect=At(padding,buttonY+10f,buttonWidth,heightControl);
+            CloseRect=At(padding+buttonWidth+gap,buttonY+10f,buttonWidth,heightControl);
             roleRect=At(padding,126f,controlWidth,heightControl);
             nicknameRect=At(padding,164f,controlWidth-90f,heightControl);
             applyRect=At(padding+controlWidth-84f,164f,84f,heightControl);
             skinResetRect=At(padding,190f,controlWidth,heightControl);
             armsRect=At(padding,216f,controlWidth,heightControl);
             statusRect=At(padding,242f,controlWidth,12f);
+            if (languageMenuOpen) LayoutLanguageMenu();
         }
         private Rect At(float x,float y,float width,float height){return new Rect(WindowRect.x+x*scale,WindowRect.y+y*scale,width*scale,height*scale);}
 
@@ -132,6 +139,7 @@ namespace CultCraft
 
         public bool Draw(float defaultSensitivity,float defaultFov,bool testAllowed)
         {
+            testInput = testAllowed;
             Layout();Event ev=Event.current;if(ev==null)return false;
             controlId=GUIUtility.GetControlID(0x435243,FocusType.Passive,WindowRect);
             if(ev.type==EventType.Repaint&&inputFrame!=Time.frameCount)
@@ -150,9 +158,20 @@ namespace CultCraft
             Fill(new Rect(WindowRect.x-scale,WindowRect.y-scale,WindowRect.width+scale*2f,WindowRect.height+scale*2f),new Color(0.07f,0.07f,0.07f,1f));
             GUI.DrawTextureWithTexCoords(WindowRect,tiledBackground,new Rect(0f,0f,WindowRect.width/(tiledBackground.width*scale),WindowRect.height/(tiledBackground.height*scale)),true);
             Fill(At(0f,0f,V("settings_width"),31f),new Color(0f,0f,0f,0.3f));
+            if (languageMenuOpen)
+            {
+                DrawLanguageMenu();
+                GUI.color=original;
+                return false;
+            }
             pixels.Text(At(8f,V("settings_title_y"),V("settings_width")-16f,12f),MinecraftLocalization.Ui("settings"),scale,Color.white);
             DrawSlider(0,MinecraftLocalization.Ui("mouse_sensitivity")+": "+Sensitivity.ToString("0.00",System.Globalization.CultureInfo.InvariantCulture),"0.02","1.00",(Sensitivity-0.02f)/0.98f);
             DrawSlider(1,MinecraftLocalization.Ui("field_of_view")+": "+Mathf.RoundToInt(Fov)+"°","55°","110°",(Fov-55f)/55f);
+            string selectedLanguage = CultLanguages.CurrentLabel();
+            string languageLabel = language.Translation("options.language", "Language") + " · " + selectedLanguage;
+            if (pixels.Measure(languageLabel, scale) + 8f * scale > languageRect.width)
+                languageLabel = selectedLanguage;
+            DrawButton(languageRect, LanguageControl, languageLabel);
             string scaleLabel = PixelUi.ScaleMode == 0 ? language.Translation("options.guiScale.auto","Auto") : PixelUi.ScaleMode.ToString();
             DrawButton(ScaleRect,2,language.Translation("options.guiScale","Interface scale")+": "+scaleLabel);
             string hintsValue = PixelUi.ShowHints ? language.Translation("options.on","On") : language.Translation("options.off","Off");
@@ -196,6 +215,7 @@ namespace CultCraft
         private void PointerDown(Vector2 position)
         {
             pointer=position;dragging=pressedButton=-1;
+            if (languageMenuOpen) { LanguagePointerDown(position); return; }
             if(Skins!=null)
             {
                 if(nicknameRect.Contains(position)){focus=10;Editing=true;return;}
@@ -207,7 +227,8 @@ namespace CultCraft
                 if(pressedButton>=6){GUIUtility.hotControl=controlId;return;}
             }
             for(int i=0;i<2;i++)if(sliders[i].Contains(position)){focus=dragging=i;GUIUtility.hotControl=controlId;SetFromPointer(i,position);return;}
-            if(ScaleRect.Contains(position))focus=pressedButton=2;
+            if(languageRect.Contains(position))focus=pressedButton=LanguageControl;
+            else if(ScaleRect.Contains(position))focus=pressedButton=2;
             else if(HintsRect.Contains(position))focus=pressedButton=3;
             else if(ResetRect.Contains(position))focus=pressedButton=4;
             else if(CloseRect.Contains(position))focus=pressedButton=5;
@@ -216,13 +237,15 @@ namespace CultCraft
         private void PointerUp(Vector2 position,float defaultSensitivity,float defaultFov)
         {
             pointer=position;
-            if(pressedButton>=6)
+            if (languageMenuOpen) { LanguagePointerUp(position); return; }
+            if(pressedButton>=6&&pressedButton<=9)
             {
                 Rect target=pressedButton==6?roleRect:pressedButton==7?applyRect:pressedButton==8?skinResetRect:armsRect;
                 if(target.Contains(position))Activate(defaultSensitivity,defaultFov);
             }
             if(dragging>=0)SetFromPointer(dragging,position);
-            if(pressedButton==2&&ScaleRect.Contains(position))Activate(defaultSensitivity,defaultFov);
+            if(pressedButton==LanguageControl&&languageRect.Contains(position))Activate(defaultSensitivity,defaultFov);
+            else if(pressedButton==2&&ScaleRect.Contains(position))Activate(defaultSensitivity,defaultFov);
             else if(pressedButton==3&&HintsRect.Contains(position))Activate(defaultSensitivity,defaultFov);
             else if(pressedButton==4&&ResetRect.Contains(position))Activate(defaultSensitivity,defaultFov);
             else if(pressedButton==5&&CloseRect.Contains(position))Activate(defaultSensitivity,defaultFov);
@@ -248,12 +271,19 @@ namespace CultCraft
                 if(Mathf.Abs(value-Fov)>0.00001f){Fov=value;SliderChangeCount++;}
             }
         }
-        private void MoveFocus(int direction){int count=Skins==null?6:11;focus=(focus+direction+count)%count;Editing=focus==10;}
+        private void MoveFocus(int direction)
+        {
+            int[] order=Skins==null?FocusOrderWithoutSkins:FocusOrder;
+            int current=Array.IndexOf(order,focus);
+            focus=order[(current+direction+order.Length)%order.Length];
+            Editing=focus==10;
+        }
         private void Adjust(int direction)
         {
             if(focus<2)SetValue(focus,(focus==0?Sensitivity:Fov)+direction*(focus==0?0.01f:1f));
             else if(focus==2)CycleScale(direction);
             else if(focus==3)PixelUi.ShowHints=!PixelUi.ShowHints;
+            else if(focus==LanguageControl)OpenLanguageMenu();
             else MoveFocus(direction);
         }
         private static void CycleScale(int direction){PixelUi.ScaleMode=(PixelUi.ScaleMode+direction+4)%4;}
@@ -263,6 +293,7 @@ namespace CultCraft
             else if(focus==3)PixelUi.ShowHints=!PixelUi.ShowHints;
             else if(focus==4){SetValue(0,defaultSensitivity);SetValue(1,defaultFov);PixelUi.ScaleMode=PixelUi.DefaultScaleMode;PixelUi.ShowHints=true;}
             else if(focus==5)close=true;
+            else if(focus==LanguageControl)OpenLanguageMenu();
             else if(Skins!=null&&focus==6){skinRole=1-skinRole;nickname=Skins.Get(skinRole).Nickname;}
             else if(Skins!=null&&(focus==7||focus==10))Skins.Apply(skinRole,nickname);
             else if(Skins!=null&&focus==8){Skins.Reset(skinRole);nickname="";}
@@ -279,10 +310,18 @@ namespace CultCraft
                 {
                     if(mouse.leftButton.wasPressedThisFrame)PointerDown(pointer);
                     if(mouse.leftButton.isPressed&&dragging>=0)SetFromPointer(dragging,pointer);
+                    if(mouse.leftButton.isPressed&&languageScrollDrag)DragLanguageScroll(pointer);
                     if(mouse.leftButton.wasReleasedThisFrame)PointerUp(pointer,defaultSensitivity,defaultFov);
                 }
+                if (languageMenuOpen && wheelEventFrame != Time.frameCount)
+                    ScrollLanguages(pointer, mouse.scroll.ReadValue().y);
             }
             Keyboard keyboard=Keyboard.current;
+            if (languageMenuOpen)
+            {
+                PollLanguageKeys(testAllowed && keyEventFrame != Time.frameCount ? keyboard : null, Gamepad.current);
+                return;
+            }
             if(Editing&&keyboard!=null)
             {
                 if(keyboard.escapeKey.wasPressedThisFrame)close=true;
@@ -320,10 +359,21 @@ namespace CultCraft
             if(ev.isMouse||!testAllowed&&ev.type==EventType.Repaint)pointer=ev.mousePosition;
             if(ev.type==EventType.MouseDown&&ev.button==0){PointerDown(ev.mousePosition);pointerEventFrame=Time.frameCount;ev.Use();}
             else if(ev.type==EventType.MouseDrag&&dragging>=0){SetFromPointer(dragging,ev.mousePosition);pointerEventFrame=Time.frameCount;ev.Use();}
+            else if(ev.type==EventType.MouseDrag&&languageScrollDrag){DragLanguageScroll(ev.mousePosition);pointerEventFrame=Time.frameCount;ev.Use();}
             else if(ev.type==EventType.MouseUp&&ev.button==0){PointerUp(ev.mousePosition,defaultSensitivity,defaultFov);pointerEventFrame=Time.frameCount;ev.Use();}
+            else if(ev.type==EventType.ScrollWheel&&languageMenuOpen)
+            {
+                if (wheelEventFrame != Time.frameCount) ScrollLanguages(ev.mousePosition, -ev.delta.y);
+                ev.Use();
+            }
             else if(ev.type==EventType.KeyDown)
             {
                 if(Editing){ev.Use();return;}
+                if (languageMenuOpen)
+                {
+                    if (HandleLanguageKey(ev.keyCode, ev.shift)) { keyEventFrame=Time.frameCount;ev.Use(); }
+                    return;
+                }
                 bool used=true;
                 switch(ev.keyCode)
                 {

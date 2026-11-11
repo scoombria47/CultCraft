@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -23,17 +21,13 @@ namespace CultCraft
         public string LastPlayback { get; private set; }
         public float LastPitch { get; private set; } = 1f;
         public string Status { get { var result=new List<string>();foreach(var item in states)result.Add(item.Key+"="+item.Value);return String.Join(", ",result.ToArray()); } }
-        public InstalledSounds(string clientJar)
+        public InstalledSounds(MinecraftAssetIndex index)
         {
-            string root=Directory.GetParent(Directory.GetParent(Path.GetDirectoryName(clientJar)).FullName).FullName;
-            string preferredIndex=null;
-            try { preferredIndex=(string)JObject.Parse(File.ReadAllText(Path.ChangeExtension(clientJar,".json")))["assetIndex"]?["id"]; }
-            catch(IOException){}catch(Newtonsoft.Json.JsonException){}
             foreach(SoundSourceRow source in Spec.SoundSourceRows)
             {
                 try
                 {
-                    string path=Find(root,source,preferredIndex);
+                    string path=index.FindLegacy(source.LegacyPath) ?? index.Find(source.Entry);
                     if(path==null){states[source.Id]="not installed";continue;}
                     paths[source.Id]=path;
                     var request=UnityWebRequestMultimedia.GetAudioClip(new Uri(path).AbsoluteUri,AudioType.OGGVORBIS);
@@ -41,33 +35,6 @@ namespace CultCraft
                 }
                 catch(Exception error){states[source.Id]="unavailable ("+error.GetType().Name+")";}
             }
-        }
-        private static string Find(string root,SoundSourceRow source,string preferredIndex)
-        {
-            string legacy=Path.Combine(root,source.LegacyPath.Replace('/',Path.DirectorySeparatorChar));
-            if(File.Exists(legacy))return legacy;
-            string indexFolder=Path.Combine(root,"assets","indexes");
-            if(!Directory.Exists(indexFolder))return null;
-            var indexes=new List<string>();
-            if(!String.IsNullOrEmpty(preferredIndex)&&preferredIndex.IndexOfAny(new[]{'/', '\\', ':'})<0)
-            {
-                string preferred=Path.Combine(indexFolder,preferredIndex+".json");if(File.Exists(preferred))indexes.Add(preferred);
-            }
-            foreach(string file in Directory.GetFiles(indexFolder,"*.json"))if(!indexes.Contains(file))indexes.Add(file);
-            foreach(string file in indexes)
-            {
-                try
-                {
-                    if(new FileInfo(file).Length>16*1024*1024)continue;
-                    JToken token=JObject.Parse(File.ReadAllText(file))["objects"]?[source.Entry];
-                    string hash=(string)token?["hash"];
-                    if(String.IsNullOrEmpty(hash)||hash.Length!=40||!System.Text.RegularExpressions.Regex.IsMatch(hash,"\\A[0-9a-f]{40}\\z"))continue;
-                    string path=Path.Combine(root,"assets","objects",hash.Substring(0,2),hash);
-                    if(File.Exists(path))return path;
-                }
-                catch(IOException){}catch(Newtonsoft.Json.JsonException){}
-            }
-            return null;
         }
         public void Tick()
         {

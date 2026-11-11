@@ -23,10 +23,34 @@
       "Verification": "Runtime observation required; static design is not a pass"
     },
     {
+      "Id": "minecraft-startup-fallback",
+      "Evidence": "An isolated Minecraft 26.3 client starts the real Unity fallback with an empty cache and then reuses the verified archive on a warm load.",
+      "System": "testing",
+      "Verification": "Use the production asset loader. Check the verified archive, skin, sword, bed and local Unicode font lookup."
+    },
+    {
+      "Id": "meme-languages",
+      "Evidence": "LOLCAT, both Pirate Speak variants, Anglish, Shakespearean English and pre-reform Russian appear in both settings menus and localize native and Minecraft text without changing format tokens.",
+      "System": "testing",
+      "Verification": "Select each native language by its exact name and verify both text sources and the pirate coin names."
+    },
+    {
+      "Id": "minecraft-language-picker",
+      "Evidence": "F6 opens a separate scrollable language list in the same order as the native settings.",
+      "System": "testing",
+      "Verification": "Use mouse and keyboard in the actual game window to open, scroll, select, confirm and cancel."
+    },
+    {
       "Id": "minecraft-tree-tool",
       "Evidence": "The native tree interaction renders the stone axe during chopping.",
       "System": "testing",
       "Verification": "Read the held mesh during the real chopping track."
+    },
+    {
+      "Id": "interaction-prompt-clearance",
+      "Evidence": "The native Chop Wood prompt is visible above the CultCraft hotbar.",
+      "System": "testing",
+      "Verification": "Measure the on-screen bottom edge of the real interaction indicator in Auto and all three UI scales."
     },
     {
       "Id": "minecraft-stone-tool",

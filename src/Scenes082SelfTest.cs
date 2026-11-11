@@ -148,8 +148,8 @@ namespace CultCraft
         private static void Require(bool value,string why){if(!value)throw new Exception(why);}
         private static Action Snapshot(PlayerSkins.Choice c)
         {
-            Texture2D texture=c.Texture;bool slim=c.SourceSlim;string name=c.Nickname,status=c.Status;int arms=c.Arms;
-            return ()=>{c.Request++;c.Texture=texture;c.SourceSlim=slim;c.Nickname=name;c.Status=status;c.Arms=arms;c.NickConfig.Value=name;c.ArmsConfig.Value=arms;c.Revision++;};
+            Texture2D texture=c.Texture;bool slim=c.SourceSlim;string name=c.Nickname,status=c.StatusKey;int arms=c.Arms;
+            return ()=>{c.Request++;c.Texture=texture;c.SourceSlim=slim;c.Nickname=name;c.StatusKey=status;c.Arms=arms;c.NickConfig.Value=name;c.ArmsConfig.Value=arms;c.Revision++;};
         }
         private void CleanupMenu()
         {

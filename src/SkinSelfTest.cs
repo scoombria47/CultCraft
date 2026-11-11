@@ -127,8 +127,8 @@ namespace CultCraft
             Require(skins.Get(0).Nickname==""&&lamb!=null&&!lamb.SlimArms&&Mathf.Abs(lamb.ArmMeshWidth-4f)<0.01f,"Lamb reset did not restore Steve: nickname="+skins.Get(0).Nickname+", selected role="+camera.SkinUi.SelectedSkinRole+", "+Describe(lamb));
         }
         private static Action Snapshot(PlayerSkins.Choice c)
-        {string name=c.Nickname,status=c.Status,config=c.NickConfig.Value;int arms=c.Arms,ac=c.ArmsConfig.Value;bool slim=c.SourceSlim;Texture2D tex=c.Texture;
-            return delegate{c.Request++;c.Nickname=name;c.Status=status;c.Texture=tex;c.SourceSlim=slim;c.Arms=arms;c.NickConfig.Value=config;c.ArmsConfig.Value=ac;c.Revision++;};}
+        {string name=c.Nickname,status=c.StatusKey,config=c.NickConfig.Value;int arms=c.Arms,ac=c.ArmsConfig.Value;bool slim=c.SourceSlim;Texture2D tex=c.Texture;
+            return delegate{c.Request++;c.Nickname=name;c.StatusKey=status;c.Texture=tex;c.SourceSlim=slim;c.Arms=arms;c.NickConfig.Value=config;c.ArmsConfig.Value=ac;c.Revision++;};}
         private void Open(){if(!camera.SettingsOpen)camera.ToggleSettings();}
         private void Close(){if(camera.SettingsOpen)camera.ToggleSettings();}
         private static string Describe(MinecraftAvatar model){return model==null?"model absent":"world="+model.WorldVisible+", native hidden="+model.LambHidden+", slim="+model.SlimArms+", solid arm width="+model.ArmMeshWidth+", draws="+model.SkinRenderFrames;}

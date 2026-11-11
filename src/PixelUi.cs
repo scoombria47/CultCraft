@@ -114,26 +114,17 @@ namespace CultCraft
             japaneseUnicode=MinecraftLocalization.LanguageCode.StartsWith("ja",StringComparison.Ordinal);
             try
             {
-                DirectoryInfo version=Directory.GetParent(assets.ClientJar);
-                string root=version.Parent.Parent.FullName;
-                JObject versionData=JObject.Parse(File.ReadAllText(Path.ChangeExtension(assets.ClientJar,".json")));
-                string indexId=(string)versionData["assetIndex"]?["id"];
-                if(String.IsNullOrEmpty(indexId)||Path.GetFileName(indexId)!=indexId)return;
-                JObject objects=JObject.Parse(File.ReadAllText(Path.Combine(root,"assets","indexes",indexId+".json")))["objects"] as JObject;
                 // The Japanese archive is an override, not a complete font: kana and
                 // most symbols remain in the base archive, exactly as the native providers.
-                ReadUnicodeArchive(objects,root,"minecraft/font/unifont.zip");
-                if(japaneseUnicode)ReadUnicodeArchive(objects,root,"minecraft/font/unifont_jp.zip");
+                ReadUnicodeArchive(assets.FindLocalIndexedObject("minecraft/font/unifont.zip", 16 * 1024 * 1024));
+                if(japaneseUnicode)ReadUnicodeArchive(assets.FindLocalIndexedObject("minecraft/font/unifont_jp.zip", 16 * 1024 * 1024));
             }
-            catch(IOException){}catch(Newtonsoft.Json.JsonException){}catch(InvalidDataException){}
+            catch(IOException){}catch(UnauthorizedAccessException){}catch(InvalidDataException){}
         }
 
-        private void ReadUnicodeArchive(JObject objects,string root,string entry)
+        private void ReadUnicodeArchive(string path)
         {
-                string hash=(string)objects?[entry]?["hash"];
-                if(hash==null||!System.Text.RegularExpressions.Regex.IsMatch(hash,"\\A[0-9a-f]{40}\\z"))return;
-                string path=Path.Combine(root,"assets","objects",hash.Substring(0,2),hash);
-                if(!File.Exists(path))return;
+                if(path==null)return;
                 using(var file=File.OpenRead(path))using(var zip=new ZipArchive(file,ZipArchiveMode.Read))
                     foreach(ZipArchiveEntry item in zip.Entries)
                     {

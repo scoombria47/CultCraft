@@ -26,6 +26,7 @@ namespace CultCraft
         private readonly Dictionary<string,Source> sources=new Dictionary<string,Source>(StringComparer.Ordinal);
         private readonly List<string> roots;
         private readonly bool primaryOnly;
+        private readonly string cacheDirectory;
         private UnityWebRequest activeRequest;
         private string activePartial;
         private bool started,disposed;
@@ -35,10 +36,11 @@ namespace CultCraft
             get {var values=new List<string>();foreach(Source source in sources.Values)values.Add(source.Version+"="+source.Status);return String.Join(", ",values.ToArray());}
         }
 
-        public MinecraftClientSources(IEnumerable<string> ownerRoots, bool primaryOnly = false)
+        public MinecraftClientSources(IEnumerable<string> ownerRoots, bool primaryOnly = false, string cacheDirectory = null)
         {
             roots=new List<string>(ownerRoots);
             this.primaryOnly = primaryOnly;
+            this.cacheDirectory = cacheDirectory ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CultCraft", "minecraft-assets");
             foreach(AssetRow row in Spec.AssetRows)
             {
                 bool primary = String.IsNullOrEmpty(row.SourceJarVersion) || row.SourceJarVersion == "primary";
@@ -87,7 +89,7 @@ namespace CultCraft
 
         private IEnumerable<string> Candidates(Source source)
         {
-            string cache=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"CultCraft","minecraft-assets",source.Version+"-client.jar");
+            string cache=Path.Combine(cacheDirectory,source.Version+"-client.jar");
             var paths=new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             paths.Add(cache);yield return cache;
             foreach(string root in roots)
@@ -149,7 +151,7 @@ namespace CultCraft
                     if(!check.IsFaulted&&check.Result&&Open(source,path)){ready=true;break;}
                 }
                 if(ready)continue;
-                string cache=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"CultCraft","minecraft-assets",source.Version+"-client.jar");
+                string cache=Path.Combine(cacheDirectory,source.Version+"-client.jar");
                 string setupError=null;
                 try
                 {

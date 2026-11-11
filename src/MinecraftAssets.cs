@@ -20,6 +20,7 @@ namespace CultCraft
         private InstalledSounds sounds;
         private MinecraftClientSources optionalSources;
         private MinecraftClientSources primaryFallback;
+        private MinecraftAssetIndex assetIndex;
         private string installedSoundClient;
         private List<string> installedRoots;
         private readonly Dictionary<string,string> entrySources=new Dictionary<string,string>(StringComparer.Ordinal);
@@ -27,6 +28,7 @@ namespace CultCraft
         public bool Ready { get; private set; }
         public string Version { get; private set; }
         public string ClientJar { get; private set; }
+        internal string InstalledClientJar { get; private set; }
         public string Error { get; private set; }
         public Texture2D PlayerSkin { get; private set; }
         public bool CanPreparePrimary { get { return primaryFallback != null; } }
@@ -34,7 +36,9 @@ namespace CultCraft
         public int SourceRevision { get { return optionalSources==null?0:optionalSources.Revision; } }
         public string OptionalSourceStatus { get { return optionalSources==null?"not prepared":optionalSources.Status; } }
 
-        public MinecraftAssets(string mcFolder)
+        public MinecraftAssets(string mcFolder) : this(mcFolder, useInstalledFolders: true, cacheDirectory: null) { }
+
+        internal MinecraftAssets(string mcFolder, bool useInstalledFolders, string cacheDirectory)
         {
             Version = "unavailable";
             try
@@ -43,10 +47,13 @@ namespace CultCraft
                 foreach(AssetRow row in Spec.AssetRows)entrySources[row.Entry]=String.IsNullOrEmpty(row.SourceJarVersion)?"primary":row.SourceJarVersion;
                 var folders = new List<string>();
                 if (!String.IsNullOrWhiteSpace(mcFolder)) folders.Add(mcFolder);
-                string companion = Environment.GetEnvironmentVariable(source.CompanionEnvironment);
-                if (!String.IsNullOrWhiteSpace(companion)) folders.Add(companion);
-                // Melty can identify the launcher's program folder rather than its separate data folder.
-                folders.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".minecraft"));
+                if (useInstalledFolders)
+                {
+                    string companion = Environment.GetEnvironmentVariable(source.CompanionEnvironment);
+                    if (!String.IsNullOrWhiteSpace(companion)) folders.Add(companion);
+                    // Melty can identify the launcher's program folder rather than its separate data folder.
+                    folders.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), ".minecraft"));
+                }
                 var candidates = new List<string>();
                 var rejections = new List<string>();
                 var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -77,7 +84,7 @@ namespace CultCraft
                 if (installedSoundClient != null)
                 {
                     installedRoots = folders;
-                    primaryFallback = new MinecraftClientSources(folders, primaryOnly: true);
+                    primaryFallback = new MinecraftClientSources(folders, primaryOnly: true, cacheDirectory: cacheDirectory);
                 }
             }
             catch (Exception ex)
@@ -93,6 +100,7 @@ namespace CultCraft
             bool hasStone = candidate.GetEntry("assets/minecraft/textures/block/stone.png") != null ||
                             candidate.GetEntry("assets/minecraft/textures/blocks/stone.png") != null;
             return hasStone && (candidate.GetEntry("assets/minecraft/lang/en_us.json") != null ||
+                                candidate.GetEntry("assets/minecraft/lang/en_us.lang") != null ||
                                 candidate.GetEntry("assets/minecraft/lang/en_US.lang") != null);
         }
 
@@ -120,12 +128,14 @@ namespace CultCraft
         private void ActivatePrimary(string archivePath, string soundClient, string version, List<string> folders)
         {
             ClientJar = archivePath;
+            InstalledClientJar = soundClient;
             Version = version;
             DirectoryInfo versionFolder = Directory.GetParent(soundClient);
             if (versionFolder?.Parent?.Name == "versions" && versionFolder.Parent.Parent != null)
                 folders.Add(versionFolder.Parent.Parent.FullName);
             optionalSources = new MinecraftClientSources(folders);
-            try { sounds = new InstalledSounds(soundClient); } catch { sounds = null; }
+            assetIndex = new MinecraftAssetIndex(soundClient, folders);
+            try { sounds = new InstalledSounds(assetIndex); } catch { sounds = null; }
             Error = null;
             Ready = true;
         }
@@ -245,6 +255,8 @@ namespace CultCraft
         }
 
         public bool IsSourceReady(string version){return !disposed&&(version=="primary"?Ready:optionalSources!=null&&optionalSources.Archive(version)!=null);}
+        internal string VerifiedOptionalJar(string version) => optionalSources?.PreparedPath(version);
+        internal string FindLocalIndexedObject(string entry, long maxSize) => assetIndex?.Find(entry, maxSize);
         public bool IsAssetReady(string assetId)
         {
             if(disposed||archive==null)return false;

@@ -100,6 +100,7 @@ namespace CultCraft
         public Rect SettingsCloseRect { get { return _settingsUi==null?new Rect():_settingsUi.CloseRect; } }
         public Rect SettingsScaleRect { get { return _settingsUi==null?new Rect():_settingsUi.ScaleRect; } }
         public Rect SettingsHintsRect { get { return _settingsUi==null?new Rect():_settingsUi.HintsRect; } }
+        internal MinecraftSettingsUi SettingsUi => _settingsUi;
         public int SettingsRenderFrameCount { get { return _settingsUi==null?0:_settingsUi.RenderFrameCount; } }
         public int SettingsSliderChangeCount { get { return _settingsUi==null?0:_settingsUi.SliderChangeCount; } }
         public bool SettingsPixelStyleReady { get { return _settingsUi!=null&&_settingsUi.PixelStyleReady; } }

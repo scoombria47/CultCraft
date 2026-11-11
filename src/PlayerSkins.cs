@@ -16,7 +16,9 @@ namespace CultCraft
     {
         internal sealed class Choice
         {
-            public string Nickname = "", Status = "";
+            public string Nickname = "";
+            public string StatusKey;
+            public string Status => StatusKey == null ? Nickname : Text(StatusKey);
             public int Arms; // 0 auto, 1 classic, 2 slim
             public Texture2D Texture;
             public bool SourceSlim;
@@ -53,15 +55,15 @@ namespace CultCraft
         {
             Choice c=Get(role);c.Texture=role==0?assets.PlayerSkin:assets.Texture("assets/minecraft/textures/entity/player/slim/alex.png");
             if(c.Texture==null)throw new InvalidOperationException("Installed Minecraft Alex skin is unavailable.");
-            c.SourceSlim=role==1;c.Nickname="";c.Status=role==0?"Steve":"Alex";c.Revision++;
+            c.SourceSlim=role==1;c.Nickname="";c.StatusKey=role==0?"Steve":"Alex";c.Revision++;
         }
         public void SetArms(int role,int value){Choice c=Get(role);c.Arms=Mathf.Clamp(value,0,2);c.ArmsConfig.Value=c.Arms;c.Revision++;}
         public void Reset(int role){Choice c=Get(role);c.Request++;Default(role);c.NickConfig.Value="";c.Arms=0;c.ArmsConfig.Value=0;}
         public void Apply(int role,string nickname)
         {
             Choice c=Get(role);nickname=(nickname??"").Trim();
-            if(!Regex.IsMatch(nickname,"^[A-Za-z0-9_]{1,16}$")){c.Status=Text("invalid");return;}
-            int request=++c.Request;c.Status=Text("loading");
+            if(!Regex.IsMatch(nickname,"^[A-Za-z0-9_]{1,16}$")){c.StatusKey="invalid";return;}
+            int request=++c.Request;c.StatusKey="loading";
             host.StartCoroutine(Load(role,nickname,request));
         }
         private bool Current(Choice c,int request){return !disposed&&c.Request==request;}
@@ -116,12 +118,12 @@ namespace CultCraft
                 ready=Tuple.Create(texture,slim,nickname);cache[nickname]=ready;
             }
             if(!Current(c,sequence))yield break;
-            c.Texture=ready.Item1;c.SourceSlim=ready.Item2;c.Nickname=ready.Item3;c.Status=c.Nickname;c.NickConfig.Value=c.Nickname;c.Revision++;
+            c.Texture=ready.Item1;c.SourceSlim=ready.Item2;c.Nickname=ready.Item3;c.StatusKey=null;c.NickConfig.Value=c.Nickname;c.Revision++;
             logger.LogInfo("Public Minecraft skin applied: role="+role+", nickname="+c.Nickname+", sourceSlim="+c.SourceSlim+", arms="+c.Arms);
         }
         private UnityWebRequest Open(string url){var web=UnityWebRequest.Get(url);web.timeout=15;requests.Add(web);return web;}
         private static void Check(UnityWebRequest web){if(web.result!=UnityWebRequest.Result.Success)throw new Exception("HTTP "+web.responseCode+": "+web.error);if(web.downloadedBytes>1048576)throw new Exception("Oversized response.");}
-        private void Fail(Choice c,string error){c.Status=Text("failed");logger.LogWarning("Public skin lookup failed; keeping previous skin: "+error);}
+        private void Fail(Choice c,string error){c.StatusKey="failed";logger.LogWarning("Public skin lookup failed; keeping previous skin: "+error);}
         private static int ReadInt(byte[] b,int i){return b[i]<<24|b[i+1]<<16|b[i+2]<<8|b[i+3];}
         private static Texture2D Normalize(Texture2D source)
         {
@@ -138,12 +140,12 @@ namespace CultCraft
         private static void Copy(Texture2D t,int sx,int sy,int dx,int dy,int w,int h){for(int y=0;y<h;y++)for(int x=0;x<w;x++)t.SetPixel(dx+x,63-dy-y,t.GetPixel(sx+w-1-x,63-sy-y));}
         public static string Text(string key)
         {
-            string lang=MinecraftLocalization.LanguageCode.Split('_')[0];
+            string lang=MinecraftLocalization.UiLanguageCode.Split('_')[0];
             string[] keys={"role","lamb","goat","nickname","apply","reset","arms","auto","classic","slim","loading","failed","invalid"};
             string[] en={"Skin","Lamb","Goat","Minecraft nickname","Apply","Reset skin","Arms","Auto","Classic","Slim","Loading…","Could not load skin","Use 1–16 letters, digits or _"};
             string[] ru={"Скин","Ягнёнок","Козёл","Ник Minecraft","Применить","Сбросить скин","Руки","Авто","Обычные","Тонкие","Загрузка…","Не удалось загрузить скин","1–16 латинских букв, цифр или _"};
             string[] uk={"Скін","Ягня","Козел","Нік Minecraft","Застосувати","Скинути скін","Руки","Авто","Звичайні","Тонкі","Завантаження…","Не вдалося завантажити скін","1–16 латинських літер, цифр або _"};
-            int i=Array.IndexOf(keys,key);return i<0?key:(lang=="ru"?ru:lang=="uk"?uk:en)[i];
+            int i=Array.IndexOf(keys,key);return i<0?key:MinecraftLocalization.TranslateOriginal((lang=="ru"?ru:lang=="uk"?uk:en)[i]);
         }
         public void Dispose(){disposed=true;foreach(var web in requests){web.Abort();web.Dispose();}requests.Clear();foreach(var t in owned)UnityEngine.Object.Destroy(t);owned.Clear();}
     }

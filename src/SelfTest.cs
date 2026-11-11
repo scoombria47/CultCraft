@@ -532,7 +532,12 @@ namespace CultCraft
                 if(stage==1&&startedWorld)
                 {
                     regressionProof.Tick(player,Ready(player)&&PlayerFarming.Location==FollowerLocation.Base);
-                    if(regressionProof.Complete)Next(12);
+                    if (regressionProof.Complete)
+                    {
+                        Next(12);
+                        if (Array.Exists(Spec.TestRows, row => row.Id == LanguagePickerSelfTest.Id))
+                            player.StartCoroutine(LanguagePickerSelfTest.Run(camera, Report));
+                    }
                 }
                 return;
             }

@@ -11,6 +11,7 @@ namespace CultCraft
     public sealed class Plugin : BaseUnityPlugin
     {
         private MinecraftAssets assets;
+        private CultLanguages languages;
         private MinecraftAvatar avatar;
         private PlayerSkins skins;
         private CinematicActors cinematicActors;
@@ -66,6 +67,7 @@ namespace CultCraft
         private void Initialize()
         {
             if (!assets.Ready) throw new InvalidOperationException(assets.Error);
+            languages = new CultLanguages(Logger);
             avatar = new MinecraftAvatar(assets);
             camera = new CameraRig(Logger, Config, assets);
             skins=new PlayerSkins(this,assets,Config,Logger);
@@ -85,8 +87,15 @@ namespace CultCraft
             test.ConfigureSkinTest(this,skins,FindAvatar);
             test.ConfigureScenesTest(this,skins,cinematicActors,knucklebonesHeads);
             gameplay.AllowTestInput(test.Active);
-            StartCoroutine(assets.PrepareOptionalSources(Logger));
+            StartCoroutine(PrepareMinecraftSources());
             Logger.LogInfo("CultCraft " + Spec.Version + " loaded; official Minecraft resources " + assets.Version + "; solo and local co-op.");
+        }
+
+        private IEnumerator PrepareMinecraftSources()
+        {
+            yield return assets.PrepareOptionalSources(Logger);
+            if (test != null && test.Active && Array.Exists(Spec.TestRows, row => row.Id == StartupCompatibilitySelfTest.Id))
+                yield return StartupCompatibilitySelfTest.Run(assets, Logger);
         }
 
         private void FailStartup(Exception error)
@@ -104,6 +113,7 @@ namespace CultCraft
             try
             {
                 MeltyPlay.Tick();
+                if (test.Active) languages.Test(Logger, assets);
                 assets.TickSounds();
                 cinematicActors.Tick();
                 if (Application.isFocused && !test.Active && TogglePressed()) camera.Toggle();
@@ -224,7 +234,7 @@ namespace CultCraft
             if (startupError != null)
             {
                 GUI.Box(new Rect(18, 18, 600, 100), "");
-                GUI.Label(new Rect(30, 28, 575, 80), "CultCraft could not load Minecraft resources. Install and launch Minecraft: Java Edition 1.21, then restart Cult of the Lamb. Details: BepInEx/LogOutput.log.", hud);
+                GUI.Label(new Rect(30, 28, 575, 80), "CultCraft could not start. Check that Minecraft: Java Edition has been launched and that the resource download can reach Mojang. See BepInEx/LogOutput.log for the cause.", hud);
                 return;
             }
             if (assets != null && assets.CanPreparePrimary)
@@ -247,6 +257,7 @@ namespace CultCraft
 
         private void DisposeParts()
         {
+            if (languages != null) { languages.Dispose(); languages = null; }
             if (test != null) { test.Dispose(); test = null; }
             if(knucklebonesHeads!=null){knucklebonesHeads.Dispose();knucklebonesHeads=null;}
             if(cinematicActors!=null){cinematicActors.Dispose();cinematicActors=null;}

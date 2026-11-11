@@ -48,6 +48,17 @@ namespace CultCraft
         }
         public static Rect ScreenRect { get { return BarRect(); } }
 
+        internal static float InteractionPromptMinimumY
+        {
+            get
+            {
+                Rect bar = BarRect();
+                float scale = PixelUi.Scale;
+                float nameOffset = PixelUi.V("name_line_offset") * Mathf.Max(1f, scale - 1f);
+                return Screen.height - bar.yMin + Mathf.Max(bar.height, nameOffset + 4f * scale);
+            }
+        }
+
         public bool PointerOverBar
         {
             get

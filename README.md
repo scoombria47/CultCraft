@@ -4,25 +4,31 @@
 
 ## English
 
-CultCraft brings Steve, Alex, and Minecraft gear into Cult of the Lamb. Version **0.8.7** supports two-player co-op on a shared screen, including through Steam Remote Play Together.
+CultCraft brings Steve, Alex, and Minecraft gear into Cult of the Lamb. Version **0.8.8** supports two-player co-op on a shared screen, including through Steam Remote Play Together.
 
 ### Play and install
 
 - **Play through Melty.** Install Cult of the Lamb and Minecraft: Java Edition. Then open [CultCraft on Melty](https://melty.gg/m/cultcraft) and select **Play**. Melty installs BepInEx and the mod.
-- **Install the ZIP manually.** Download `CultCraft-0.8.7.zip` from [GitHub](downloads/CultCraft-0.8.7.zip) and follow the [Windows installation guide](INSTALL.md#вручную-из-готового-архива).
+- **Install the ZIP manually.** Download `CultCraft-0.8.8.zip` from [GitHub](downloads/CultCraft-0.8.8.zip) and follow the [Windows installation guide](INSTALL.md#вручную-из-готового-архива).
 - **Build from source.** For a personal Windows build, follow the [installation and build guide in Russian](INSTALL.md).
 - **Add a second player.** Load a save, open the pause menu, select **Add Co-Op Player**, and assign the second controller. For two PCs, invite your friend through Steam Remote Play Together before adding them in the game. Both players share the host's screen.
 
-### What’s new in 0.8.7
+### What’s new in 0.8.8
+
+Adds six language styles for menus, dialogue, quests, and item names: **LOLCAT (Kingdom of Cats)**, **Pirate Speak (The Seven Seas)**, **Russian Pirate Speak (Семь морей)**, **Anglish (Oned Riches)**, **Shakespearean English (Kingdom of England)**, and **Pre-reform Russian (Русскій дореформенный)**.
+
+Pick a language in the game’s **Settings → Game → Language** or open **F6 → Language** for a scrollable Minecraft-style list in the game’s language order. Coins are called **Doubloons** in English Pirate Speak and **Дублоны** in Russian Pirate Speak.
+
+### Startup compatibility
 
 **0.8.7 fixes startup compatibility.** Minecraft: Java Edition must be installed, but you no longer need to install version 1.21 separately. If your installed client is missing required resources, CultCraft downloads and verifies the official 1.21 resource archive in its own cache. The first download requires an internet connection.
 
 In 0.8.6, gathering uses the correct axe or pickaxe. Reward choices show compact 3D blocks and properly sized item icons. The player carries wrapped followers overhead and moves through a seated pose when getting into and out of bed. Scripted gestures now follow the native animations, and **B** uses a Minecraft-style crouch.
 
-### Features in 0.8.7
+### Features
 
 - **Steve, Alex, and custom skins.** The Lamb appears as Steve and the Goat as Alex by default. Each character has a separate skin and arm model in **F6**. Enter a Minecraft Java username to load a skin from Mojang, then choose automatic, classic, or slim arms. Loading a skin requires internet access.
-- **Camera and settings.** **F5** switches between top-down and first-person views. **F6** opens Minecraft-style settings for mouse sensitivity, field of view, dropped-item size, and hints. The menu supports mouse, keyboard, and controller input.
+- **Camera and settings.** **F5** switches between top-down and first-person views. **F6** opens Minecraft-style settings for mouse sensitivity, field of view, interface scale, and hints. The menu supports mouse, keyboard, and controller input.
 - **Weapons and combat.** Swords and axes use Minecraft models and material tiers. Hammers look like maces, and guns look like loaded crossbows that reload after three shots. The bow has a separate cooldown, **R** gives quick access to a ranged shot, and the attack indicator follows weapon readiness.
 - **Hotbar and food.** **1** selects melee, **2** selects the bow, and **3** selects food. In peaceful areas, hold **1** and scroll to choose the sword or an empty hand. Hold **3** and scroll to pick food, then hold the left mouse button to eat it. Food restores or grants different kinds of hearts, and taking a hit interrupts eating.
 - **Resources and settlement.** Dropped items spin in 3D. Resources, crops, seeds, fertilizer, gifts, and scrolls use Minecraft visuals. The settlement features Minecraft-style trees, growing berry bushes, beds, a campfire, and a crafting table. Devotion looks and sounds like Minecraft experience while keeping its role in the game.
@@ -44,25 +50,31 @@ The original code is proprietary. The creator permits remixes through Melty. See
 
 ## Русский
 
-CultCraft переносит Стива, Алекс и снаряжение Minecraft в Cult of the Lamb. Версия **0.8.7** поддерживает кооператив на двоих на общем экране, в том числе через Steam Remote Play Together.
+CultCraft переносит Стива, Алекс и снаряжение Minecraft в Cult of the Lamb. Версия **0.8.8** поддерживает кооператив на двоих на общем экране, в том числе через Steam Remote Play Together.
 
 ### Установка и запуск
 
 - **Через Melty.** Установите Cult of the Lamb и Minecraft: Java Edition. Затем откройте [CultCraft в Melty](https://melty.gg/m/cultcraft) и нажмите **Play**. Melty установит BepInEx и мод.
-- **Из готового ZIP.** Скачайте `CultCraft-0.8.7.zip` из [GitHub](downloads/CultCraft-0.8.7.zip) и следуйте [инструкции для Windows](INSTALL.md#вручную-из-готового-архива).
+- **Из готового ZIP.** Скачайте `CultCraft-0.8.8.zip` из [GitHub](downloads/CultCraft-0.8.8.zip) и следуйте [инструкции для Windows](INSTALL.md#вручную-из-готового-архива).
 - **Из исходников.** Для личной сборки на Windows следуйте [инструкции по установке и сборке](INSTALL.md).
 - **Вдвоём.** Загрузите сохранение, откройте меню паузы, добавьте второго игрока и назначьте ему второй контроллер. Для игры с двух компьютеров сначала пригласите друга через Steam Remote Play Together, затем добавьте его в игре. Оба игрока делят экран ведущего.
 
-### Что нового в 0.8.7
+### Что нового в 0.8.8
+
+Добавлено шесть вариантов языка для меню, диалогов, заданий и названий предметов: **LOLCAT (Kingdom of Cats)**, **Pirate Speak (The Seven Seas)**, **Пиратская речь (Семь морей)**, **Anglish (Oned Riches)**, **Shakespearean English (Kingdom of England)** и **Русскій дореформенный**.
+
+Язык можно выбрать в **Настройки → Игра → Язык** или в **F6 → Язык**, где открывается прокручиваемый список в стиле Minecraft с порядком языков из Cult of the Lamb. Монета называется **Doubloon** в английской пиратской речи и **«Дублон»** в русской.
+
+### Совместимость при запуске
 
 **В 0.8.7 исправлен запуск мода.** Minecraft: Java Edition должна быть установлена, но отдельно устанавливать версию 1.21 больше не нужно. Если в установленном клиенте не хватает ресурсов, CultCraft скачает официальный архив 1.21 в свой кэш и проверит его. Для первой загрузки нужен интернет.
 
 В 0.8.6 при сборе ресурсов появляются топор и кирка. В выборе наград блоки отображаются объёмно, а иконки предметов вписываются в штатный размер. Персонаж несёт свёрток на поднятых руках, садится на край кровати при укладывании и подъёме. Жесты повторяют игровые анимации, а **B** включает приседание в стиле Minecraft.
 
-### Возможности 0.8.7
+### Возможности
 
 - **Стив, Алекс и свои скины.** По умолчанию Ягнёнок выглядит как Стив, а Козёл — как Алекс. У каждого персонажа свой скин и тип рук в меню **F6**. Введите ник Minecraft Java, чтобы загрузить скин с серверов Mojang, и выберите тип рук «Авто», «Обычные» или «Тонкие». Для загрузки скина нужен интернет.
-- **Камера и настройки.** **F5** переключает вид сверху и вид от первого лица. **F6** открывает меню в стиле Minecraft с настройками чувствительности мыши, поля зрения, размера выпавших предметов и подсказок. Меню поддерживает мышь, клавиатуру и контроллер.
+- **Камера и настройки.** **F5** переключает вид сверху и вид от первого лица. **F6** открывает меню в стиле Minecraft с настройками чувствительности мыши, поля зрения, масштаба интерфейса и подсказок. Меню поддерживает мышь, клавиатуру и контроллер.
 - **Оружие и бой.** Мечи и топоры используют модели и уровни материалов Minecraft. Молоты выглядят как булавы, а пистолеты — как заряженные арбалеты с перезарядкой после трёх выстрелов. У лука своя задержка между выстрелами. **R** позволяет быстро выстрелить, а индикатор показывает готовность оружия.
 - **Хотбар и еда.** **1** выбирает оружие ближнего боя, **2** — лук, **3** — еду. В мирной локации зажмите **1** и прокрутите колесо, чтобы выбрать меч или пустую руку. Чтобы выбрать еду, зажмите **3** и прокрутите колесо, затем удерживайте левую кнопку мыши. Еда восстанавливает или добавляет разные виды сердец, а попадание прерывает приём пищи.
 - **Ресурсы и поселение.** Выпавшие предметы объёмные и вращаются. Ресурсы, урожай, семена, удобрения, подарки и свитки оформлены в стиле Minecraft. В поселении есть деревья, растущие ягодные кусты, кровати, костёр и верстак в стиле Minecraft. Преданность выглядит и звучит как опыт Minecraft и сохраняет свою роль в игре.

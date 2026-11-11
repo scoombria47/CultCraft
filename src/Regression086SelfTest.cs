@@ -272,7 +272,15 @@ namespace CultCraft
                 ? (Interaction)fixture.GetComponentInChildren<Interaction_Woodcutting>()
                 : fixture.GetComponentInChildren<Interaction_PlayerClearRubble>();
             string check = type == StructureBrain.TYPES.TREE ? "minecraft-tree-tool" : "minecraft-stone-tool";
-            if (interaction == null) { report(check, false, "Native harvest fixture was unavailable."); yield break; }
+            bool checkPrompt = type == StructureBrain.TYPES.TREE &&
+                Array.Exists(Spec.TestRows, row => row.Id == "interaction-prompt-clearance");
+            if (interaction == null)
+            {
+                if (checkPrompt) report("interaction-prompt-clearance", false, "Native tree interaction was unavailable.");
+                report(check, false, "Native harvest fixture was unavailable.");
+                yield break;
+            }
+            if (checkPrompt) yield return CheckInteractionPrompt(player);
             int draws = avatar.HeldRenderFrames;
             interaction.OnInteract(player.state);
             yield return Wait(() => avatar.HeldItemId == item && avatar.HeldRenderFrames > draws, 8f);
@@ -282,6 +290,54 @@ namespace CultCraft
             yield return new WaitForSecondsRealtime(4f);
             if (player.state.CURRENT_STATE == StateMachine.State.CustomAnimation) player.state.CURRENT_STATE = StateMachine.State.Idle;
             yield return new WaitForSecondsRealtime(1.5f);
+        }
+
+        private IEnumerator CheckInteractionPrompt(PlayerFarming player)
+        {
+            int oldScale = PixelUi.ScaleMode;
+            Indicator indicator = player.indicator;
+            Interactor interactor = player.interactor;
+            bool interactorEnabled = interactor.enabled;
+            string expected = I2.Loc.ScriptLocalization.Interactions.ChopWood;
+            try
+            {
+                // Present the real game indicator without depending on which generated prop is closest.
+                interactor.enabled = false;
+                indicator.SetGameObjectActive(true);
+                indicator.text.text = expected;
+                indicator.SecondaryText.text = Gameplay.NativePromptPlaceholder;
+                indicator.Interactable = true;
+                indicator.Reset();
+                indicator.canvasGroup.alpha = 1f;
+                bool native = indicator.IsActive && indicator.text.text == expected && indicator.SecondaryText.text.Length == 0;
+                float minimumGap = float.PositiveInfinity;
+                var gaps = new List<string>();
+                for (int scale = 0; scale <= 3; scale++)
+                {
+                    PixelUi.ScaleMode = scale;
+                    yield return null;
+                    yield return new WaitForEndOfFrame();
+                    var label = indicator.text.rectTransform;
+                    var canvas = label.GetComponentInParent<Canvas>();
+                    Camera uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+                    float bottom = RectTransformUtility.WorldToScreenPoint(uiCamera,
+                        label.TransformPoint(new Vector3(label.rect.center.x, label.rect.yMin))).y;
+                    float gap = bottom - Hotbar.InteractionPromptMinimumY;
+                    gaps.Add(gap.ToString("F1"));
+                    minimumGap = Mathf.Min(minimumGap, gap);
+                    native &= indicator.IsActive && indicator.text.text == expected && indicator.canvasGroup.alpha > 0f;
+                }
+                report("interaction-prompt-clearance", native && minimumGap >= -0.5f,
+                    "Visible native Chop Wood prompt=" + native + ", gaps across Auto/1/2/3=" + String.Join("/", gaps));
+                yield return new WaitForSecondsRealtime(2.2f);
+            }
+            finally
+            {
+                PixelUi.ScaleMode = oldScale;
+                indicator.SetGameObjectActive(false);
+                interactor.PreviousInteraction = null;
+                interactor.enabled = interactorEnabled;
+            }
         }
 
         private IEnumerator CheckCorpse(PlayerFarming player)
