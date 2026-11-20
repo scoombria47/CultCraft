@@ -123,7 +123,7 @@ namespace CultCraft
                 {channel.stop();return false;}
                 bool playing;
                 if(channel.isPlaying(out playing)!=FMOD.RESULT.OK||!playing){channel.stop();return false;}
-                owner.RecordPlayback(id,actual);return true;
+                owner?.RecordPlayback(id,actual);return true;
             }
             catch{if(channel.hasHandle())channel.stop();return false;}
         }

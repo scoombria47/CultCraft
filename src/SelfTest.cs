@@ -191,6 +191,7 @@ namespace CultCraft
         private readonly bool hotbarOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-return-held-items");
         private readonly bool survivalFoodOnly = Array.Exists(Spec.TestRows, row => row.Id == FoodSelfTest.SurvivalId);
         private readonly SettlementPerformanceSelfTest settlementPerformance;
+        private readonly PickupPromptSelfTest pickupPromptProof;
         private readonly bool localCoopOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-local-coop");
         private readonly bool templeOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-temple-ceremonies");
         private readonly bool scenesOnly=Array.Exists(Spec.TestRows,row=>row.Id=="minecraft-cutscene-player");
@@ -245,6 +246,8 @@ namespace CultCraft
             stoneWalk = new RockCollisionSelfTest(camera, logger);
             fishingProof = new FishingSelfTest(avatar, camera, logger, Report);
             foodProof = new FoodSelfTest(gameplay, logger, Report, survivalFoodOnly);
+            if (survivalFoodOnly && Array.Exists(Spec.TestRows, row => row.Id == PickupPromptSelfTest.Id))
+                pickupPromptProof = new PickupPromptSelfTest(camera, logger, Report);
             if (survivalFoodOnly && Array.Exists(Spec.TestRows, row => row.Id == SettlementPerformanceSelfTest.Id))
                 settlementPerformance = new SettlementPerformanceSelfTest(assets, logger, Report);
             lootProof=new LootVisualSelfTest(assets,logger,Report);
@@ -831,6 +834,11 @@ namespace CultCraft
             if (stage == 30 && ready && EnterDungeon()) Next(31);
             if (stage == 31 && gameplay.IsDungeon)
             {
+                if (pickupPromptProof != null && !pickupPromptProof.Complete)
+                {
+                    pickupPromptProof.Tick(player, ready);
+                    return;
+                }
                 foodProof.TickDungeon(player, ready);
                 if (foodProof.Complete) Next(12);
             }

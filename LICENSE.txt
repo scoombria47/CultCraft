@@ -5,7 +5,8 @@ No separate permission to redistribute the original project or game content is g
 
 Cult of the Lamb and all its content belong to Massive Monster and its respective rightsholders.
 Minecraft and all its content belong to Mojang/Microsoft and their respective rightsholders.
-CultCraft contains no redistributed content from either game. Each player supplies their own installed copies.
+Each player supplies their own installed copies for in-game resources.
+The creator-supplied Mojang Studios startup video and its soundtrack are bundled separately. Their branding and content belong to their respective rightsholders.
 
 BepInEx and Harmony are separate loader dependencies supplied by Melty, not bundled in this package.
 Original implementation prepared with assistance from OpenAI Codex.

@@ -11,6 +11,18 @@
   },
   "rows": [
     {
+      "Id": "startup-mojang-video",
+      "Evidence": "The supplied Mojang Studios video plays after Massive Monster and finishes before Devolver starts.",
+      "System": "testing",
+      "Verification": "Observe actual decoded video frames, the end-of-video event, and the subsequent native Devolver playback."
+    },
+    {
+      "Id": "pickup-info-clearance",
+      "Evidence": "Native weapon, curse and relic info cards fit above the raised interaction indicator.",
+      "System": "testing",
+      "Verification": "Measure the actual cards in top-down and first-person views across Auto and scales 1/2/3. Check the gap, screen bounds and absence of cumulative movement."
+    },
+    {
       "Id": "mod-loads",
       "Evidence": "Exact MeltyTest.Start protocol runs in plugin Awake",
       "System": "testing",

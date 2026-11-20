@@ -37,4 +37,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Compilation failed.' }
 foreach ($document in @('README.md', 'INSTALL.md', 'LICENSE.txt')) {
     Copy-Item -LiteralPath (Join-Path $projectRoot $document) -Destination $outputDir
 }
+$mediaDir = Join-Path $outputDir 'CultCraftMedia'
+New-Item -ItemType Directory -Force -Path $mediaDir | Out-Null
+Copy-Item -LiteralPath (Join-Path $projectRoot 'media\MojangStudios.mp4') -Destination $mediaDir
+Copy-Item -LiteralPath (Join-Path $projectRoot 'media\MojangStudios.wav') -Destination $mediaDir
 Get-Item -LiteralPath (Join-Path $outputDir 'CultCraft.dll') | Select-Object Name,Length

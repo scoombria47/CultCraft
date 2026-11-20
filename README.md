@@ -4,14 +4,20 @@
 
 ## English
 
-CultCraft brings Steve, Alex, and Minecraft gear into Cult of the Lamb. Version **0.9.0-survival** supports two-player co-op on a shared screen, including through Steam Remote Play Together.
+CultCraft brings Steve, Alex, and Minecraft gear into Cult of the Lamb. Version **0.9.1** supports two-player co-op on a shared screen, including through Steam Remote Play Together.
 
 ### Play and install
 
 - **Play through Melty.** Install Cult of the Lamb and Minecraft: Java Edition. Then open [CultCraft on Melty](https://melty.gg/m/cultcraft) and select **Play**. Melty installs BepInEx and the mod.
-- **Install the ZIP manually.** Download `CultCraft-0.9.0-survival.zip` from [GitHub](downloads/CultCraft-0.9.0-survival.zip) and follow the [Windows installation guide](INSTALL.md#вручную-из-готового-архива).
+- **Install the ZIP manually.** Download `CultCraft-0.9.1.zip` from [GitHub](downloads/CultCraft-0.9.1.zip) and follow the [Windows installation guide](INSTALL.md#вручную-из-готового-архива).
 - **Build from source.** For a personal Windows build, follow the [installation and build guide in Russian](INSTALL.md).
 - **Add a second player.** Load a save, open the pause menu, select **Add Co-Op Player**, and assign the second controller. For two PCs, invite your friend through Steam Remote Play Together before adding them in the game. Both players share the host's screen.
+
+### What’s new in 0.9.1
+
+Adds the supplied Mojang Studios video between the Massive Monster and Devolver Digital intros. Its soundtrack plays through the game's FMOD audio engine and stays synchronized with the video.
+
+Weapon, curse and relic information cards now sit above the interaction buttons. Their placement follows the interface scale in both top-down and first-person views.
 
 ### What’s new in 0.9.0-survival
 
@@ -56,14 +62,20 @@ The original code is proprietary. The creator permits remixes through Melty. See
 
 ## Русский
 
-CultCraft переносит Стива, Алекс и снаряжение Minecraft в Cult of the Lamb. Версия **0.9.0-survival** поддерживает кооператив на двоих на общем экране, в том числе через Steam Remote Play Together.
+CultCraft переносит Стива, Алекс и снаряжение Minecraft в Cult of the Lamb. Версия **0.9.1** поддерживает кооператив на двоих на общем экране, в том числе через Steam Remote Play Together.
 
 ### Установка и запуск
 
 - **Через Melty.** Установите Cult of the Lamb и Minecraft: Java Edition. Затем откройте [CultCraft в Melty](https://melty.gg/m/cultcraft) и нажмите **Play**. Melty установит BepInEx и мод.
-- **Из готового ZIP.** Скачайте `CultCraft-0.9.0-survival.zip` из [GitHub](downloads/CultCraft-0.9.0-survival.zip) и следуйте [инструкции для Windows](INSTALL.md#вручную-из-готового-архива).
+- **Из готового ZIP.** Скачайте `CultCraft-0.9.1.zip` из [GitHub](downloads/CultCraft-0.9.1.zip) и следуйте [инструкции для Windows](INSTALL.md#вручную-из-готового-архива).
 - **Из исходников.** Для личной сборки на Windows следуйте [инструкции по установке и сборке](INSTALL.md).
 - **Вдвоём.** Загрузите сохранение, откройте меню паузы, добавьте второго игрока и назначьте ему второй контроллер. Для игры с двух компьютеров сначала пригласите друга через Steam Remote Play Together, затем добавьте его в игре. Оба игрока делят экран ведущего.
+
+### Что нового в 0.9.1
+
+Добавлен предоставленный автором ролик Mojang Studios между заставками Massive Monster и Devolver Digital. Его звук воспроизводится через игровой FMOD и синхронизируется с видео.
+
+Карточки оружия, проклятий и реликвий подняты над кнопками взаимодействия. Положение учитывает масштаб интерфейса при виде сверху и от первого лица.
 
 ### Что нового в 0.9.0-survival
 

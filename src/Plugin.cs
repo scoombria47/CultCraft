@@ -21,6 +21,8 @@ namespace CultCraft
         private CameraRig camera;
         private Gameplay gameplay;
         private SelfTest test;
+        private StartupMovie startupMovie;
+        private PickupPromptLayout pickupPromptLayout;
         private DevotionVisuals devotion;
         private DevotionHud devotionHud;
         private WorldResourceVisuals worldResources;
@@ -43,6 +45,8 @@ namespace CultCraft
             DontDestroyOnLoad(gameObject);
             Logger.LogInfo("CultCraft Awake lifecycle: enabled=" + enabled + ", active=" + gameObject.activeInHierarchy);
             MeltyTest.Start();
+            try { startupMovie = new StartupMovie(Logger); }
+            catch (Exception error) { Logger.LogWarning("CultCraft startup video unavailable: " + error.Message); }
             try
             {
                 assets = new MinecraftAssets(Environment.GetEnvironmentVariable("CULTCRAFT_MINECRAFT"));
@@ -76,6 +80,7 @@ namespace CultCraft
             knucklebonesHeads=new KnucklebonesHeads(assets,skins);
             camera.RenderPoseApplied += avatar.AlignViewCamera;
             gameplay = new Gameplay(assets, Logger);
+            pickupPromptLayout = new PickupPromptLayout();
             gameplay.SetCamera(camera);
             devotion = new DevotionVisuals(assets, Logger);
             devotionHud = new DevotionHud(assets);
@@ -269,6 +274,7 @@ namespace CultCraft
             if (devotion != null) { devotion.Dispose(); devotion = null; }
             if (camera != null) { camera.Dispose(); camera = null; }
             if (gameplay != null) { gameplay.Dispose(); gameplay = null; }
+            if (pickupPromptLayout != null) { pickupPromptLayout.Dispose(); pickupPromptLayout = null; }
             if (avatar != null) { avatar.Dispose(); avatar = null; }
             foreach(var model in otherAvatars.Values)model.Dispose();otherAvatars.Clear();
             if(skins!=null){skins.Dispose();skins=null;}
@@ -278,6 +284,12 @@ namespace CultCraft
         private void Start() { Logger.LogInfo("CultCraft Start; component enabled=" + enabled); }
         private void OnEnable() { Logger.LogInfo("CultCraft runtime OnEnable."); }
         private void OnDisable() { Logger.LogInfo("CultCraft runtime OnDisable."); }
-        private void OnDestroy() { Logger.LogInfo("CultCraft runtime OnDestroy."); DisposeParts(); }
+        private void OnDestroy()
+        {
+            Logger.LogInfo("CultCraft runtime OnDestroy.");
+            startupMovie?.Dispose();
+            startupMovie = null;
+            DisposeParts();
+        }
     }
 }
